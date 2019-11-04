@@ -1,0 +1,30 @@
+fileFormatVersion: 2
+guid: 1853537d3a9eaa445a34c8f515c36c7c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _incomeTax: {fileID: 8300000, guid: f49ae94a9c08d904e91078c01da7d1f4, type: 3}
+  - _yourTurn: {fileID: 8300000, guid: 5e33ea814d42cee4289de6bd755c6abe, type: 3}
+  - _neenerNeener: {instanceID: 0}
+  - _Bad: {instanceID: 0}
+  - _good: {instanceID: 0}
+  - _garnished: {instanceID: 0}
+  - _droughtYear: {instanceID: 0}
+  - _tetonDam: {instanceID: 0}
+  - _gotoSpringPlanting: {fileID: 8300000, guid: 15d0b21f20419874ca6696f750f5831f,
+      type: 3}
+  - _getOnYourTractor: {instanceID: 0}
+  - _ff: {instanceID: 0}
+  - _otb: {instanceID: 0}
+  - _move: {instanceID: 0}
+  - _passGo: {fileID: 8300000, guid: be2051dcbbab9a041bc48c353b6fcbd4, type: 3}
+  - _goBonus: {fileID: 8300000, guid: ae22e857db506ea459451840133c295f, type: 3}
+  - _hurtBack: {instanceID: 0}
+  - _farmingLikeAnIdiot: {instanceID: 0}
+  - _fireworks: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
