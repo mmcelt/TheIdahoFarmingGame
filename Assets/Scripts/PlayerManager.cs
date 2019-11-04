@@ -58,6 +58,7 @@ public class PlayerManager : MonoBehaviourPun
 	public bool _isMyTurn;
 
 	public List<OTBCard> _myOtbs = new List<OTBCard>();
+	public int _myOtbCount;
 
 	#endregion
 
@@ -116,11 +117,12 @@ public class PlayerManager : MonoBehaviourPun
 		UpdateMyTractor(false);
 		UpdateMyHarvester(false);
 		UpdateMyNetworth(CalculateNetworth());
-		UpdateMyOtbCount(_myOtbs.Count);
 		UpdateOxfordRange(false);
 		UpdateTargheeRange(false);
 		UpdateLostRiverRange(false);
 		UpdateLemhiRange(false);
+		_myOtbCount = _myOtbs.Count;
+		UpdateMyOtbCount(_myOtbCount);
 
 		//StartCoroutine(UpdateOtbProperty(_myOtbs.Count));
 	}
@@ -387,7 +389,8 @@ public class PlayerManager : MonoBehaviourPun
 			{
 				//Debug.Log("Card Found");
 				_myOtbs.Remove(_myOtbs[i]);
-				UpdateMyOtbCount(_myOtbs.Count);
+				_myOtbCount = _myOtbs.Count;
+				UpdateMyOtbCount(_myOtbCount);
 			}
 		}
 		
@@ -531,7 +534,8 @@ public class PlayerManager : MonoBehaviourPun
 			//add the card to myOtbs
 			_myOtbs.Add(drawnCard);
 			//update the number of my OTB's to everyone...
-			UpdateMyOtbCount(_myOtbs.Count);
+			_myOtbCount = _myOtbs.Count;
+			UpdateMyOtbCount(_myOtbCount);
 		}
 	}
 
@@ -574,7 +578,8 @@ public class PlayerManager : MonoBehaviourPun
 		//add the card to myOtbs
 		_myOtbs.Add(card);
 		//update the number of my OTB's to everyone...
-		UpdateMyOtbCount(_myOtbs.Count);
+		_myOtbCount = _myOtbs.Count;
+		UpdateMyOtbCount(_myOtbCount);
 	}
 
 	void OnFfCardReceived(EventData eventData)

@@ -848,7 +848,8 @@ public class UIManager : MonoBehaviourPun
 
 		//remove the card from your deck
 		_pManager._myOtbs.Remove(cardToUse);
-		_pManager.UpdateMyOtbCount(_pManager._myOtbs.Count);
+		_pManager._myOtbCount = _pManager._myOtbs.Count;
+		_pManager.UpdateMyOtbCount(_pManager._myOtbCount);
 		_pManager.UpdateMyCash(-_downPayment);
 		_pManager.UpdateMyNotes(_otbCost - _downPayment);
 		_dManager.UseOtbCard(cardToUse.cardNumber);

@@ -182,6 +182,7 @@ MonoBehaviour:
   _pWagesGarnished: 0
   _pNoWages: 0
   _isMyTurn: 0
+  _myOtbCount: 0
 --- !u!114 &4059972660696982893
 MonoBehaviour:
   m_ObjectHideFlags: 0
