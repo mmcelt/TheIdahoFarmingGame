@@ -19,6 +19,7 @@ public class UncleChester : MonoBehaviour
 	int _downpayment, _pCash, _pNotes, _tempCash, _tempNotes;
 
 	PlayerManager _pManager;
+	StickerManager _sManager;
 
 	#endregion
 
@@ -44,9 +45,11 @@ public class UncleChester : MonoBehaviour
 		_pNotesText.text = _pNotes.ToString();
 	}
 
-	void Start() 
+	void Start()
 	{
+		_sManager = GameManager.Instance.sManager;
 	}
+
 	#endregion
 
 	#region Public Methods
@@ -71,6 +74,7 @@ public class UncleChester : MonoBehaviour
 		_pManager.UpdateMyNotes(10000 - _downpayment);
 		_pManager.UpdateMyHay(10);
 		//TODO: update stickers
+		_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Hay", _pManager._pHay, _pManager._pHayDoubled);
 
 		Debug.Log("Hay: " + _pManager._pHay);
 	}

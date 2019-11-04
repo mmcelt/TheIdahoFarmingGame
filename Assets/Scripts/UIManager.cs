@@ -79,7 +79,7 @@ public class UIManager : MonoBehaviourPun
 	[Header("Harvest Panel")]
 	public GameObject _harvestPanel;
 	public Text _harvestMessageText;
-	public Button _harvestRollButton, _harvestOk1Button, _harvestOk2Button;
+	public Button _harvestRollButton, _harvestOk1Button, _harvestOk2Button, _harvestOk3Button;
 
 	[Header("Forced Loan Panel")]
 	public GameObject _forcedLoanPanel;
@@ -330,18 +330,18 @@ public class UIManager : MonoBehaviourPun
 
 	public void UpdateActionsPanelFunds(int cash, int notes)
 	{
-		_cashText.text = "$ " + cash;
-		_notesText.text = "$ " + notes;
+		_cashText.text = cash.ToString("c0");
+		_notesText.text = notes.ToString("c0");
 
 		if (cash <= 0)
 			_cashText.color = Color.red;
 		else
-			_cashText.color = Color.black;
+			_cashText.color = Color.green;
 
 		if (notes >= 50000)
 			_notesText.color = Color.red;
 		else
-			_notesText.color = Color.black;
+			_notesText.color = Color.green;
 
 		if (cash < 0 || notes > 50000)
 			_transactionBlocked = true;
@@ -355,9 +355,21 @@ public class UIManager : MonoBehaviourPun
 	public void UpdateUI()
 	{
 		_otbText.text = _pManager._myOtbs.Count.ToString();
-		_playerCashText.text = _pManager._pCash.ToString();
-		_playerNotesText.text = _pManager._pNotes.ToString();
-		_networthText.text = _pManager._pNetworth.ToString();
+		_playerCashText.text = _pManager._pCash.ToString("c0");
+
+		if (_pManager._pCash <= 0)
+			_playerCashText.color = Color.red;
+		else
+			_playerCashText.color = Color.black;
+
+		_playerNotesText.text = _pManager._pNotes.ToString("c0");
+
+		if (_pManager._pNotes >= 50000)
+			_playerNotesText.color = Color.red;
+		else
+			_playerNotesText.color = Color.black;
+
+		_networthText.text = _pManager._pNetworth.ToString("c0");
 		_currentYearText.text = _pMove._currentYear.ToString();
 
 		if (_pManager._pHarvester)
@@ -459,18 +471,18 @@ public class UIManager : MonoBehaviourPun
 	//forced loan panel methods
 	public void UpdateForcedLoanFunds(int cash, int notes)
 	{
-		_flCashText.text = "$" + cash;
-		_flNotesText.text = "$" + notes;
+		_flCashText.text = cash.ToString("c0");
+		_flNotesText.text = notes.ToString("c0");
 
 		if (cash < 0)
 			_flCashText.color = Color.red;
 		else
-			_flCashText.color = Color.black;
+			_flCashText.color = Color.green;
 
 		if (notes > 50000)
 			_flNotesText.color = Color.red;
 		else
-			_flNotesText.color = Color.black;
+			_flNotesText.color = Color.green;
 
 		if (cash < 0 || notes > 50000)
 			_transactionBlocked = true;
@@ -526,7 +538,11 @@ public class UIManager : MonoBehaviourPun
 				{
 					int playersCash = 0;
 					playersCash = (int)cash;
-					_otherPlayerCashTexts[index].text = playersCash.ToString();
+					_otherPlayerCashTexts[index].text = playersCash.ToString("c0");
+					if (playersCash <= 0)
+						_otherPlayerCashTexts[index].color = Color.red;
+					else
+						_otherPlayerCashTexts[index].color = Color.black;
 				}
 
 				object notes;
@@ -534,7 +550,11 @@ public class UIManager : MonoBehaviourPun
 				{
 					int playersNotes = 0;
 					playersNotes = (int)notes;
-					_otherPlayerNotesTexts[index].text = playersNotes.ToString();
+					_otherPlayerNotesTexts[index].text = playersNotes.ToString("c0");
+					if (playersNotes >= 50000)
+						_otherPlayerNotesTexts[index].color = Color.red;
+					else
+						_otherPlayerNotesTexts[index].color = Color.black;
 				}
 
 				object otbs;
@@ -553,7 +573,7 @@ public class UIManager : MonoBehaviourPun
 					playerNetworth = (int)networth;
 					_remotePlayerNameTexts[index].text = player.NickName;
 					_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
-					_remotePlayerNetworthTexts[index].text = "$" + playerNetworth;
+					_remotePlayerNetworthTexts[index].text = playerNetworth.ToString("c0");
 				}
 				index++;
 				//Debug.Log("Index: " + index);

@@ -44,12 +44,14 @@ public class HarvestManager : MonoBehaviour
 	int _operatingExpenses;
 
 	bool _okButton1Pressed;
+	bool _okButton2Pressed;
 	bool _waitingForOeCard;
 
 	Text _messageText;
 	Button _rollButton;
 	Button _ok1Button;
 	Button _ok2Button;
+	Button _ok3Button;
 
 	PlayerManager _pManager;
 	UIManager _uiManager;
@@ -96,12 +98,20 @@ public class HarvestManager : MonoBehaviour
 		_myDiceRoll.isOtherRoll = false;
 		_okButton1Pressed = true;
 		_messageText.text = "Performing Harvest Calculations...";
+		//_ok2Button.gameObject.SetActive(true);
+		Invoke("OnOkButton2Clicked", 0.5f);
 	}
 
-	public void OnOk2ButtonClicked()
+	public void OnOkButton2Clicked()
+	{
+		_okButton2Pressed = true;
+		_messageText.text = "Your Harvest Check is: " + _harvestCheck;
+	}
+
+	public void OnOkButton3Clicked()
 	{
 		_uiManager._harvestPanel.SetActive(false);
-		_ok2Button.gameObject.SetActive(false);
+		_ok3Button.gameObject.SetActive(false);
 		_messageText.text = IFG.HarvestBaseMessage;
 	}
 
@@ -122,7 +132,9 @@ public class HarvestManager : MonoBehaviour
 			_ok1Button = _uiManager._harvestOk1Button;
 			_ok1Button.onClick.AddListener(OnOkButton1Clicked);
 			_ok2Button = _uiManager._harvestOk2Button;
-			_ok2Button.onClick.AddListener(OnOk2ButtonClicked);
+			_ok2Button.onClick.AddListener(OnOkButton2Clicked);
+			_ok3Button = _uiManager._harvestOk3Button;
+			_ok3Button.onClick.AddListener(OnOkButton3Clicked);
 		}
 		if (_myDiceRoll == null)
 			_myDiceRoll = GameManager.Instance.myDiceRoll;
@@ -135,10 +147,11 @@ public class HarvestManager : MonoBehaviour
 
 		//WAIT roll the die
 		yield return new WaitUntil(() => _rollButtonPressed);
-
+		Debug.Log("Roll Button Pressed");
 		_myDiceRoll.isHarvestRoll = false;
 
 		yield return new WaitUntil(() => _okButton1Pressed);
+		Debug.Log("OK1 Pressed");
 
 		//_dieRoll = 1;	//TESTING
 
@@ -184,7 +197,8 @@ public class HarvestManager : MonoBehaviour
 				SpecialPlayerConditions(commodity);
 				break;
 		}
-		//yield return null;
+		//wait to show the harvest check
+		yield return new WaitUntil(() => _okButton2Pressed);
 
 		//draw OE card...
 		DrawOECard();
@@ -202,7 +216,7 @@ public class HarvestManager : MonoBehaviour
 	}
 	#endregion
 
-	#region Private Methods & (HARVEST CHARTS)
+	#region HARVEST CHARTS
 
 	int GetHayCheck(int die, int hay)
 	{
@@ -510,6 +524,9 @@ public class HarvestManager : MonoBehaviour
 
 		return baseAmt * calcSpuds;
 	}
+	#endregion
+
+	#region Private Methods
 
 	void SpecialBoardConditions(string commodity)
 	{
@@ -603,7 +620,7 @@ public class HarvestManager : MonoBehaviour
 		_pManager.UpdateMyCash(netCheck);
 
 		_waitingForOeCard = false;
-		_ok2Button.gameObject.SetActive(true);
+		_ok3Button.gameObject.SetActive(true);
 
 		//return the card to the deck
 		//fire the replace OE event...
@@ -754,7 +771,7 @@ public class HarvestManager : MonoBehaviour
 				break;
 
 			default:
-				Debug.LogWarning("OOPS, no such space here! " + space);
+				Debug.LogWarning("Nothing to do here... " + space);
 				break;
 		}
 

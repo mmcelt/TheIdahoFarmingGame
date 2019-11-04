@@ -498,6 +498,8 @@ public class PlayerMove : MonoBehaviour
 			{
 				_currentSpace = 0;
 
+				AudioManager.Instance.PlaySound(AudioManager.Instance._passGo);
+
 				//Set the player to his Christmas Vacation spot.
 				switch (GameManager.Instance.myFarmerName)
 				{

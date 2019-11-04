@@ -187,6 +187,7 @@ public class DeckManager : MonoBehaviourPun
 			case 16:	//drought year
 			case 17:
 				//TODO: play sound
+				AudioManager.Instance.PlaySound(AudioManager.Instance._droughtYear);
 				_pManager._pNoWages = true;
 				_pMove.DirectedForwardMove(52);
 				break;
@@ -196,6 +197,7 @@ public class DeckManager : MonoBehaviourPun
 				{
 					_pManager.UpdateMyCash(2000);
 					//good sound
+					AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				}
 				break;
 
@@ -203,16 +205,21 @@ public class DeckManager : MonoBehaviourPun
 				if (_pManager._pFarmCows > 0)
 				{
 					_pManager.UpdateMyFCows(-_pManager._pFarmCows);
-					//TODO: update stickers
-					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased);
+					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased,true);
 					//play bad sound
+					AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
+
 				}
 				break;
 
 			case 20: //increase cows 2 yrs
 				_pManager._pCowsIncreased = true;
-				//TODO: update stickers
-				//TODO: affect harvest
+				if(_pManager._pFarmCows > 0)
+				{
+					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased);
+				}
+				UpdateOwnedRangeStickers();
+				_uiManager.UpdateUI();
 				break;
 
 			case 21: //grain embargo
@@ -228,7 +235,6 @@ public class DeckManager : MonoBehaviourPun
 				{
 					_uiManager._wheatCutInHalfWarning.SetActive(true);
 					_pManager._pWheatCutInHalf = true;
-					//TODO: affect harvest
 				}
 				break;
 
@@ -250,7 +256,11 @@ public class DeckManager : MonoBehaviourPun
 
 			case 26: //spuds in high demand for 2 years
 				_pManager._pSpudsDoubled = true;
-				//TODO: stickers & harvest
+				if (_pManager._pSpuds > 0)
+				{
+					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Spuds", _pManager._pSpuds, _pManager._pSpudsDoubled);
+				}
+				_uiManager.UpdateUI();
 				break;
 
 			default:
@@ -970,5 +980,32 @@ public class DeckManager : MonoBehaviourPun
 		}
 	}
 
+	void UpdateOwnedRangeStickers()
+	{
+		//oxford
+		if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Oxford_Range_Owned])
+		{
+			_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Oxford", _pManager._pCowsIncreased);
+		}
+
+		//targhee
+		if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Targhee_Range_Owned])
+		{
+			_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Targhee", _pManager._pCowsIncreased);
+		}
+
+		//lost river
+		if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Oxford_Range_Owned])
+		{
+			_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Lost River", _pManager._pCowsIncreased);
+		}
+
+		//lemhi
+		if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Oxford_Range_Owned])
+		{
+			_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Lemhi", _pManager._pCowsIncreased);
+		}
+
+	}
 	#endregion
 }

@@ -130,7 +130,7 @@ public class MyDiceRoll : MonoBehaviour
 				harvestOkButtonText.text = Pip.ToString();
 				_hManager._dieRoll = Pip;
 				_hManager._rollButtonPressed = true;
-				yield return new WaitForSeconds(2f);
+				yield return new WaitForSeconds(1.2f);
 				harvestOkButtonText.text = "OK";
 			}
 

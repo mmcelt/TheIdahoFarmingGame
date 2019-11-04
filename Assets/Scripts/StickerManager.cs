@@ -48,11 +48,6 @@ public class StickerManager : MonoBehaviour
 	{
 		PhotonNetwork.NetworkingClient.EventReceived -= OnPlaceInitialBoardStickers;
 	}
-
-	void Start() 
-	{
-		
-	}
 	#endregion
 
 	#region Public Methods
@@ -101,13 +96,13 @@ public class StickerManager : MonoBehaviour
 			PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.Euler(0,0,-90));
 	}
 
-	public void PlaceFarmSticker(string farmer,string sticker,int amount,bool doubled)
+	public void PlaceFarmSticker(string farmer,string sticker,int amount,bool doubled,bool fCowsKilled=false)
 	{
 		Debug.Log("IN PLACESTICKER: STICKER: " + farmer + " " + sticker + " " + amount);
-		if (amount == 0 && sticker == "Cow")
-		{
-			_fCowsKilled = true;
-		}
+		//if (amount == 0 && sticker == "Cow")
+		//{
+		_fCowsKilled = fCowsKilled;
+		//}
 
 		if (sticker == "Fruit")
 			amount /= 5;
@@ -160,7 +155,7 @@ public class StickerManager : MonoBehaviour
 			PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.Euler(0, 0, -90));
 		}
 
-		if (_fCowsKilled)
+		if (fCowsKilled)
 			_fCowsKilled = false;
 	}
 

@@ -580,22 +580,22 @@ public class BoardManager : MonoBehaviour
 				break;
 
 			case 24: //draw FF
-				if (_pManager._cherries || _pManager._pFruit == 0)
-				{
-					_pManager.DrawFFCard();
-					AudioManager.Instance.PlaySound(AudioManager.Instance._ff);
-				}
-				else
+				if(_pManager._pFruit > 0 && !_pManager._cherries)
 				{
 					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Cherries", _pManager._pFruit));
 					_pManager._cherries = true;
 					//draw FF in post harvest
 				}
+				else
+				{
+					_pManager.DrawFFCard();
+					AudioManager.Instance.PlaySound(AudioManager.Instance._ff);
+				}
 				break;
 
 			case 25:	//independence day - END OF CHERRY HARVEST
 				//fireworks...
-				if(_pManager._pFruit > 0)
+				if(_pManager._pFruit > 0 && !_pManager._cherries)
 				{
 					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Cherries", _pManager._pFruit));
 					_pManager._cherries = true;
@@ -712,9 +712,8 @@ public class BoardManager : MonoBehaviour
 
 			case 36: //Harvest Moon - START LIVESTOCK HARVEST - collect $500
 				_pManager.UpdateMyCash(500);
-				_pManager.DrawOTBCard();
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
-				if (_pManager._pFarmCows>0 || _pManager._pRangeCows > 0)
+				if (_pManager._pFarmCows > 0 || _pManager._pRangeCows > 0)
 				{
 					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Livestock", _pManager._pRangeCows + _pManager._pFarmCows));
 					_pManager._livestock = true;

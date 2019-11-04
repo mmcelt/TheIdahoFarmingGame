@@ -154,7 +154,7 @@ public class PlayerManager : MonoBehaviourPun
 	public void UpdateMyOtbCount(int amount)
 	{
 		Debug.Log("In UpdateOTBCount: "+amount);
-		ExitGames.Client.Photon.Hashtable otbProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Otb_Count, amount } };
+		ExitGames.Client.Photon.Hashtable otbProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Otb_Count, _myOtbCount = amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(otbProp);
 		if (photonView.IsMine)
 		{
@@ -649,6 +649,10 @@ public class PlayerManager : MonoBehaviourPun
 		bottomLine += _pFruit * 5000;
 		bottomLine += _pSpuds * 2000;
 		bottomLine += (_pFarmCows + _pRangeCows) * 500;
+		if (_pHarvester)
+			bottomLine += 10000;
+		if (_pTractor)
+			bottomLine += 10000;
 
 		return bottomLine;
 	}
