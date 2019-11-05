@@ -92,6 +92,9 @@ public class UIManager : MonoBehaviourPun
 	public Button _getFlButton;
 	public InputField _forcedLoanInput;
 
+	[Header("Message Texts")]
+	public Text _bonusMessageText;
+
 	[Header("Modal Panels")]
 	public GameObject _modalPanel;
 	public GameObject _completeModalPanel;
@@ -141,11 +144,12 @@ public class UIManager : MonoBehaviourPun
 	void OnEnable()
 	{
 		//InitializeTheActionsPanel();
+		PhotonNetwork.NetworkingClient.EventReceived += OnSpudMessageReceived;
 	}
 
 	void OnDisable()
 	{
-		
+		PhotonNetwork.NetworkingClient.EventReceived -= OnSpudMessageReceived;
 	}
 
 	void Awake()
@@ -465,7 +469,6 @@ public class UIManager : MonoBehaviourPun
 		}
 		return Color.black;
 	}
-
 
 	public IEnumerator BuyOptionRoutine()
 	{
@@ -897,6 +900,41 @@ public class UIManager : MonoBehaviourPun
 		_dManager.UseOtbCard(cardToUse.cardNumber);
 		_pManager.DiscardOtbCard(cardToUse);
 		ResetOtbListPanel();
+	}
+
+	IEnumerator ShowMessageRoutine(string typeOfMessage, string msg, Color fontColor)
+	{
+		switch (typeOfMessage)
+		{
+			case "Bonus":
+				_bonusMessageText.text = msg;
+				_bonusMessageText.color = fontColor;
+				_bonusMessageText.gameObject.SetActive(true);
+
+				yield return new WaitForSeconds(4f);
+
+				_bonusMessageText.gameObject.SetActive(false);
+				break;
+		}
+	}
+	#endregion
+
+	#region Photon Event Handlers
+
+	void OnSpudMessageReceived(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Spud_Message_Event_Code)
+		{
+			//extract data...IFG.SpudBonusGivenS,fontColor,Message
+			object[] recData = (object[])eventData.CustomData;
+			IFG.SpudBonusGiven = (bool)recData[0];
+			Vector3 fontColor = (Vector3)recData[1];
+			string msg = (string)recData[2];
+			Color combinedColor = new Color(fontColor.x, fontColor.y, fontColor.z);
+			_bonusMessageText.text = msg;
+			_bonusMessageText.color = combinedColor;
+			StartCoroutine(ShowMessageRoutine("Bonus",msg,combinedColor));
+		}
 	}
 	#endregion
 }

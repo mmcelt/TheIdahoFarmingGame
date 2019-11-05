@@ -42,6 +42,8 @@ public class IFG
 	public static Color Brown = new Color(0.6627f,0.4117f,0f);
 	public static Color SpudBlue = new Color(0f, 0.6392157f, 0.8392158f);
 	public static Color GreyedOut = new Color(0.5943396f, 0.5943396f, 0.5943396f);
+
+	public static bool SpudBonusGiven;
 }
 
 public enum RaiseEventCodes
@@ -59,6 +61,8 @@ public enum RaiseEventCodes
 	Custom_Hire_Harvester_Code = 10,
 	Get_Initial_Otb_Event_Code = 11,
 	Change_Active_Player_Event_Code = 12,
-	Place_Initial_Stickers_Event_Code = 13
+	Place_Initial_Stickers_Event_Code = 13,
+	Spud_Bonus_Given_Event_Code = 14,
+	Spud_Message_Event_Code = 15
 };
 

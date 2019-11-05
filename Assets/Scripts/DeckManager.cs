@@ -51,6 +51,8 @@ public class DeckManager : MonoBehaviourPun
 	int _oeDeckShuffleCounter;
 	int _ffDeckShuffleCounter;
 
+	bool _spudBonusGiven;
+
 	//string _farmer;
 
 	#endregion
@@ -99,6 +101,9 @@ public class DeckManager : MonoBehaviourPun
 		//_farmer = GameManager.Instance.myFarmerName;
 		//Debug.Log("IN DM START: GM FARMER: " + GameManager.Instance.myFarmerName);
 		//Debug.Log("IN DM START: farmer: " + _farmer);
+
+		//TESTING
+
 	}
 	#endregion
 
@@ -373,6 +378,27 @@ public class DeckManager : MonoBehaviourPun
 			case 46:
 				_pManager.UpdateMySpuds(10);
 				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Spuds", _pManager._pSpuds, _pManager._pSpudsDoubled);
+
+				if (!IFG.SpudBonusGiven)
+				{
+					//get the bonus
+					_pManager.UpdateMyCash(1000);
+
+					//send event to GameManager for Spud Bonus (only once)
+					//event data
+					object[] sndData = new object[] {  PhotonNetwork.LocalPlayer.NickName, GameManager.Instance.myFarmerName };
+					//event options
+					RaiseEventOptions eventOptions = new RaiseEventOptions
+					{
+						Receivers = ReceiverGroup.MasterClient,
+						CachingOption = EventCaching.DoNotCache
+					};
+					//send data
+					SendOptions sendOptions = new SendOptions() { Reliability = true };
+					//fire the event...
+					PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Spud_Bonus_Given_Event_Code, sndData, eventOptions, sendOptions);
+				}
+
 				break;
 		}
 	}
@@ -401,166 +427,166 @@ public class DeckManager : MonoBehaviourPun
 
 	void MakeTheOtbDeck()	//46 cards
 	{
-		CreateAnOTBCard(
-	01,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-		"10 acres GRAIN - Total $20,000", 20000);
-		CreateAnOTBCard(
-			02,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-		"10 acres GRAIN - Total $20,000", 20000);
-		CreateAnOTBCard(
-			03,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-		"10 acres GRAIN - Total $20,000", 20000);
-		CreateAnOTBCard(
-			04,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-		"10 acres GRAIN - Total $20,000", 20000);
-		CreateAnOTBCard(
-			05,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-		"10 acres GRAIN - Total $20,000", 20000);
-		CreateAnOTBCard(
-			06,
-			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-			"10 Cows - Total $5,000", 5000);
-		CreateAnOTBCard(
-			07,
-			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-			"10 Cows - Total $5,000", 5000);
-		CreateAnOTBCard(
-			08,
-			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-			"10 Cows - Total $5,000", 5000);
-		CreateAnOTBCard(
-			09,
-			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-			"10 Cows - Total $5,000", 5000);
-		CreateAnOTBCard(
-			10,
-			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-			"10 Cows - Total $5,000", 5000);
-		CreateAnOTBCard(
-			11,
-			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-			"10 Cows - Total $5,000", 5000);
-		CreateAnOTBCard(
-			12,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-			"10 acres HAY - Total $20,000", 20000);
-		CreateAnOTBCard(
-			13,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-			"10 acres HAY - Total $20,000", 20000);
-		CreateAnOTBCard(
-			14,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-			"10 acres HAY - Total $20,000", 20000);
-		CreateAnOTBCard(
-			15,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-			"10 acres HAY - Total $20,000", 20000);
-		CreateAnOTBCard(
-			16,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-			"10 acres HAY - Total $20,000", 20000);
-		CreateAnOTBCard(
-			17,
-			"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
-			"TRACTOR - Total $10,000", 10000);
-		CreateAnOTBCard(
-			18,
-			"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
-			"TRACTOR - Total $10,000", 10000);
-		CreateAnOTBCard(
-			19,
-			"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
-			"TRACTOR - Total $10,000", 10000);
-		CreateAnOTBCard(
-			20,
-			"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
-			"HARVESTER - Total $10,000", 10000);
-		CreateAnOTBCard(
-			21,
-			"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
-			"HARVESTER - Total $10,000", 10000);
-		CreateAnOTBCard(
-			22,
-			"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
-			"HARVESTER - Total $10,000", 10000);
-		CreateAnOTBCard(
-			23,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-			"5 acres FRUIT - Total $25,000", 25000);
-		CreateAnOTBCard(
-			24,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-			"5 acres FRUIT - Total $25,000", 25000);
-		CreateAnOTBCard(
-			25,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-			"5 acres FRUIT - Total $25,000", 25000);
-		CreateAnOTBCard(
-			26,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-			"5 acres FRUIT - Total $25,000", 25000);
-		CreateAnOTBCard(
-			27,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-			"5 acres FRUIT - Total $25,000", 25000);
-		CreateAnOTBCard(
-			28,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-			"5 acres FRUIT - Total $25,000", 25000);
-		CreateAnOTBCard(
-			29,
-			"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
-			"LEASE Lemhi Range - Total $50,000", 50000);
-		CreateAnOTBCard(
-			30,
-			"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
-			"LEASE Lemhi Range - Total $50,000", 50000);
-		CreateAnOTBCard(
-			31,
-			"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
-			"LEASE Lemhi Range - Total $50,000", 50000);
-		CreateAnOTBCard(
-			32,
-			"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
-			"LEASE Lost River Range - Total $40,000", 40000);
-		CreateAnOTBCard(
-			33,
-			"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
-			"LEASE Lost River Range - Total $40,000", 40000);
-		CreateAnOTBCard(
-			34,
-			"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
-			"LEASE Lost River Range - Total $40,000", 40000);
-		CreateAnOTBCard(
-			35,
-			"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
-			"LEASE Targhee Range - Total $30,000", 30000);
-		CreateAnOTBCard(
-			36,
-			"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
-			"LEASE Targhee Range - Total $30,000", 30000);
-		CreateAnOTBCard(
-			37,
-			"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
-			"LEASE Targhee Range - Total $30,000", 30000);
-		CreateAnOTBCard(
-			38,
-			"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
-			"LEASE Oxford Range - Total $20,000", 20000);
-		CreateAnOTBCard(
-			39,
-			"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
-			"LEASE Oxford Range - Total $20,000", 20000);
-		CreateAnOTBCard(
-			40,
-			"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
-			"LEASE Oxford Range - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//01,
+	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+	//	"10 acres GRAIN - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		02,
+	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+	//	"10 acres GRAIN - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		03,
+	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+	//	"10 acres GRAIN - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		04,
+	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+	//	"10 acres GRAIN - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		05,
+	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+	//	"10 acres GRAIN - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		06,
+	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+	//		"10 Cows - Total $5,000", 5000);
+	//	CreateAnOTBCard(
+	//		07,
+	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+	//		"10 Cows - Total $5,000", 5000);
+	//	CreateAnOTBCard(
+	//		08,
+	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+	//		"10 Cows - Total $5,000", 5000);
+	//	CreateAnOTBCard(
+	//		09,
+	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+	//		"10 Cows - Total $5,000", 5000);
+	//	CreateAnOTBCard(
+	//		10,
+	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+	//		"10 Cows - Total $5,000", 5000);
+	//	CreateAnOTBCard(
+	//		11,
+	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+	//		"10 Cows - Total $5,000", 5000);
+	//	CreateAnOTBCard(
+	//		12,
+	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+	//		"10 acres HAY - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		13,
+	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+	//		"10 acres HAY - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		14,
+	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+	//		"10 acres HAY - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		15,
+	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+	//		"10 acres HAY - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		16,
+	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+	//		"10 acres HAY - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		17,
+	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
+	//		"TRACTOR - Total $10,000", 10000);
+	//	CreateAnOTBCard(
+	//		18,
+	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
+	//		"TRACTOR - Total $10,000", 10000);
+	//	CreateAnOTBCard(
+	//		19,
+	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
+	//		"TRACTOR - Total $10,000", 10000);
+	//	CreateAnOTBCard(
+	//		20,
+	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
+	//		"HARVESTER - Total $10,000", 10000);
+	//	CreateAnOTBCard(
+	//		21,
+	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
+	//		"HARVESTER - Total $10,000", 10000);
+	//	CreateAnOTBCard(
+	//		22,
+	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
+	//		"HARVESTER - Total $10,000", 10000);
+	//	CreateAnOTBCard(
+	//		23,
+	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+	//		"5 acres FRUIT - Total $25,000", 25000);
+	//	CreateAnOTBCard(
+	//		24,
+	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+	//		"5 acres FRUIT - Total $25,000", 25000);
+	//	CreateAnOTBCard(
+	//		25,
+	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+	//		"5 acres FRUIT - Total $25,000", 25000);
+	//	CreateAnOTBCard(
+	//		26,
+	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+	//		"5 acres FRUIT - Total $25,000", 25000);
+	//	CreateAnOTBCard(
+	//		27,
+	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+	//		"5 acres FRUIT - Total $25,000", 25000);
+	//	CreateAnOTBCard(
+	//		28,
+	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+	//		"5 acres FRUIT - Total $25,000", 25000);
+	//	CreateAnOTBCard(
+	//		29,
+	//		"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
+	//		"LEASE Lemhi Range - Total $50,000", 50000);
+	//	CreateAnOTBCard(
+	//		30,
+	//		"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
+	//		"LEASE Lemhi Range - Total $50,000", 50000);
+	//	CreateAnOTBCard(
+	//		31,
+	//		"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
+	//		"LEASE Lemhi Range - Total $50,000", 50000);
+	//	CreateAnOTBCard(
+	//		32,
+	//		"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
+	//		"LEASE Lost River Range - Total $40,000", 40000);
+	//	CreateAnOTBCard(
+	//		33,
+	//		"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
+	//		"LEASE Lost River Range - Total $40,000", 40000);
+	//	CreateAnOTBCard(
+	//		34,
+	//		"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
+	//		"LEASE Lost River Range - Total $40,000", 40000);
+	//	CreateAnOTBCard(
+	//		35,
+	//		"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
+	//		"LEASE Targhee Range - Total $30,000", 30000);
+	//	CreateAnOTBCard(
+	//		36,
+	//		"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
+	//		"LEASE Targhee Range - Total $30,000", 30000);
+	//	CreateAnOTBCard(
+	//		37,
+	//		"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
+	//		"LEASE Targhee Range - Total $30,000", 30000);
+	//	CreateAnOTBCard(
+	//		38,
+	//		"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
+	//		"LEASE Oxford Range - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		39,
+	//		"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
+	//		"LEASE Oxford Range - Total $20,000", 20000);
+	//	CreateAnOTBCard(
+	//		40,
+	//		"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
+	//		"LEASE Oxford Range - Total $20,000", 20000);
 		CreateAnOTBCard(
 			41,
 			"<color=#00A1D6FF>NEIGHBOR SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",

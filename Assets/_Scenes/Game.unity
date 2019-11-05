@@ -852,6 +852,7 @@ MonoBehaviour:
   _cut50PerWheatAcre: 0
   _rollButtonPressed: 0
   _dieRoll: 0
+  _waitingForOeCard: 0
 --- !u!4 &258946704
 Transform:
   m_ObjectHideFlags: 0
@@ -1140,6 +1141,7 @@ MonoBehaviour:
   _hurtBack: {fileID: 8300000, guid: e99f192f7267e8f46aa93a4278548421, type: 3}
   _farmingLikeAnIdiot: {fileID: 8300000, guid: 6194b1aef10b54445b46094afd845a98, type: 3}
   _fireworks: {fileID: 0}
+  _aSource: {fileID: 0}
 --- !u!82 &383173912
 AudioSource:
   m_ObjectHideFlags: 0

@@ -44,6 +44,16 @@ public class GameManager : MonoBehaviourPun
 
 	#region MonoBehaviour Methods
 
+	void OnEnable()
+	{
+		PhotonNetwork.NetworkingClient.EventReceived += OnSpudsPurchased;
+	}
+
+	void OnDisable()
+	{
+		PhotonNetwork.NetworkingClient.EventReceived -= OnSpudsPurchased;
+	}
+
 	void Awake()
 	{
 		if (Instance == null)
@@ -256,5 +266,80 @@ public class GameManager : MonoBehaviourPun
 		//fire the event...
 		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Change_Active_Player_Event_Code, sendData, eventOptions, sendOptions);
 	}
+
+	void OnSpudsPurchased(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Spud_Bonus_Given_Event_Code)
+		{
+			IFG.SpudBonusGiven = true;
+			//extract the sent data: awarded nickname, awarded farmer
+			object[] recData = (object[])eventData.CustomData;
+			string awardedPlayer = (string)recData[0];
+			string awardedFarmer = (string)recData[1];
+			//send msg to display the message to all...
+			//event data
+			Color fontColor = uiManager.SelectFontColorForFarmer(awardedFarmer);
+			Vector3 splitColor = Vector3.zero;
+			splitColor = SplitColorToRGB(fontColor);
+			string message = awardedPlayer + " has received a $1000 Bonus for being the first to plant Spuds! This is Idaho after all...";
+			object[] sndData = new object[] {  IFG.SpudBonusGiven, splitColor, message };
+			//event options
+			RaiseEventOptions eventOptions = new RaiseEventOptions
+			{
+				Receivers = ReceiverGroup.All,
+				CachingOption = EventCaching.DoNotCache
+			};
+			//send options
+			SendOptions sendOptions = new SendOptions() { Reliability = true };
+			//fire the event
+			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Spud_Message_Event_Code, sndData, eventOptions, sendOptions);
+		}
+	}
+
+	Vector3 SplitColorToRGB(Color color)
+	{
+		float r=0, g=0, b=0;
+
+		if (color == Color.white)
+		{
+			r = 1f;
+			g = 1f;
+			b = 1f;
+		}
+		else if (color == Color.yellow)
+		{
+			r = 1f;
+			g = 0.92f;
+			b = 0.016f;
+		}
+		else if (color == Color.red)
+		{
+			r = 1f;
+			g = 0f;
+			b = 0f;
+		}
+		else if (color == IFG.Purple)
+		{
+			r = 0.6039f;
+			g = 0.1607f;
+			b = 0.7411f;
+		}
+		else if (color == Color.blue)
+		{
+			r = 0f;
+			g = 0f;
+			b = 1f;
+		}
+		else if (color == Color.black)
+		{
+			r = 0f;
+			g = 0f;
+			b = 0f;
+		}
+
+		Vector3 splitColor = new Vector3(r, g, b);
+		return splitColor;
+	}
+
 	#endregion
 }
