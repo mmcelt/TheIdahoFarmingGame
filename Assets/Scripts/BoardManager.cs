@@ -531,7 +531,10 @@ public class BoardManager : MonoBehaviour
 				_pManager.UpdateMyCash(1000);
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				_pManager._firstHay = true;
-				StartCoroutine( _hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+				if (!_pManager._pWagesGarnished)
+					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+				else
+					StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
 				break;
 
 			case 20: //memorial day - draw OTB
@@ -542,7 +545,10 @@ public class BoardManager : MonoBehaviour
 				}
 				else
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
 					//drawOTB in post harvest
 					_pManager._firstHay = true;
 				}
@@ -553,7 +559,11 @@ public class BoardManager : MonoBehaviour
 				{
 					_hManager._cutHarvestInHalf = true;
 					AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._firstHay = true;
 				}
 				break;
@@ -564,7 +574,11 @@ public class BoardManager : MonoBehaviour
 
 				if (!_pManager._firstHay)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					if(!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._firstHay = true;
 				}
 				break;
@@ -574,7 +588,11 @@ public class BoardManager : MonoBehaviour
 				{
 					_hManager._cutHarvestInHalf = true;
 					AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Cherries", _pManager._pFruit));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Cherries", _pManager._pFruit));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._cherries = true;
 				}
 				break;
@@ -582,7 +600,11 @@ public class BoardManager : MonoBehaviour
 			case 24: //draw FF
 				if(_pManager._pFruit > 0 && !_pManager._cherries)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Cherries", _pManager._pFruit));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Cherries", _pManager._pFruit));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._cherries = true;
 					//draw FF in post harvest
 				}
@@ -597,7 +619,11 @@ public class BoardManager : MonoBehaviour
 				//fireworks...
 				if(_pManager._pFruit > 0 && !_pManager._cherries)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Cherries", _pManager._pFruit));
+					if(!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Cherries", _pManager._pFruit));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._cherries = true;
 				}
 				break;
@@ -605,7 +631,11 @@ public class BoardManager : MonoBehaviour
 			case 26: //START 2ND HAY CUT - double harvest check
 				_hManager._doubleHarvest = true;
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
-				StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+				if(!_pManager._pWagesGarnished)
+					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+				else
+					StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 				_pManager._secondHay = true;
 				break;
 
@@ -617,7 +647,11 @@ public class BoardManager : MonoBehaviour
 				}
 				else
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					//draw OTB in post harvest
 					_pManager._secondHay = true;
 				}
@@ -631,7 +665,11 @@ public class BoardManager : MonoBehaviour
 				}
 				else
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					//move to HM in post harvest
 					_pManager._secondHay = true;
 				}
@@ -640,7 +678,11 @@ public class BoardManager : MonoBehaviour
 			case 29: //START OF WHEAT HARVEST - increase harvest by 50/acre
 				_hManager._add50PerWheatAcre = true;
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
-				StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+				if (!_pManager._pWagesGarnished)
+					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+				else
+					StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 				_pManager._wheat = true;
 				break;
 
@@ -652,7 +694,11 @@ public class BoardManager : MonoBehaviour
 				}
 				else
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+					if(!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					//direectedFowrwardMove(58) in post harvest
 					_pManager._wheat = true;
 				}
@@ -666,7 +712,11 @@ public class BoardManager : MonoBehaviour
 				}
 				if (!_pManager._wheat)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+					if(!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._wheat = true;
 				}
 				break;
@@ -676,7 +726,11 @@ public class BoardManager : MonoBehaviour
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				if (!_pManager._wheat)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._wheat = true;
 				}
 				break;
@@ -686,12 +740,19 @@ public class BoardManager : MonoBehaviour
 				{
 					_hManager._cut50PerWheatAcre = true;
 					AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Wheat", _pManager._pGrain));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
 				}
 				break;
 
 			case 34: //START OF 3RD HAY CUT - tractor owners to space 46
-				StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+				if(!_pManager._pWagesGarnished)
+					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+				else
+					StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 				_pManager._thirdHay = true;
 				//DirectedMove(46) in post harvest
 				break;
@@ -699,7 +760,11 @@ public class BoardManager : MonoBehaviour
 			case 35: //draw OTB - END OF 3RD HAY CUT
 				if (!_pManager._thirdHay)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					if(!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					//DrawOTB in post harvest
 					_pManager._thirdHay = true;
 				}
@@ -715,7 +780,11 @@ public class BoardManager : MonoBehaviour
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				if (_pManager._pFarmCows > 0 || _pManager._pRangeCows > 0)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Livestock", _pManager._pRangeCows + _pManager._pFarmCows));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Livestock", _pManager._pRangeCows + _pManager._pFarmCows));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._livestock = true;
 				}
 				break;
@@ -725,7 +794,11 @@ public class BoardManager : MonoBehaviour
 				{
 					_hManager._cutHarvestInHalf = true;
 					AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Livestock", _pManager._pRangeCows + _pManager._pFarmCows));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Livestock", _pManager._pRangeCows + _pManager._pFarmCows));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._livestock = true;
 				}
 				break;
@@ -739,7 +812,12 @@ public class BoardManager : MonoBehaviour
 
 				if ((_pManager._pFarmCows > 0 || _pManager._pRangeCows > 0) && !_pManager._livestock)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Livestock", _pManager._pRangeCows + _pManager._pFarmCows));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Livestock", _pManager._pRangeCows + _pManager._pFarmCows));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
+					_pManager._livestock = true;
 				}
 				break;
 
@@ -748,7 +826,11 @@ public class BoardManager : MonoBehaviour
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				if ((_pManager._pFarmCows > 0 || _pManager._pRangeCows > 0) && !_pManager._livestock)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Livestock", _pManager._pRangeCows + _pManager._pFarmCows));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Livestock", _pManager._pRangeCows + _pManager._pFarmCows));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._livestock = true;
 				}
 				break;
@@ -756,14 +838,22 @@ public class BoardManager : MonoBehaviour
 			case 40: //4TH HAY CUT - $500 bonus
 				_pManager.UpdateMyCash(500);
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
-				StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+				if (!_pManager._pWagesGarnished)
+					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
+				else
+					StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 				_pManager._fourthHay = true;
 				break;
 
 			case 41: //START SPUD HARVEST - DrawFF card
 				if (_pManager._pSpuds > 0)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Spuds", _pManager._pSpuds));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Spuds", _pManager._pSpuds));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					//do draw ff in post harvest
 					_pManager._spuds = true;
 				}
@@ -777,7 +867,11 @@ public class BoardManager : MonoBehaviour
 			case 42: //draw OTB
 				if (_pManager._pSpuds > 0 && !_pManager._spuds)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Spuds", _pManager._pSpuds));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Spuds", _pManager._pSpuds));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					//do draw otb in post harvest
 					_pManager._spuds = true;
 				}
@@ -791,7 +885,11 @@ public class BoardManager : MonoBehaviour
 			case 43: //draw FF - END OF SPUD HARVEST
 				if (_pManager._pSpuds > 0 && !_pManager._spuds)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Spuds", _pManager._pSpuds));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Spuds", _pManager._pSpuds));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					//do draw ff in post harvest
 					_pManager._spuds = true;
 				}
@@ -805,7 +903,11 @@ public class BoardManager : MonoBehaviour
 			case 44: //START APPLE HARVEST - draw OTB
 				if (_pManager._pFruit > 0)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Apples", _pManager._pFruit));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Apples", _pManager._pFruit));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					//draw otb in post harvest
 					_pManager._apples = true;
 				}
@@ -821,7 +923,11 @@ public class BoardManager : MonoBehaviour
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				if (_pManager._pFruit>0 && !_pManager._apples)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Apples", _pManager._pFruit));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Apples", _pManager._pFruit));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._apples = true;
 				}
 				break;
@@ -831,7 +937,11 @@ public class BoardManager : MonoBehaviour
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				if (_pManager._pFruit > 0 && !_pManager._apples)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Apples", _pManager._pFruit));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Apples", _pManager._pFruit));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._apples = true;
 				}
 				break;
@@ -842,7 +952,11 @@ public class BoardManager : MonoBehaviour
 					_pManager.UpdateMyCash(-1000);
 					AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 				}
-				StartCoroutine(_hManager.PerformHarvestRoutine(space, "Corn", _pManager._pGrain));
+				if (!_pManager._pWagesGarnished)
+					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Corn", _pManager._pGrain));
+				else
+					StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 				_pManager._corn = true;
 				break;
 
@@ -851,7 +965,11 @@ public class BoardManager : MonoBehaviour
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				if (!_pManager._corn)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Corn", _pManager._pGrain));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Corn", _pManager._pGrain));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					_pManager._corn = true;
 				}
 				break;
@@ -859,7 +977,11 @@ public class BoardManager : MonoBehaviour
 			case 49: //END CORN HARVEST - draw FF
 				if (!_pManager._corn)
 				{
-					StartCoroutine(_hManager.PerformHarvestRoutine(space, "Corn", _pManager._pGrain));
+					if (!_pManager._pWagesGarnished)
+						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Corn", _pManager._pGrain));
+					else
+						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
+
 					//draw FF in post harvest
 					_pManager._corn = true;
 				}

@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -6169673475873916705}
   - component: {fileID: -8502495063212141154}
   - component: {fileID: -3220928639018792713}
+  - component: {fileID: 6660386980760624783}
   m_Layer: 0
   m_Name: Kay
   m_TagString: Player
@@ -195,8 +196,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc14f1fdc7b992044aa7615a6d859f7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _normalMoveSpeed: 0.3
-  _directedMoveSpeed: 0.25
+  _normalMoveSpeed: 0.31
+  _directedMoveSpeed: 0.26
   _currentSpace: 0
   _currentPosition: {x: 0, y: 0, z: 0}
   _currentYear: 0
@@ -215,3 +216,15 @@ MonoBehaviour:
   _time: 0
   _startTime: 0
   _testTime: 0
+--- !u!114 &6660386980760624783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905443823061005083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 976ce505b25843649aac0b656ee31be4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

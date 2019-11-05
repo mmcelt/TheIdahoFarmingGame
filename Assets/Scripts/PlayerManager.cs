@@ -68,6 +68,7 @@ public class PlayerManager : MonoBehaviourPun
 	UIManager _uiManager;
 	PlayerMove _pMove;
 	MyDiceRoll _diceRoll;
+	RemotePlayerUpdater _rpUpdater;
 
 	#endregion
 
@@ -104,6 +105,7 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		_uiManager = GameManager.Instance.uiManager;
 		_pMove = GetComponent<PlayerMove>();
+		_rpUpdater = GetComponent<RemotePlayerUpdater>();
 
 		UpdateMyCash(5000);
 		UpdateMyNotes(5000);
@@ -122,8 +124,10 @@ public class PlayerManager : MonoBehaviourPun
 		UpdateLostRiverRange(false);
 		UpdateLemhiRange(false);
 		_myOtbCount = _myOtbs.Count;
-		UpdateMyOtbCount(_myOtbCount);
+		//UpdateMyOtbCount(_myOtbCount);
+		//_rpUpdater.UpdateRemotePlayerData();
 
+		//Invoke("UpdateMyUI", 1.0f);
 		//StartCoroutine(UpdateOtbProperty(_myOtbs.Count));
 	}
 	#endregion
@@ -390,7 +394,9 @@ public class PlayerManager : MonoBehaviourPun
 				//Debug.Log("Card Found");
 				_myOtbs.Remove(_myOtbs[i]);
 				_myOtbCount = _myOtbs.Count;
-				UpdateMyOtbCount(_myOtbCount);
+				//UpdateMyOtbCount(_myOtbCount);
+				//_rpUpdater.UpdateRemotePlayerData();
+				UpdateMyUI();
 			}
 		}
 		
@@ -411,6 +417,12 @@ public class PlayerManager : MonoBehaviourPun
 	#endregion
 
 	#region Private Methods
+
+	void UpdateMyUI()
+	{
+		if(photonView.IsMine)
+			_uiManager.UpdateUI();
+	}
 
 	[PunRPC]
 	void ShowFfCard(string cardToShow, PhotonMessageInfo info)
@@ -535,7 +547,9 @@ public class PlayerManager : MonoBehaviourPun
 			_myOtbs.Add(drawnCard);
 			//update the number of my OTB's to everyone...
 			_myOtbCount = _myOtbs.Count;
-			UpdateMyOtbCount(_myOtbCount);
+			//UpdateMyOtbCount(_myOtbCount);
+			//_rpUpdater.UpdateRemotePlayerData();
+			UpdateMyUI();
 		}
 	}
 
@@ -579,7 +593,9 @@ public class PlayerManager : MonoBehaviourPun
 		_myOtbs.Add(card);
 		//update the number of my OTB's to everyone...
 		_myOtbCount = _myOtbs.Count;
-		UpdateMyOtbCount(_myOtbCount);
+		//UpdateMyOtbCount(_myOtbCount);
+		//_rpUpdater.UpdateRemotePlayerData();
+		UpdateMyUI();
 	}
 
 	void OnFfCardReceived(EventData eventData)

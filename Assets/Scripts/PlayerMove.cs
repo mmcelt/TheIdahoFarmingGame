@@ -595,6 +595,7 @@ public class PlayerMove : MonoBehaviour
 			if (_spudCounter == 2)
 			{
 				_pManager._pSpudsDoubled = false;
+				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Spuds", _pManager._pSpuds, _pManager._pSpudsDoubled);
 				_spudCounter = 0;
 			}
 		}
@@ -604,8 +605,10 @@ public class PlayerMove : MonoBehaviour
 			_cowCounter++;
 			if (_cowCounter == 2)
 			{
-				_pManager._pSpudsDoubled = false;
+				_pManager._pCowsIncreased = false;
 				_cowCounter = 0;
+				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows + _pManager._pRangeCows, _pManager._pCowsIncreased);
+				GameManager.Instance.dManager.UpdateOwnedRangeStickers();
 			}
 		}
 	}
@@ -614,12 +617,6 @@ public class PlayerMove : MonoBehaviour
 	{
 		_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Hay", _pManager._pHay, false);
 		_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Grain", _pManager._pGrain, false);
-
-		if (_spudCounter == 2)
-			_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Spuds", _pManager._pSpuds, false);
-
-		if (_cowCounter == 2)
-			_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows + _pManager._pRangeCows, false);
 	}
 
 	void ResetHarvests()

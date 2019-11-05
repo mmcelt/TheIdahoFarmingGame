@@ -47,6 +47,10 @@ public class DeckManager : MonoBehaviourPun
 	PlayerMove _pMove;
 	UIManager _uiManager;
 
+	int _otbDeckShuffleCounter;
+	int _oeDeckShuffleCounter;
+	int _ffDeckShuffleCounter;
+
 	//string _farmer;
 
 	#endregion
@@ -178,6 +182,7 @@ public class DeckManager : MonoBehaviourPun
 				_pManager._pWagesGarnished = true;
 				_uiManager._wagesGarnishedWarning.SetActive(true);
 				//TODO: play hideous sound
+				AudioManager.Instance.PlaySound(AudioManager.Instance._garnished);
 				break;
 
 			case 15: //uncle cheester
@@ -980,7 +985,7 @@ public class DeckManager : MonoBehaviourPun
 		}
 	}
 
-	void UpdateOwnedRangeStickers()
+	public void UpdateOwnedRangeStickers()
 	{
 		//oxford
 		if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Oxford_Range_Owned])
@@ -995,17 +1000,16 @@ public class DeckManager : MonoBehaviourPun
 		}
 
 		//lost river
-		if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Oxford_Range_Owned])
+		if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[IFG.LostRiver_Range_Owned])
 		{
 			_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Lost River", _pManager._pCowsIncreased);
 		}
 
 		//lemhi
-		if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Oxford_Range_Owned])
+		if ((bool)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Lemhi_Range_Owned])
 		{
 			_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Lemhi", _pManager._pCowsIncreased);
 		}
-
 	}
 	#endregion
 }

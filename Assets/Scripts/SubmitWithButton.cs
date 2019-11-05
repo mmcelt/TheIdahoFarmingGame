@@ -28,7 +28,6 @@ public class SubmitWithButton : MonoBehaviour
 			if (Input.GetButton(_submitKey))
 				validateAndSubmit(fieldValue);
 		});
-
 	}
 
 	private bool isInvalid(string fieldValue)
@@ -71,7 +70,7 @@ public class SubmitWithButton : MonoBehaviour
 			//	//_uiManager.GetForcedLoan();
 			//	break;
 		}
-		//_uiManager._actionsPanel.gameObject.SetActive(false);
+		_uiManager._actionsPanel.SetActive(false);
 	}
 
 	private bool SelectCorrectValidation(string target)

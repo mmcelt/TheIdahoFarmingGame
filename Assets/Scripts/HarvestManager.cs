@@ -45,13 +45,19 @@ public class HarvestManager : MonoBehaviour
 
 	bool _okButton1Pressed;
 	bool _okButton2Pressed;
-	bool _waitingForOeCard;
+	[SerializeField] bool _waitingForOeCard;
 
 	Text _messageText;
 	Button _rollButton;
 	Button _ok1Button;
 	Button _ok2Button;
 	Button _ok3Button;
+
+	//Garnished Stuff
+	Text _gMessageText;
+	Button _ok1GButton, _ok2GButton, _ok3GButton;
+	bool _ok1GButtonPressed;
+	bool _ok2GButtonPressed;
 
 	PlayerManager _pManager;
 	UIManager _uiManager;
@@ -99,7 +105,13 @@ public class HarvestManager : MonoBehaviour
 		_okButton1Pressed = true;
 		_messageText.text = "Performing Harvest Calculations...";
 		//_ok2Button.gameObject.SetActive(true);
-		Invoke("OnOkButton2Clicked", 0.5f);
+		Invoke("OnOkButton2Clicked", 0.4f);
+	}
+
+	public void OnOkButton1GarnishedClicked()
+	{
+		_gMessageText.text = "Getting your Operating Expenses...";
+		_ok1GButtonPressed = true;
 	}
 
 	public void OnOkButton2Clicked()
@@ -108,11 +120,21 @@ public class HarvestManager : MonoBehaviour
 		_messageText.text = "Your Harvest Check is: " + _harvestCheck;
 	}
 
+	public void OnOkButton2GarnishedClicked()
+	{
+
+	}
+
 	public void OnOkButton3Clicked()
 	{
 		_uiManager._harvestPanel.SetActive(false);
 		_ok3Button.gameObject.SetActive(false);
 		_messageText.text = IFG.HarvestBaseMessage;
+	}
+
+	public void OnOkButton3GarnishedClicked()
+	{
+
 	}
 
 	public IEnumerator PerformHarvestRoutine(int space, string commodity, int amount)
@@ -210,6 +232,42 @@ public class HarvestManager : MonoBehaviour
 		_okButton1Pressed = false;
 
 		yield return new WaitWhile(() => _uiManager._harvestPanel.activeSelf);
+
+		PerformPostHarvestActions(space);
+		ResetHarvestModifiers();
+	}
+
+	public IEnumerator PerformGarnishedHarvestRoutine(int space)
+	{
+		_harvestCheck = 0;
+
+
+		if (_pManager == null)
+			_pManager = GameManager.Instance.myFarmer.GetComponent<PlayerManager>();
+		if (_uiManager == null)
+		{
+			_uiManager = GameManager.Instance.uiManager;
+			_gMessageText = _uiManager._gHarvestMessageText;
+			_ok1GButton = _uiManager._ok1GarnishedButton;
+			_ok1GButton.onClick.AddListener(OnOkButton1GarnishedClicked);
+			_ok2GButton = _uiManager._ok2GarnishedButton;
+			_ok2GButton.onClick.AddListener(OnOkButton2GarnishedClicked);
+			_ok3GButton = _uiManager._ok3GarnishedButton;
+			_ok3GButton.onClick.AddListener(OnOkButton3GarnishedClicked);
+		}
+		if (_pMove == null)
+			_pMove = GameManager.Instance.myFarmer.GetComponent<PlayerMove>();
+
+		_uiManager._gHarvestPanel.SetActive(true);
+		_gMessageText.text = "Wages Garnished - No Harvest Check!";
+
+		yield return new WaitUntil(() => _ok1GButtonPressed);
+		Debug.Log(" draw  & show OE Card");
+		DrawOECard();
+		yield return new WaitUntil(() => !_waitingForOeCard);
+		_okButton1Pressed = false;
+
+		yield return new WaitWhile(() => _uiManager._gHarvestPanel.activeSelf);
 
 		PerformPostHarvestActions(space);
 		ResetHarvestModifiers();
@@ -614,13 +672,18 @@ public class HarvestManager : MonoBehaviour
 
 		while (_uiManager._oePanel.activeSelf)
 			yield return null;
-
-		_messageText.text = "Your Harvest results are: You received $" + _harvestCheck + " for your commodity and your Operating Expenses were $" + _operatingExpenses + " for a net Harvest of $" + netCheck;
+		if (!_pManager._pWagesGarnished)
+			_messageText.text = "Your Harvest results are: You received $" + _harvestCheck + " for your commodity and your Operating Expenses were $" + _operatingExpenses + " for a net Harvest of $" + netCheck;
+		else
+			_gMessageText.text= "Your Harvest results are: You received $" + _harvestCheck + " for your commodity and your Operating Expenses were $" + _operatingExpenses + " for a net Harvest of $" + netCheck;
 
 		_pManager.UpdateMyCash(netCheck);
 
 		_waitingForOeCard = false;
-		_ok3Button.gameObject.SetActive(true);
+		if (!_pManager._pWagesGarnished)
+			_ok3Button.gameObject.SetActive(true);
+		else
+			_ok3GButton.gameObject.SetActive(true);
 
 		//return the card to the deck
 		//fire the replace OE event...
@@ -775,7 +838,8 @@ public class HarvestManager : MonoBehaviour
 				break;
 		}
 
-		_rollButton.gameObject.SetActive(true);
+		if (!_pManager._pWagesGarnished)
+			_rollButton.gameObject.SetActive(true);
 	}
 
 	void ResetHarvestModifiers()

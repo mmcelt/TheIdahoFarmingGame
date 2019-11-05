@@ -12,11 +12,11 @@ public class UIManager : MonoBehaviourPun
 	#region Public / Serialized Fields
 
 	[Header("Left Panel")]
-	[SerializeField] TextMeshProUGUI _playerNameText, _farmerNameText;
-	[SerializeField] TextMeshProUGUI[] _otherPlayerNameTexts;
-	[SerializeField] TextMeshProUGUI[] _otherPlayerCashTexts;
-	[SerializeField] TextMeshProUGUI[] _otherPlayerNotesTexts;
-	[SerializeField] TextMeshProUGUI[] _otherPlayerOtbTexts;
+	public TextMeshProUGUI _playerNameText, _farmerNameText;
+	public TextMeshProUGUI[] _otherPlayerNameTexts;
+	public TextMeshProUGUI[] _otherPlayerCashTexts;
+	public TextMeshProUGUI[] _otherPlayerNotesTexts;
+	public TextMeshProUGUI[] _otherPlayerOtbTexts;
 	public GameObject _wagesGarnishedWarning;
 	public GameObject _cherriesCutInHalfWarning;
 	public GameObject _wheatCutInHalfWarning;
@@ -81,6 +81,11 @@ public class UIManager : MonoBehaviourPun
 	public Text _harvestMessageText;
 	public Button _harvestRollButton, _harvestOk1Button, _harvestOk2Button, _harvestOk3Button;
 
+	[Header("Garnished Harvest Panel")]
+	public GameObject _gHarvestPanel;
+	public Button _ok1GarnishedButton, _ok2GarnishedButton, _ok3GarnishedButton;
+	public Text _gHarvestMessageText;
+
 	[Header("Forced Loan Panel")]
 	public GameObject _forcedLoanPanel;
 	public Text _flCashText, _flNotesText;
@@ -111,6 +116,7 @@ public class UIManager : MonoBehaviourPun
 	PlayerManager _pManager;
 	PlayerMove _pMove;
 	DeckManager _dManager;
+	RemotePlayerUpdater _rpUpdater;
 
 	//OTB Stuff
 	List<string> _otbCards = new List<string>();
@@ -157,10 +163,12 @@ public class UIManager : MonoBehaviourPun
 		_pManager = GetComponentInParent<PlayerManager>();
 		_pMove = GetComponentInParent<PlayerMove>();
 		_diceRoll = GameManager.Instance.myDiceRoll;
+		_rpUpdater = GameManager.Instance.myFarmer.GetComponent<RemotePlayerUpdater>();
 
 		InitialPlayerInfoUpdate();
+		UpdateUI();
 
-		//StartCoroutine(UpdateUIRoutine());
+		StartCoroutine("UpdateUIRoutine");
 	}
 	#endregion
 
@@ -262,6 +270,8 @@ public class UIManager : MonoBehaviourPun
 		_pManager.UpdateMyNotes(-_repayLoanAmount);
 		_repayLoanAmount = 0;
 		ResetTempFunds();
+		_repayLoanInput.text = "";
+		_repayLoanInput.placeholder.GetComponent<Text>().text = "Enter your Loan Repayment...";
 	}
 
 	public void OnGetLoanButtonClicked()
@@ -422,6 +432,13 @@ public class UIManager : MonoBehaviourPun
 		_spudText.text = _pManager._pSpuds.ToString();
 		_fCowText.text = _pManager._pFarmCows.ToString();
 		_rCowText.text = _pManager._pRangeCows.ToString();
+
+		if (!_pManager._pWagesGarnished)
+			_wagesGarnishedWarning.SetActive(false);
+		if (!_pManager._pCherriesCutInHalf)
+			_cherriesCutInHalfWarning.SetActive(false);
+		if (!_pManager._pWheatCutInHalf)
+			_wheatCutInHalfWarning.SetActive(false);
 	}
 
 	public Color SelectFontColorForFarmer(string farmer)
@@ -499,9 +516,12 @@ public class UIManager : MonoBehaviourPun
 	//TESTING
 	IEnumerator UpdateUIRoutine()
 	{
+		Debug.Log("IN UPDATE ROUTINE");
 		UpdateUI();
 		yield return new WaitForSeconds(1f);
-		StartCoroutine(UpdateUIRoutine());
+		StartCoroutine("UpdateUIRoutine");
+		if (_otbText.text != "0")
+			StopCoroutine("UpdateUIRoutine");
 	}
 	//END TESTING
 
@@ -557,14 +577,14 @@ public class UIManager : MonoBehaviourPun
 						_otherPlayerNotesTexts[index].color = Color.black;
 				}
 
-				object otbs;
-				if (player.CustomProperties.TryGetValue(IFG.Player_Otb_Count, out otbs))
-				{
-					int playersOtbs = 0;
-					playersOtbs = (int)otbs;
-					Debug.Log("In UpdateRemoteOTB: " + playersOtbs);
-					_otherPlayerOtbTexts[index].text = playersOtbs.ToString();
-				}
+				//object otbs;
+				//if (player.CustomProperties.TryGetValue(IFG.Player_Otb_Count, out otbs))
+				//{
+				//	int playersOtbs = 0;
+				//	playersOtbs = (int)otbs;
+				//	Debug.Log("In UpdateRemoteOTB: " + playersOtbs);
+				//	_otherPlayerOtbTexts[index].text = playersOtbs.ToString();
+				//}
 
 				object networth;
 				if (player.CustomProperties.TryGetValue(IFG.Player_Networth, out networth))
@@ -869,7 +889,9 @@ public class UIManager : MonoBehaviourPun
 		//remove the card from your deck
 		_pManager._myOtbs.Remove(cardToUse);
 		_pManager._myOtbCount = _pManager._myOtbs.Count;
-		_pManager.UpdateMyOtbCount(_pManager._myOtbCount);
+		//_pManager.UpdateMyOtbCount(_pManager._myOtbCount);
+		//_rpUpdater.UpdateRemotePlayerData();
+		UpdateUI();
 		_pManager.UpdateMyCash(-_downPayment);
 		_pManager.UpdateMyNotes(_otbCost - _downPayment);
 		_dManager.UseOtbCard(cardToUse.cardNumber);
