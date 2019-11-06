@@ -375,6 +375,7 @@ public class PlayerManager : MonoBehaviourPun
 				}
 			}
 		}
+		//TODO: message for how many hit players
 		//get my money...
 		UpdateMyCash(2000 * hitPlayers);
 	}
@@ -677,6 +678,7 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		_uiManager._modalPanel.SetActive(true);
 		_uiManager._forcedLoanPanel.SetActive(true);
+		_uiManager._forcedLoanInput.Select();
 		_uiManager.UpdateForcedLoanFunds(_pCash, _pNotes);
 		yield return new WaitUntil(() => _pCash >= 0);
 		_uiManager._modalPanel.SetActive(false);

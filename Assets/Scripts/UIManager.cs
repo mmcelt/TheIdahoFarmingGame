@@ -33,6 +33,9 @@ public class UIManager : MonoBehaviourPun
 	[Header("Right Panel")]
 	[SerializeField] Text[] _remotePlayerNameTexts;
 	[SerializeField] Text[] _remotePlayerNetworthTexts;
+	[SerializeField] Text _otbShuffleText, _oeShuffleText, _ffShuffleText;
+	[SerializeField] Text _otbLeftText, _oeLeftText, _ffLeftText;
+	[SerializeField] Text _otbTotalText, _oeTotalText, _ffTotalText;
 
 	[Header("Actions Panel")]
 	public GameObject _actionsPanel;
@@ -131,6 +134,16 @@ public class UIManager : MonoBehaviourPun
 	bool _isSellMsg;
 	bool _isWarningMsg;
 	bool _cancelOtbSale;
+	//deck info
+	int _otbShuffleCount;
+	int _oeShuffleCount;
+	int _ffShuffleCount;
+	int _otbCardsLeft;
+	int _oeCardsLeft;
+	int _ffCardsLeft;
+	int _otbTotalCards;
+	int _oeTotalCards;
+	int _ffTotalCards;
 
 	#endregion
 
@@ -144,12 +157,16 @@ public class UIManager : MonoBehaviourPun
 	void OnEnable()
 	{
 		//InitializeTheActionsPanel();
-		PhotonNetwork.NetworkingClient.EventReceived += OnSpudMessageReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnSpudBonusEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnShuffleADeckEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnUpdateDeckDataEventReceived;
 	}
 
 	void OnDisable()
 	{
-		PhotonNetwork.NetworkingClient.EventReceived -= OnSpudMessageReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnSpudBonusEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnShuffleADeckEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnUpdateDeckDataEventReceived;
 	}
 
 	void Awake()
@@ -443,6 +460,16 @@ public class UIManager : MonoBehaviourPun
 			_cherriesCutInHalfWarning.SetActive(false);
 		if (!_pManager._pWheatCutInHalf)
 			_wheatCutInHalfWarning.SetActive(false);
+		//deck info
+		_otbShuffleText.text = _otbShuffleCount.ToString();
+		_otbLeftText.text = _otbCardsLeft.ToString();
+		_otbTotalText.text = _otbTotalCards.ToString();
+		_oeShuffleText.text = _oeShuffleCount.ToString();
+		_oeLeftText.text = _oeCardsLeft.ToString();
+		_oeTotalText.text = _oeTotalCards.ToString();
+		_ffShuffleText.text = _ffShuffleCount.ToString();
+		_ffLeftText.text = _ffCardsLeft.ToString();
+		_ffTotalText.text = _ffTotalCards.ToString();
 	}
 
 	public Color SelectFontColorForFarmer(string farmer)
@@ -481,12 +508,14 @@ public class UIManager : MonoBehaviourPun
 			yield return new WaitUntil(() => !CheckIfRangeIsAlreadyOwned());
 			//Debug.Log("Past CIRIAO");
 		}
-
+		if (_selectedCard.cardNumber >= 6 && _selectedCard.cardNumber <= 11)
+		{
+			yield return new WaitUntil(() => !CheckIfMaxFarmCowsReached());
+		}
 		yield return new WaitUntil(() => !_transactionBlocked);
 		//Debug.Log("Past TB");
 		_buyOptionButton.interactable = true;
 	}
-
 
 	//forced loan panel methods
 	public void UpdateForcedLoanFunds(int cash, int notes)
@@ -521,10 +550,10 @@ public class UIManager : MonoBehaviourPun
 	{
 		Debug.Log("IN UPDATE ROUTINE");
 		UpdateUI();
-		yield return new WaitForSeconds(1f);
+		yield return null;
 		StartCoroutine("UpdateUIRoutine");
-		if (_otbText.text != "0")
-			StopCoroutine("UpdateUIRoutine");
+		yield return new WaitForSeconds(1f);
+		StopCoroutine("UpdateUIRoutine");
 	}
 	//END TESTING
 
@@ -677,6 +706,7 @@ public class UIManager : MonoBehaviourPun
 		}
 		_cancelOtbSale = false;
 		ResetOtbListPanel();
+		_actionsPanel.SetActive(false);
 	}
 
 	string SelectSellMessageText()
@@ -782,7 +812,7 @@ public class UIManager : MonoBehaviourPun
 	{
 		if ((_pMove._currentSpace <= 14) && (_pManager._pCash >= _minDownPayment) && (_pManager._pNotes <= 50000 - (_otbCost - _minDownPayment) && (_pManager._isMyTurn)))
 		{
-			_stopBuying = true;
+			_stopBuying = false;
 			return true;
 		}
 		else
@@ -884,6 +914,21 @@ public class UIManager : MonoBehaviourPun
 		return true;
 	}
 
+	bool CheckIfMaxFarmCowsReached()
+	{
+		bool maxReached = true;
+
+		if (_pManager._pFarmCows <= 10)
+			maxReached = false;
+		else
+		{
+			_otbMessageText.text = "You already have your 20 Farm Cows!";
+			maxReached = true;
+		}
+
+		return maxReached;
+	}
+
 	void UseOtb(OTBCard cardToUse)
 	{
 		if (_dManager == null)
@@ -911,7 +956,7 @@ public class UIManager : MonoBehaviourPun
 				_bonusMessageText.color = fontColor;
 				_bonusMessageText.gameObject.SetActive(true);
 
-				yield return new WaitForSeconds(4f);
+				yield return new WaitForSeconds(5f);
 
 				_bonusMessageText.gameObject.SetActive(false);
 				break;
@@ -921,7 +966,7 @@ public class UIManager : MonoBehaviourPun
 
 	#region Photon Event Handlers
 
-	void OnSpudMessageReceived(EventData eventData)
+	void OnSpudBonusEventReceived(EventData eventData)
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Spud_Message_Event_Code)
 		{
@@ -934,6 +979,70 @@ public class UIManager : MonoBehaviourPun
 			_bonusMessageText.text = msg;
 			_bonusMessageText.color = combinedColor;
 			StartCoroutine(ShowMessageRoutine("Bonus",msg,combinedColor));
+		}
+	}
+
+	void OnShuffleADeckEventReceived(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Shuffle_Deck_Event_Code)
+		{
+			//extract the data...
+			object[] recData = (object[])eventData.CustomData;
+			string deck = (string)recData[0];
+			int counter = (int)recData[1];
+
+			switch (deck)
+			{
+				case "OTB":
+					_otbShuffleCount = counter;
+					break;
+
+				case "OE":
+					_oeShuffleCount = counter;
+					break;
+
+				case "FF":
+					_ffShuffleCount = counter;
+					break;
+
+				default:
+					Debug.Log("No such deck " + deck);
+					break;
+			}
+			UpdateUI();
+		}
+	}
+
+	void OnUpdateDeckDataEventReceived(EventData eventData)
+	{
+		Debug.Log("IN UPDATE DECK DATA");
+		if (eventData.Code == (byte)RaiseEventCodes.Update_Deck_Data_Event_Code)
+		{
+			//extract data..."deck",total,left
+			object[] recData = (object[])eventData.CustomData;
+			string deck = (string)recData[0];
+			int totalCards = (int)recData[1];
+			int cardsLeft = (int)recData[2];
+
+			switch (deck)
+			{
+				case "OTB":
+					_otbTotalCards = totalCards;
+					_otbCardsLeft = cardsLeft;
+					break;
+
+				case "OE":
+					_oeTotalCards = totalCards;
+					_oeCardsLeft = cardsLeft;
+					break;
+
+				case "FF":
+					_ffTotalCards = totalCards;
+					_ffCardsLeft = cardsLeft;
+					break;
+			}
+
+			UpdateUI();
 		}
 	}
 	#endregion

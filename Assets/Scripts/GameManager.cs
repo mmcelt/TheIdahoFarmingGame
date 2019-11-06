@@ -135,10 +135,11 @@ public class GameManager : MonoBehaviourPun
 			GiveTwoOtbCardsToPlayers();
 			//place the initial board stickers
 			PlaceInitialBoardStickers();
+			//update the deck info
+			UpdateDeckInfo();
+			//determine who is 1st player
+			SelectFirstPlayer();
 		}
-		//determine who is 1st player
-		SelectFirstPlayer();
-
 		//Debug.Log("Active Player: " + _activePlayer);
 		yield return null;
 	}
@@ -226,6 +227,12 @@ public class GameManager : MonoBehaviourPun
 		}
 	}
 
+	void UpdateDeckInfo()
+	{
+		dManager.UpdateOtbDeckInfo();
+		dManager.UpdateOeDeckInfo();
+		dManager.UpdateFfDeckInfo();
+	}
 	void PlaceInitialBoardStickers()
 	{
 		//get the farmer name

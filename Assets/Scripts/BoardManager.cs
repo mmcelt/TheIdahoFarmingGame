@@ -650,9 +650,10 @@ public class BoardManager : MonoBehaviour
 					if (!_pManager._pWagesGarnished)
 						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
 					else
+					{
 						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
-
-					//draw OTB in post harvest
+						//draw OTB in post harvest
+					}
 					_pManager._secondHay = true;
 				}
 				break;
@@ -668,9 +669,10 @@ public class BoardManager : MonoBehaviour
 					if (!_pManager._pWagesGarnished)
 						StartCoroutine(_hManager.PerformHarvestRoutine(space, "Hay", _pManager._pHay));
 					else
+					{
 						StartCoroutine(_hManager.PerformGarnishedHarvestRoutine(space));
-
-					//move to HM in post harvest
+						//move to HM in post harvest
+					}
 					_pManager._secondHay = true;
 				}
 				break;

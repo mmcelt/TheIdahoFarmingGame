@@ -44,6 +44,7 @@ public class IFG
 	public static Color GreyedOut = new Color(0.5943396f, 0.5943396f, 0.5943396f);
 
 	public static bool SpudBonusGiven;
+	public static bool CompleteFarmerBonusGive;
 }
 
 public enum RaiseEventCodes
@@ -63,6 +64,8 @@ public enum RaiseEventCodes
 	Change_Active_Player_Event_Code = 12,
 	Place_Initial_Stickers_Event_Code = 13,
 	Spud_Bonus_Given_Event_Code = 14,
-	Spud_Message_Event_Code = 15
+	Spud_Message_Event_Code = 15,
+	Shuffle_Deck_Event_Code = 16,
+	Update_Deck_Data_Event_Code = 17
 };
 

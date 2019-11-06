@@ -51,10 +51,6 @@ public class DeckManager : MonoBehaviourPun
 	int _oeDeckShuffleCounter;
 	int _ffDeckShuffleCounter;
 
-	bool _spudBonusGiven;
-
-	//string _farmer;
-
 	#endregion
 
 	#region Properties
@@ -97,13 +93,16 @@ public class DeckManager : MonoBehaviourPun
 
 	void Start() 
 	{
+		_otbDeckShuffleCounter = -1;
+		_oeDeckShuffleCounter = -1;
+		_ffDeckShuffleCounter = -1;
+
 		InitializeDecks();
 		//_farmer = GameManager.Instance.myFarmerName;
 		//Debug.Log("IN DM START: GM FARMER: " + GameManager.Instance.myFarmerName);
 		//Debug.Log("IN DM START: farmer: " + _farmer);
 
-		//TESTING
-
+		//Debug.Log("OTB DECK COUNT IN DM: " + _otbCards.Count);
 	}
 	#endregion
 
@@ -427,166 +426,166 @@ public class DeckManager : MonoBehaviourPun
 
 	void MakeTheOtbDeck()	//46 cards
 	{
-	//	CreateAnOTBCard(
-	//01,
-	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-	//	"10 acres GRAIN - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		02,
-	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-	//	"10 acres GRAIN - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		03,
-	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-	//	"10 acres GRAIN - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		04,
-	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-	//	"10 acres GRAIN - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		05,
-	//	"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
-	//	"10 acres GRAIN - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		06,
-	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-	//		"10 Cows - Total $5,000", 5000);
-	//	CreateAnOTBCard(
-	//		07,
-	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-	//		"10 Cows - Total $5,000", 5000);
-	//	CreateAnOTBCard(
-	//		08,
-	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-	//		"10 Cows - Total $5,000", 5000);
-	//	CreateAnOTBCard(
-	//		09,
-	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-	//		"10 Cows - Total $5,000", 5000);
-	//	CreateAnOTBCard(
-	//		10,
-	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-	//		"10 Cows - Total $5,000", 5000);
-	//	CreateAnOTBCard(
-	//		11,
-	//		"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
-	//		"10 Cows - Total $5,000", 5000);
-	//	CreateAnOTBCard(
-	//		12,
-	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-	//		"10 acres HAY - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		13,
-	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-	//		"10 acres HAY - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		14,
-	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-	//		"10 acres HAY - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		15,
-	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-	//		"10 acres HAY - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		16,
-	//		"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
-	//		"10 acres HAY - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		17,
-	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
-	//		"TRACTOR - Total $10,000", 10000);
-	//	CreateAnOTBCard(
-	//		18,
-	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
-	//		"TRACTOR - Total $10,000", 10000);
-	//	CreateAnOTBCard(
-	//		19,
-	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
-	//		"TRACTOR - Total $10,000", 10000);
-	//	CreateAnOTBCard(
-	//		20,
-	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
-	//		"HARVESTER - Total $10,000", 10000);
-	//	CreateAnOTBCard(
-	//		21,
-	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
-	//		"HARVESTER - Total $10,000", 10000);
-	//	CreateAnOTBCard(
-	//		22,
-	//		"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
-	//		"HARVESTER - Total $10,000", 10000);
-	//	CreateAnOTBCard(
-	//		23,
-	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-	//		"5 acres FRUIT - Total $25,000", 25000);
-	//	CreateAnOTBCard(
-	//		24,
-	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-	//		"5 acres FRUIT - Total $25,000", 25000);
-	//	CreateAnOTBCard(
-	//		25,
-	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-	//		"5 acres FRUIT - Total $25,000", 25000);
-	//	CreateAnOTBCard(
-	//		26,
-	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-	//		"5 acres FRUIT - Total $25,000", 25000);
-	//	CreateAnOTBCard(
-	//		27,
-	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-	//		"5 acres FRUIT - Total $25,000", 25000);
-	//	CreateAnOTBCard(
-	//		28,
-	//		"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
-	//		"5 acres FRUIT - Total $25,000", 25000);
-	//	CreateAnOTBCard(
-	//		29,
-	//		"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
-	//		"LEASE Lemhi Range - Total $50,000", 50000);
-	//	CreateAnOTBCard(
-	//		30,
-	//		"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
-	//		"LEASE Lemhi Range - Total $50,000", 50000);
-	//	CreateAnOTBCard(
-	//		31,
-	//		"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
-	//		"LEASE Lemhi Range - Total $50,000", 50000);
-	//	CreateAnOTBCard(
-	//		32,
-	//		"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
-	//		"LEASE Lost River Range - Total $40,000", 40000);
-	//	CreateAnOTBCard(
-	//		33,
-	//		"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
-	//		"LEASE Lost River Range - Total $40,000", 40000);
-	//	CreateAnOTBCard(
-	//		34,
-	//		"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
-	//		"LEASE Lost River Range - Total $40,000", 40000);
-	//	CreateAnOTBCard(
-	//		35,
-	//		"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
-	//		"LEASE Targhee Range - Total $30,000", 30000);
-	//	CreateAnOTBCard(
-	//		36,
-	//		"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
-	//		"LEASE Targhee Range - Total $30,000", 30000);
-	//	CreateAnOTBCard(
-	//		37,
-	//		"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
-	//		"LEASE Targhee Range - Total $30,000", 30000);
-	//	CreateAnOTBCard(
-	//		38,
-	//		"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
-	//		"LEASE Oxford Range - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		39,
-	//		"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
-	//		"LEASE Oxford Range - Total $20,000", 20000);
-	//	CreateAnOTBCard(
-	//		40,
-	//		"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
-	//		"LEASE Oxford Range - Total $20,000", 20000);
+		CreateAnOTBCard(
+	01,
+		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"10 acres GRAIN - Total $20,000", 20000);
+		CreateAnOTBCard(
+			02,
+		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"10 acres GRAIN - Total $20,000", 20000);
+		CreateAnOTBCard(
+			03,
+		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"10 acres GRAIN - Total $20,000", 20000);
+		CreateAnOTBCard(
+			04,
+		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"10 acres GRAIN - Total $20,000", 20000);
+		CreateAnOTBCard(
+			05,
+		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"10 acres GRAIN - Total $20,000", 20000);
+		CreateAnOTBCard(
+			06,
+			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+			"10 Cows - Total $5,000", 5000);
+		CreateAnOTBCard(
+			07,
+			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+			"10 Cows - Total $5,000", 5000);
+		CreateAnOTBCard(
+			08,
+			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+			"10 Cows - Total $5,000", 5000);
+		CreateAnOTBCard(
+			09,
+			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+			"10 Cows - Total $5,000", 5000);
+		CreateAnOTBCard(
+			10,
+			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+			"10 Cows - Total $5,000", 5000);
+		CreateAnOTBCard(
+			11,
+			"<color=brown>LIVESTOCK AUCTION</color>\n10 pregnant cows at $500 each",
+			"10 Cows - Total $5,000", 5000);
+		CreateAnOTBCard(
+			12,
+			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"10 acres HAY - Total $20,000", 20000);
+		CreateAnOTBCard(
+			13,
+			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"10 acres HAY - Total $20,000", 20000);
+		CreateAnOTBCard(
+			14,
+			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"10 acres HAY - Total $20,000", 20000);
+		CreateAnOTBCard(
+			15,
+			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"10 acres HAY - Total $20,000", 20000);
+		CreateAnOTBCard(
+			16,
+			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"10 acres HAY - Total $20,000", 20000);
+		CreateAnOTBCard(
+			17,
+			"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
+			"TRACTOR - Total $10,000", 10000);
+		CreateAnOTBCard(
+			18,
+			"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
+			"TRACTOR - Total $10,000", 10000);
+		CreateAnOTBCard(
+			19,
+			"<color=orange>EQUIPMENT SALE</color>\nold but usable TRACTOR",
+			"TRACTOR - Total $10,000", 10000);
+		CreateAnOTBCard(
+			20,
+			"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
+			"HARVESTER - Total $10,000", 10000);
+		CreateAnOTBCard(
+			21,
+			"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
+			"HARVESTER - Total $10,000", 10000);
+		CreateAnOTBCard(
+			22,
+			"<color=orange>EQUIPMENT SALE</color>\nold but usable HARVESTER",
+			"HARVESTER - Total $10,000", 10000);
+		CreateAnOTBCard(
+			23,
+			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"5 acres FRUIT - Total $25,000", 25000);
+		CreateAnOTBCard(
+			24,
+			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"5 acres FRUIT - Total $25,000", 25000);
+		CreateAnOTBCard(
+			25,
+			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"5 acres FRUIT - Total $25,000", 25000);
+		CreateAnOTBCard(
+			26,
+			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"5 acres FRUIT - Total $25,000", 25000);
+		CreateAnOTBCard(
+			27,
+			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"5 acres FRUIT - Total $25,000", 25000);
+		CreateAnOTBCard(
+			28,
+			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"5 acres FRUIT - Total $25,000", 25000);
+		CreateAnOTBCard(
+			29,
+			"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
+			"LEASE Lemhi Range - Total $50,000", 50000);
+		CreateAnOTBCard(
+			30,
+			"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
+			"LEASE Lemhi Range - Total $50,000", 50000);
+		CreateAnOTBCard(
+			31,
+			"<color=brown>LEASE LEMHI RANGE</color>\nfor lifetime at $25,000\nand buy 50 pregnant cows to stock it at $500 each",
+			"LEASE Lemhi Range - Total $50,000", 50000);
+		CreateAnOTBCard(
+			32,
+			"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
+			"LEASE Lost River Range - Total $40,000", 40000);
+		CreateAnOTBCard(
+			33,
+			"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
+			"LEASE Lost River Range - Total $40,000", 40000);
+		CreateAnOTBCard(
+			34,
+			"<color=brown>LEASE LOST RIVER RANGE</color>\nfor lifetime at $20,000\nand buy 40 pregnant cows to stock it at $500 each",
+			"LEASE Lost River Range - Total $40,000", 40000);
+		CreateAnOTBCard(
+			35,
+			"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
+			"LEASE Targhee Range - Total $30,000", 30000);
+		CreateAnOTBCard(
+			36,
+			"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
+			"LEASE Targhee Range - Total $30,000", 30000);
+		CreateAnOTBCard(
+			37,
+			"<color=brown>LEASE TARGHEE RANGE</color>\nfor lifetime at $15,000\nand buy 30 pregnant cows to stock it at $500 each",
+			"LEASE Targhee Range - Total $30,000", 30000);
+		CreateAnOTBCard(
+			38,
+			"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
+			"LEASE Oxford Range - Total $20,000", 20000);
+		CreateAnOTBCard(
+			39,
+			"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
+			"LEASE Oxford Range - Total $20,000", 20000);
+		CreateAnOTBCard(
+			40,
+			"<color=brown>LEASE OXFORD RANGE</color>\nfor lifetime at $10,000\nand buy 20 pregnant cows to stock it at $500 each",
+			"LEASE Oxford Range - Total $20,000", 20000);
 		CreateAnOTBCard(
 			41,
 			"<color=#00A1D6FF>NEIGHBOR SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
@@ -633,6 +632,51 @@ public class DeckManager : MonoBehaviourPun
 		_otbCards.Add(newOTBCard);
 	}
 
+	void ShuffleOtbDeck<T>(List<T> list)
+	{
+		_otbDeckShuffleCounter++;
+
+		RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+		int n = list.Count;
+		while (n > 1)
+		{
+			byte[] box = new byte[1];
+			do provider.GetBytes(box);
+			while (!(box[0] < n * (byte.MaxValue / n)));
+			int k = (box[0] % n);
+			n--;
+			T value = list[k];
+			list[k] = list[n];
+			list[n] = value;
+		}
+		SetBottomOtbCard(_otbCards);
+
+		//send msg to all to update their shuffle counter text
+		//event data
+		object[] sndData = new object[] { "OTB", _otbDeckShuffleCounter };
+		//event options
+		RaiseEventOptions eventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.All,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions sendOptions = new SendOptions() { Reliability = true };
+		//fire the event
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Shuffle_Deck_Event_Code, sndData, eventOptions, sendOptions);
+	}
+
+	void SetBottomOtbCard(List<OTBCard> deck)
+	{
+		for (int i = 0; i < deck.Count; i++)
+		{
+			if (i == deck.Count - 1)
+				deck[i].bottomCard = true;
+			else
+				deck[i].bottomCard = false;
+		}
+	}
+
 	void OnDrawOtbCard(EventData eventData)
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Draw_Otb_Event_Code)
@@ -647,23 +691,49 @@ public class DeckManager : MonoBehaviourPun
 			if (drawnCard.bottomCard)
 				ShuffleOtbDeck(_otbCards);
 
-			//Raise the return event to the sender...
+			//Raise the return event to the sender only...
 			//event data: cardNumber/description/summary/totalCost
 			object[] sndData = new object[] { drawnCard.cardNumber, drawnCard.description, drawnCard.summary, drawnCard.totalCost };
-			//send options
+			//event options
 			RaiseEventOptions eventOptions = new RaiseEventOptions
 			{
 				TargetActors = new int[] { targetPlayer },
-				CachingOption= EventCaching.AddToRoomCache
+				CachingOption = EventCaching.AddToRoomCache
 			};
 			//send option
 			SendOptions sendOptions = new SendOptions
 			{
-				Reliability=true
+				Reliability = true
 			};
 			//fire the event...
 			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Receive_Otb_Event_code, sndData, eventOptions, sendOptions);
+
+			UpdateOtbDeckInfo();
 		}
+	}
+
+	public void UpdateOtbDeckInfo()
+	{
+		//update all player's Deck Data info
+		int otbsLeft = 0;
+		foreach (OTBCard card in _otbCards)
+		{
+			otbsLeft++;
+			if (card.bottomCard)
+				break;
+		}
+		//event data: deck, otb Count,otb's left
+		object[] deckData = new object[] { "OTB", _otbCards.Count, otbsLeft };
+		//event options
+		RaiseEventOptions raiseEventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.All,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions deckSendOptions = new SendOptions() { Reliability = true };
+		//fire the event...
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Update_Deck_Data_Event_Code, deckData, raiseEventOptions, deckSendOptions);
 	}
 
 	void OnReplaceOtbCard(EventData eventData)
@@ -680,6 +750,7 @@ public class DeckManager : MonoBehaviourPun
 			disCard.bottomCard = false;
 
 			_otbCards.Add(disCard);
+			UpdateOtbDeckInfo();
 		}
 	}
 
@@ -754,6 +825,51 @@ public class DeckManager : MonoBehaviourPun
 		_ffCards.Add(newFFCard);
 	}
 
+	void ShuffleFfDeck<T>(List<T> list)
+	{
+		_ffDeckShuffleCounter++;
+
+		RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+		int n = list.Count;
+		while (n > 1)
+		{
+			byte[] box = new byte[1];
+			do provider.GetBytes(box);
+			while (!(box[0] < n * (byte.MaxValue / n)));
+			int k = (box[0] % n);
+			n--;
+			T value = list[k];
+			list[k] = list[n];
+			list[n] = value;
+		}
+		SetBottomFfCard(_ffCards);
+
+		//send msg to all to update their shuffle counter text
+		//event data
+		object[] sndData = new object[] { "FF", _ffDeckShuffleCounter };
+		//event options
+		RaiseEventOptions eventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.All,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions sendOptions = new SendOptions() { Reliability = true };
+		//fire the event
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Shuffle_Deck_Event_Code, sndData, eventOptions, sendOptions);
+	}
+
+	void SetBottomFfCard(List<FFCard> deck)
+	{
+		for (int i = 0; i < deck.Count; i++)
+		{
+			if (i == deck.Count - 1)
+				deck[i].bottomCard = true;
+			else
+				deck[i].bottomCard = false;
+		}
+	}
+
 	void OnDrawFfCard(EventData eventData)
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Draw_Ff_Event_Code)
@@ -784,7 +900,33 @@ public class DeckManager : MonoBehaviourPun
 			};
 			//fire the event...
 			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Receive_Ff_Event_Code, sndData, eventOptions, sendOptions);
+
+			UpdateFfDeckInfo();
 		}
+	}
+
+	public void UpdateFfDeckInfo()
+	{
+		//update all player's Deck Data info
+		int ffsLeft = 0;
+		foreach (FFCard card in _ffCards)
+		{
+			ffsLeft++;
+			if (card.bottomCard)
+				break;
+		}
+		//event data: deck, otb Count,otb's left
+		object[] deckData = new object[] { "FF", _ffCards.Count, ffsLeft };
+		//event options
+		RaiseEventOptions raiseEventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.All,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions deckSendOptions = new SendOptions() { Reliability = true };
+		//fire the event...
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Update_Deck_Data_Event_Code, deckData, raiseEventOptions, deckSendOptions);
 	}
 
 	void OnReplaceFfCard(EventData eventData)
@@ -800,6 +942,8 @@ public class DeckManager : MonoBehaviourPun
 			disCard.bottomCard = false;
 
 			_ffCards.Add(disCard);
+
+			UpdateFfDeckInfo();
 		}
 	}
 
@@ -876,6 +1020,51 @@ public class DeckManager : MonoBehaviourPun
 		_oeCards.Add(newOECard);
 	}
 
+	void ShuffleOeDeck<T>(List<T> list)
+	{
+		_oeDeckShuffleCounter++;
+
+		RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+		int n = list.Count;
+		while (n > 1)
+		{
+			byte[] box = new byte[1];
+			do provider.GetBytes(box);
+			while (!(box[0] < n * (byte.MaxValue / n)));
+			int k = (box[0] % n);
+			n--;
+			T value = list[k];
+			list[k] = list[n];
+			list[n] = value;
+		}
+		SetBottomOeCard(_oeCards);
+
+		//send msg to all to update their shuffle counter text
+		//event data
+		object[] sndData = new object[] { "OE", _oeDeckShuffleCounter };
+		//event options
+		RaiseEventOptions eventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.All,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions sendOptions = new SendOptions() { Reliability = true };
+		//fire the event
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Shuffle_Deck_Event_Code, sndData, eventOptions, sendOptions);
+	}
+
+	void SetBottomOeCard(List<OECard> deck)
+	{
+		for (int i = 0; i < deck.Count; i++)
+		{
+			if (i == deck.Count - 1)
+				deck[i].bottomCard = true;
+			else
+				deck[i].bottomCard = false;
+		}
+	}
+
 	void OnDrawOeCard(EventData eventData)
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Draw_Oe_Event_Code)
@@ -905,7 +1094,33 @@ public class DeckManager : MonoBehaviourPun
 			};
 			//fire the event...
 			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Receive_Oe_Event_Code, sndData, eventOptions, sendOptions);
+
+			UpdateOeDeckInfo();
 		}
+	}
+
+	public void UpdateOeDeckInfo()
+	{
+		//update all player's Deck Data info
+		int oesLeft = 0;
+		foreach (OECard card in _oeCards)
+		{
+			oesLeft++;
+			if (card.bottomCard)
+				break;
+		}
+		//event data: deck, otb Count,otb's left
+		object[] deckData = new object[] { "OE", _oeCards.Count, oesLeft };
+		//event options
+		RaiseEventOptions raiseEventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.All,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions deckSendOptions = new SendOptions() { Reliability = true };
+		//fire the event...
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Update_Deck_Data_Event_Code, deckData, raiseEventOptions, deckSendOptions);
 	}
 
 	void OnReplaceOeCard(EventData eventData)
@@ -921,93 +1136,8 @@ public class DeckManager : MonoBehaviourPun
 			disCard.bottomCard = false;
 
 			_oeCards.Add(disCard);
-		}
-	}
 
-	void ShuffleOtbDeck<T>(List<T> list)
-	{
-		RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
-		int n = list.Count;
-		while (n > 1)
-		{
-			byte[] box = new byte[1];
-			do provider.GetBytes(box);
-			while (!(box[0] < n * (byte.MaxValue / n)));
-			int k = (box[0] % n);
-			n--;
-			T value = list[k];
-			list[k] = list[n];
-			list[n] = value;
-		}
-		SetBottomOtbCard(_otbCards);
-	}
-
-	void SetBottomOtbCard(List<OTBCard> deck)
-	{
-		for(int i=0; i<deck.Count; i++)
-		{
-			if (i == deck.Count - 1)
-				deck[i].bottomCard = true;
-			else
-				deck[i].bottomCard = false;
-		}
-	}
-
-	void ShuffleFfDeck<T>(List<T> list)
-	{
-		RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
-		int n = list.Count;
-		while (n > 1)
-		{
-			byte[] box = new byte[1];
-			do provider.GetBytes(box);
-			while (!(box[0] < n * (byte.MaxValue / n)));
-			int k = (box[0] % n);
-			n--;
-			T value = list[k];
-			list[k] = list[n];
-			list[n] = value;
-		}
-		SetBottomFfCard(_ffCards);
-	}
-
-	void SetBottomFfCard(List<FFCard> deck)
-	{
-		for (int i = 0; i < deck.Count; i++)
-		{
-			if (i == deck.Count - 1)
-				deck[i].bottomCard = true;
-			else
-				deck[i].bottomCard = false;
-		}
-	}
-
-	void ShuffleOeDeck<T>(List<T> list)
-	{
-		RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
-		int n = list.Count;
-		while (n > 1)
-		{
-			byte[] box = new byte[1];
-			do provider.GetBytes(box);
-			while (!(box[0] < n * (byte.MaxValue / n)));
-			int k = (box[0] % n);
-			n--;
-			T value = list[k];
-			list[k] = list[n];
-			list[n] = value;
-		}
-		SetBottomOeCard(_oeCards);
-	}
-
-	void SetBottomOeCard(List<OECard> deck)
-	{
-		for (int i = 0; i < deck.Count; i++)
-		{
-			if (i == deck.Count - 1)
-				deck[i].bottomCard = true;
-			else
-				deck[i].bottomCard = false;
+			UpdateOeDeckInfo();
 		}
 	}
 

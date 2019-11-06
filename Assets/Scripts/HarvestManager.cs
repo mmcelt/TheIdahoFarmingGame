@@ -122,7 +122,7 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnOkButton2GarnishedClicked()
 	{
-
+		_ok2GButtonPressed = true;
 	}
 
 	public void OnOkButton3Clicked()
@@ -262,6 +262,8 @@ public class HarvestManager : MonoBehaviour
 		_gMessageText.text = "Wages Garnished - No Harvest Check!";
 
 		yield return new WaitUntil(() => _ok1GButtonPressed);
+		_ok1GButtonPressed = false;
+
 		Debug.Log(" draw  & show OE Card");
 		DrawOECard();
 		yield return new WaitUntil(() => !_waitingForOeCard);
