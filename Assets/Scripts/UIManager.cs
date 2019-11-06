@@ -157,16 +157,18 @@ public class UIManager : MonoBehaviourPun
 	void OnEnable()
 	{
 		//InitializeTheActionsPanel();
-		PhotonNetwork.NetworkingClient.EventReceived += OnSpudBonusEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnSpudBonusMessageEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnShuffleADeckEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnUpdateDeckDataEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnCompleteFarmerBonusMessageEventReceived;
 	}
 
 	void OnDisable()
 	{
-		PhotonNetwork.NetworkingClient.EventReceived -= OnSpudBonusEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnSpudBonusMessageEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnShuffleADeckEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnUpdateDeckDataEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnCompleteFarmerBonusMessageEventReceived;
 	}
 
 	void Awake()
@@ -947,7 +949,7 @@ public class UIManager : MonoBehaviourPun
 		ResetOtbListPanel();
 	}
 
-	IEnumerator ShowMessageRoutine(string typeOfMessage, string msg, Color fontColor)
+	public IEnumerator ShowMessageRoutine(string typeOfMessage, string msg, Color fontColor)
 	{
 		switch (typeOfMessage)
 		{
@@ -959,6 +961,12 @@ public class UIManager : MonoBehaviourPun
 				yield return new WaitForSeconds(5f);
 
 				_bonusMessageText.gameObject.SetActive(false);
+				_bonusMessageText.text = "";
+				_bonusMessageText.color = Color.black;
+				break;
+
+			case "Routine":
+
 				break;
 		}
 	}
@@ -966,22 +974,42 @@ public class UIManager : MonoBehaviourPun
 
 	#region Photon Event Handlers
 
-	void OnSpudBonusEventReceived(EventData eventData)
+	void OnSpudBonusMessageEventReceived(EventData eventData)
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Spud_Message_Event_Code)
 		{
-			//extract data...IFG.SpudBonusGivenS,fontColor,Message
+			IFG.SpudBonusGiven = true;
+
+			//extract data...IFG.SpudBonusGiven,fontColor,Message
 			object[] recData = (object[])eventData.CustomData;
-			IFG.SpudBonusGiven = (bool)recData[0];
-			Vector3 fontColor = (Vector3)recData[1];
-			string msg = (string)recData[2];
+			Vector3 fontColor = (Vector3)recData[0];
+			string msg = (string)recData[1];
 			Color combinedColor = new Color(fontColor.x, fontColor.y, fontColor.z);
 			_bonusMessageText.text = msg;
 			_bonusMessageText.color = combinedColor;
+			//display the message...
 			StartCoroutine(ShowMessageRoutine("Bonus",msg,combinedColor));
 		}
 	}
 
+	void OnCompleteFarmerBonusMessageEventReceived(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Complete_Farmer_Message_Event_Code)
+		{
+			IFG.CompleteFarmerBonusGiven = true;
+
+			//extract data
+			object[] recData = (object[])eventData.CustomData;
+			Vector3 fontColor = (Vector3)recData[0];
+			string msg = (string)recData[1];
+			Color combinedColor = new Color(fontColor.x, fontColor.y, fontColor.z);
+			_bonusMessageText.text = msg;
+			_bonusMessageText.color = combinedColor;
+			//display the message...
+			StartCoroutine(ShowMessageRoutine("Bonus", msg, combinedColor));
+		}
+	}
+	
 	void OnShuffleADeckEventReceived(EventData eventData)
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Shuffle_Deck_Event_Code)

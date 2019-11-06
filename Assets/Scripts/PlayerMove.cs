@@ -98,8 +98,8 @@ public class PlayerMove : MonoBehaviour
 	void Start() 
 	{
 		_currentPosition = transform.position;
-		_diceRoll = GameManager.Instance.uiManager._diceRoll;
 		_uiManager = GameManager.Instance.uiManager;
+		_diceRoll = GameManager.Instance.uiManager._diceRoll;
 		_bManager = GameManager.Instance.bManager;
 		_pManager = GetComponent<PlayerManager>();
 		_sManager = GameManager.Instance.sManager;

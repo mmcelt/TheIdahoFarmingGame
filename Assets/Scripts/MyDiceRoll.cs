@@ -106,7 +106,10 @@ public class MyDiceRoll : MonoBehaviour
 			}
 			state = RollStarte.Roll;
 			if (state == RollStarte.Roll)
+			{
+				_sprite.color = ChoosePlayerDieTint();
 				_sprite.enabled = true;
+			}
 
 			rb.isKinematic = false;
 			rb.velocity = Vector2.zero;
@@ -142,6 +145,40 @@ public class MyDiceRoll : MonoBehaviour
 			buttonTxt.text = "ROLL";
 			harvestOkButtonText.text = "OK";
 		}
+	}
+
+	Color ChoosePlayerDieTint()
+	{
+		Color dieTint = Color.white;
+
+		switch (GameManager.Instance.myFarmerName)
+		{
+			case IFG.Becky:
+				dieTint = Color.white;
+				break;
+
+			case IFG.Jerry:
+				dieTint = new Color(0.6923f, 0.5518f, 0.7558f);
+				break;
+
+			case IFG.Kay:
+				dieTint = new Color(0.8773f,0.8773f,0.4345f);
+				break;
+
+			case IFG.Mike:
+				dieTint = new Color(0.8679f, 0.4134f, 0.4134f);
+				break;
+
+			case IFG.Ric:
+				dieTint = new Color(0.5188f, 0.5188f, 0.5188f);
+				break;
+
+			case IFG.Ron:
+				dieTint = new Color(0.5047f, 0.5047f, 1);
+				break;
+		}
+
+		return dieTint;
 	}
 
 	public void OnRollButton()

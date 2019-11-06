@@ -383,7 +383,7 @@ public class DeckManager : MonoBehaviourPun
 					//get the bonus
 					_pManager.UpdateMyCash(1000);
 
-					//send event to GameManager for Spud Bonus (only once)
+					//send event to MasterClient's GameManager for Spud Bonus (only once)
 					//event data
 					object[] sndData = new object[] {  PhotonNetwork.LocalPlayer.NickName, GameManager.Instance.myFarmerName };
 					//event options

@@ -46,12 +46,14 @@ public class GameManager : MonoBehaviourPun
 
 	void OnEnable()
 	{
-		PhotonNetwork.NetworkingClient.EventReceived += OnSpudsPurchased;
+		PhotonNetwork.NetworkingClient.EventReceived += OnSpudBonusGiven;
+		PhotonNetwork.NetworkingClient.EventReceived += OnCompleteFarmerBonusGiven;
 	}
 
 	void OnDisable()
 	{
-		PhotonNetwork.NetworkingClient.EventReceived -= OnSpudsPurchased;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnSpudBonusGiven;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnCompleteFarmerBonusGiven;
 	}
 
 	void Awake()
@@ -274,22 +276,23 @@ public class GameManager : MonoBehaviourPun
 		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Change_Active_Player_Event_Code, sendData, eventOptions, sendOptions);
 	}
 
-	void OnSpudsPurchased(EventData eventData)
+	void OnSpudBonusGiven(EventData eventData)
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Spud_Bonus_Given_Event_Code)
 		{
-			IFG.SpudBonusGiven = true;
 			//extract the sent data: awarded nickname, awarded farmer
 			object[] recData = (object[])eventData.CustomData;
 			string awardedPlayer = (string)recData[0];
 			string awardedFarmer = (string)recData[1];
-			//send msg to display the message to all...
+
+			//send msg to UIManager's to display the message to all...
 			//event data
 			Color fontColor = uiManager.SelectFontColorForFarmer(awardedFarmer);
 			Vector3 splitColor = Vector3.zero;
 			splitColor = SplitColorToRGB(fontColor);
 			string message = awardedPlayer + " has received a $1000 Bonus for being the first to plant Spuds! This is Idaho after all...";
-			object[] sndData = new object[] {  IFG.SpudBonusGiven, splitColor, message };
+			//return event
+			object[] sndData = new object[] { splitColor, message };
 			//event options
 			RaiseEventOptions eventOptions = new RaiseEventOptions
 			{
@@ -300,6 +303,34 @@ public class GameManager : MonoBehaviourPun
 			SendOptions sendOptions = new SendOptions() { Reliability = true };
 			//fire the event
 			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Spud_Message_Event_Code, sndData, eventOptions, sendOptions);
+		}
+	}
+
+	void OnCompleteFarmerBonusGiven(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Complete_Farmer_Bonus_Given_Event_Code)
+		{
+			//extract data...awarded player nickname, awarded player farmerName
+			object[] recData = (object[])eventData.CustomData;
+			string awardedPlayerNickname = (string)recData[0];
+			string awardedPlayerFarmerName = (string)recData[1];
+
+			//send message to all UIManagers to display the message and set the variable...
+			Color fontColor = uiManager.SelectFontColorForFarmer(awardedPlayerFarmerName);
+			Vector3 splitColor = SplitColorToRGB(fontColor);
+			string message = awardedPlayerNickname + " has receive a $5000 Bonus for being the first to own it all!!";
+			//return event
+			object[] sndData = new object[] { splitColor, message };
+			//event options
+			RaiseEventOptions eventOptions = new RaiseEventOptions
+			{
+				Receivers = ReceiverGroup.All,
+				CachingOption = EventCaching.DoNotCache
+			};
+			//send options
+			SendOptions sendOptions = new SendOptions() { Reliability = true };
+			//fire the event
+			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Complete_Farmer_Message_Event_Code, sndData, eventOptions, sendOptions);
 		}
 	}
 

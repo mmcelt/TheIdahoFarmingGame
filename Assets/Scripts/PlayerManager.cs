@@ -170,6 +170,8 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		ExitGames.Client.Photon.Hashtable hayProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Hay, _pHay += amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(hayProp);
+		if (!IFG.CompleteFarmerBonusGiven)
+			CheckForCompleteFarmerBonus();
 		UpdateMyNetworth(CalculateNetworth());
 	}
 
@@ -177,6 +179,8 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		ExitGames.Client.Photon.Hashtable grainProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Hay, _pGrain += amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(grainProp);
+		if (!IFG.CompleteFarmerBonusGiven)
+			CheckForCompleteFarmerBonus();
 		UpdateMyNetworth(CalculateNetworth());
 	}
 
@@ -184,6 +188,8 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		ExitGames.Client.Photon.Hashtable fruitProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Fruit, _pFruit += amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(fruitProp);
+		if (!IFG.CompleteFarmerBonusGiven)
+			CheckForCompleteFarmerBonus();
 		UpdateMyNetworth(CalculateNetworth());
 	}
 
@@ -191,6 +197,8 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		ExitGames.Client.Photon.Hashtable fCowsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_FCows, _pFarmCows += amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(fCowsProp);
+		if (!IFG.CompleteFarmerBonusGiven)
+			CheckForCompleteFarmerBonus();
 		UpdateMyNetworth(CalculateNetworth());
 	}
 
@@ -198,6 +206,8 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		ExitGames.Client.Photon.Hashtable rCowsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_RCows, _pRangeCows += amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(rCowsProp);
+		if (!IFG.CompleteFarmerBonusGiven)
+			CheckForCompleteFarmerBonus();
 		UpdateMyNetworth(CalculateNetworth());
 	}
 
@@ -205,6 +215,8 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		ExitGames.Client.Photon.Hashtable spudsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Spuds, _pSpuds += amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(spudsProp);
+		if (!IFG.CompleteFarmerBonusGiven)
+			CheckForCompleteFarmerBonus();
 		UpdateMyNetworth(CalculateNetworth());
 	}
 
@@ -213,6 +225,8 @@ public class PlayerManager : MonoBehaviourPun
 		ExitGames.Client.Photon.Hashtable tractorProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Tractor, _pTractor = status } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(tractorProp);
 		_uiManager._tractorImage.color = status ? Color.white : new Color(0.5943396f, 0.5943396f, 0.5943396f);
+		if (!IFG.CompleteFarmerBonusGiven)
+			CheckForCompleteFarmerBonus();
 		UpdateMyNetworth(CalculateNetworth());
 	}
 
@@ -221,6 +235,8 @@ public class PlayerManager : MonoBehaviourPun
 		ExitGames.Client.Photon.Hashtable harvesterProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Harvester, _pHarvester = status } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(harvesterProp);
 		_uiManager._harvesterImage.color = status ? Color.white : new Color(0.5943396f, 0.5943396f, 0.5943396f);
+		if (!IFG.CompleteFarmerBonusGiven)
+			CheckForCompleteFarmerBonus();
 		UpdateMyNetworth(CalculateNetworth());
 	}
 
@@ -618,19 +634,6 @@ public class PlayerManager : MonoBehaviourPun
 		}
 	}
 
-	void OnCustomHireHarvester(EventData eventData)
-	{
-		if (eventData.Code == (byte)RaiseEventCodes.Custom_Hire_Harvester_Code)
-		{
-			if (_uiManager._ffPanel.activeSelf)
-				_uiManager._ffPanel.SetActive(false);
-
-			_uiManager._customHarvesterPanel.SetActive(true);
-			UpdateMyCash(-2000);
-			//TODO: play bad sound
-		}
-	}
-
 	IEnumerator ShowFfCardRoutine(FFCard cardToShow)
 	{
 		photonView.RPC("ShowFfCard", RpcTarget.All, new object[] { cardToShow.description });
@@ -647,7 +650,7 @@ public class PlayerManager : MonoBehaviourPun
 		//event data: //cardNum, description
 		object[] sendData = new object[] { cardToShow.cardNumber, cardToShow.description };
 		//event options
-		RaiseEventOptions eventOptions=new RaiseEventOptions
+		RaiseEventOptions eventOptions = new RaiseEventOptions
 		{
 			Receivers = ReceiverGroup.MasterClient,
 			CachingOption = EventCaching.DoNotCache
@@ -656,6 +659,20 @@ public class PlayerManager : MonoBehaviourPun
 		SendOptions sendOptions = new SendOptions { Reliability = true };
 		//fire the event...
 		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Replace_Ff_Event_Code, sendData, eventOptions, sendOptions);
+	}
+
+	void OnCustomHireHarvester(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Custom_Hire_Harvester_Code)
+		{
+			if (_uiManager._ffPanel.activeSelf)
+				_uiManager._ffPanel.SetActive(false);
+
+			_uiManager._customHarvesterPanel.SetActive(true);
+			UpdateMyCash(-2000);
+			//TODO: play bad sound
+			//TODO: show a message
+		}
 	}
 
 	int CalculateNetworth()
@@ -686,6 +703,43 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._loanAmount = 0;
 		_uiManager._forcedLoanInput.text = "";
 		_uiManager._forcedLoanInput.placeholder.GetComponent<Text>().text = "Enter the Loan Amount...";
+	}
+
+	void CheckForCompleteFarmerBonus()
+	{
+		bool first = true;
+
+		if (_pHay == 0)
+			first = false;
+		if (_pGrain == 0)
+			first = false;
+		if (_pFruit == 0)
+			first = false;
+		if (_pSpuds == 0)
+			first = false;
+		if (_pFarmCows == 0 && _pRangeCows == 0)
+			first = false;
+		if (!_pHarvester)
+			first = false;
+		if (!_pTractor)
+			first = false;
+
+		if (first)
+		{
+			UpdateMyCash(5000);
+			//send event to MasterClient GameManager - so next message fires only once
+			//data - //player nickname, player.farmerName
+			object[] sndData = new object[] { PhotonNetwork.LocalPlayer.NickName , GameManager.Instance.myFarmerName};
+			//event options
+			RaiseEventOptions eventOptions = new RaiseEventOptions()
+			{
+				Receivers = ReceiverGroup.MasterClient,
+				CachingOption = EventCaching.DoNotCache
+			};
+			//send options
+			SendOptions sendOptions = new SendOptions() { Reliability = true };
+			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Complete_Farmer_Bonus_Given_Event_Code, sndData, eventOptions, sendOptions);
+		}
 	}
 	#endregion
 }
