@@ -20,7 +20,6 @@ public class UIManager : MonoBehaviourPun
 	public GameObject _wagesGarnishedWarning;
 	public GameObject _cherriesCutInHalfWarning;
 	public GameObject _wheatCutInHalfWarning;
-
 	public Button _rollButton;
 	public Button _endTurnButton;
 	public TextMeshProUGUI _currentYearText, _otbText, _playerCashText, _playerNotesText, _networthText;
@@ -31,6 +30,7 @@ public class UIManager : MonoBehaviourPun
 	[SerializeField] Text _hayText, _grainText, _fruitText, _spudText, _fCowText, _rCowText;
 
 	[Header("Right Panel")]
+	[SerializeField] Text _gameTyeText, _gameEndText;
 	[SerializeField] Text[] _remotePlayerNameTexts;
 	[SerializeField] Text[] _remotePlayerNetworthTexts;
 	[SerializeField] Text _otbShuffleText, _oeShuffleText, _ffShuffleText;
@@ -97,6 +97,9 @@ public class UIManager : MonoBehaviourPun
 
 	[Header("Message Texts")]
 	public Text _bonusMessageText;
+	public Text _routineMessageText;
+	public Text _shuffleMessageText;
+	public Text _gameOverMessageText;
 
 	[Header("Modal Panels")]
 	public GameObject _modalPanel;
@@ -161,6 +164,8 @@ public class UIManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived += OnShuffleADeckEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnUpdateDeckDataEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnCompleteFarmerBonusMessageEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnHarvestRollMessageReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnEndOfNetworthGameReceived;
 	}
 
 	void OnDisable()
@@ -169,6 +174,8 @@ public class UIManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived -= OnShuffleADeckEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnUpdateDeckDataEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnCompleteFarmerBonusMessageEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnHarvestRollMessageReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnEndOfNetworthGameReceived;
 	}
 
 	void Awake()
@@ -191,7 +198,17 @@ public class UIManager : MonoBehaviourPun
 		InitialPlayerInfoUpdate();
 		UpdateUI();
 
-		StartCoroutine("UpdateUIRoutine");
+		if (GameManager.Instance._gameMode=="Networth Game")
+		{
+			_gameEndText.text = GameManager.Instance._networthGameAmount.ToString("c0");
+		}
+		else
+		{
+			_gameEndText.text = GameManager.Instance._timedGameLength.ToString();
+		}
+		_gameTyeText.text = GameManager.Instance._gameMode;
+
+		//StartCoroutine("UpdateUIRoutine");
 	}
 	#endregion
 
@@ -387,8 +404,15 @@ public class UIManager : MonoBehaviourPun
 
 	public void UpdateUI()
 	{
+		if (_pManager == null)
+			_pManager = GetComponentInParent<PlayerManager>();
+		if (_pMove == null)
+			_pMove = GetComponentInParent<PlayerMove>();
+
 		_otbText.text = _pManager._myOtbs.Count.ToString();
-		_playerCashText.text = _pManager._pCash.ToString("c0");
+		//_playerCashText.text = _pManager._pCash.ToString("c0");
+		int cash = (int)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Player_Cash];
+		_playerCashText.text = cash.ToString("c0");
 
 		if (_pManager._pCash <= 0)
 			_playerCashText.color = Color.red;
@@ -548,14 +572,12 @@ public class UIManager : MonoBehaviourPun
 	#region Private Methods
 
 	//TESTING
-	IEnumerator UpdateUIRoutine()
+	public IEnumerator UpdateUIRoutine()
 	{
 		Debug.Log("IN UPDATE ROUTINE");
 		UpdateUI();
-		yield return null;
-		StartCoroutine("UpdateUIRoutine");
-		yield return new WaitForSeconds(1f);
-		StopCoroutine("UpdateUIRoutine");
+		yield return new WaitForSeconds(0.5f);
+		StartCoroutine(UpdateUIRoutine());
 	}
 	//END TESTING
 
@@ -566,11 +588,14 @@ public class UIManager : MonoBehaviourPun
 		_farmerNameText.color = SelectFontColorForFarmer(GameManager.Instance.myFarmerName);
 
 		if (PhotonNetwork.PlayerList.Length > 1)
-			StartCoroutine(UpdateRemotePlayerInfo());
+			Invoke("StartRemotePlayerUpdating", 0.5f);
 
 		_currentYearText.text = _pMove._currentYear.ToString();
 	}
-
+	void StartRemotePlayerUpdating()
+	{
+		StartCoroutine(UpdateRemotePlayerInfo());
+	}
 	IEnumerator UpdateRemotePlayerInfo()
 	{
 		//update the remote players info...
@@ -957,18 +982,38 @@ public class UIManager : MonoBehaviourPun
 				_bonusMessageText.text = msg;
 				_bonusMessageText.color = fontColor;
 				_bonusMessageText.gameObject.SetActive(true);
-
-				yield return new WaitForSeconds(5f);
-
-				_bonusMessageText.gameObject.SetActive(false);
-				_bonusMessageText.text = "";
-				_bonusMessageText.color = Color.black;
 				break;
 
 			case "Routine":
+				_routineMessageText.text = msg;
+				_routineMessageText.color = fontColor;
+				_routineMessageText.gameObject.SetActive(true);
+				break;
 
+			case "Shuffle":
+				_shuffleMessageText.text = msg;
+				_shuffleMessageText.color = fontColor;
+				_shuffleMessageText.gameObject.SetActive(true);
+				break;
+
+			case "Game Over":
+				_gameOverMessageText.text = msg;
+				_gameOverMessageText.color = fontColor;
+				_gameOverMessageText.gameObject.SetActive(true);
 				break;
 		}
+		yield return new WaitForSeconds(5f);
+
+		_bonusMessageText.gameObject.SetActive(false);
+		_bonusMessageText.text = "";
+		_bonusMessageText.color = Color.black;
+		_routineMessageText.gameObject.SetActive(false);
+		_routineMessageText.text = "";
+		_routineMessageText.color = Color.black;
+		_shuffleMessageText.text = "";
+		_shuffleMessageText.color = Color.black;
+		_shuffleMessageText.gameObject.SetActive(false);
+
 	}
 	#endregion
 
@@ -1019,18 +1064,23 @@ public class UIManager : MonoBehaviourPun
 			string deck = (string)recData[0];
 			int counter = (int)recData[1];
 
+			Color deckColor = Color.white;
+
 			switch (deck)
 			{
 				case "OTB":
 					_otbShuffleCount = counter;
+					deckColor = new Color(0.7843f, 0.9372f, 1f);
 					break;
 
 				case "OE":
 					_oeShuffleCount = counter;
+					deckColor = new Color(1f, 0.9725f, 0.5803f);
 					break;
 
 				case "FF":
 					_ffShuffleCount = counter;
+					deckColor = new Color(0.9568f, 0.6352f, 0.7333f);
 					break;
 
 				default:
@@ -1038,6 +1088,11 @@ public class UIManager : MonoBehaviourPun
 					break;
 			}
 			UpdateUI();
+			if (counter > 0)
+			{
+				string message = "Shuffled the " + deck + " Deck...";
+				StartCoroutine(ShowMessageRoutine("Shuffle", message, deckColor));
+			}
 		}
 	}
 
@@ -1071,6 +1126,42 @@ public class UIManager : MonoBehaviourPun
 			}
 
 			UpdateUI();
+		}
+	}
+
+	void OnHarvestRollMessageReceived(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Harvest_Roll_Message_Event_Code)
+		{
+			//extract data - roller's nickname,roller's farmerName, die amount, commodity
+			object[] recData = (object[])eventData.CustomData;
+			string rollersName = (string)recData[0];
+			string rollersFarmer = (string)recData[1];
+			int rollAmount = (int)recData[2];
+			string commodity = (string)recData[3];
+
+			Color fontColor = SelectFontColorForFarmer(rollersFarmer);
+			string message = rollersName + " rolled a " + rollAmount + " on his/her " + commodity + " Harvest.";
+			StartCoroutine(ShowMessageRoutine("Routine", message, fontColor));
+		}
+	}
+
+	void OnEndOfNetworthGameReceived(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.End_Networth_Game_Event_Code)
+		{
+			//extract the data - nickname,farmer,networth
+			object[] recData = (object[])eventData.CustomData;
+			string winnerName = (string)recData[0];
+			string farmerName = (string)recData[1];
+			int networth = (int)recData[2];
+
+			string message = winnerName + " HAS WON THE GAME WITH A NETWORTH OF: " + networth.ToString("c0");
+			Color fontColor = SelectFontColorForFarmer(farmerName);
+			_rollButton.interactable = false;
+			_endTurnButton.interactable = false;
+			_actionsPanel.SetActive(false);
+			StartCoroutine(ShowMessageRoutine("Game Over", message, fontColor));
 		}
 	}
 	#endregion

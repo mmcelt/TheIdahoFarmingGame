@@ -66,9 +66,9 @@ public class SubmitWithButton : MonoBehaviour
 				_uiManager.OnBuyOptionButtonClicked();
 				break;
 
-			//case "FLInputField":
-			//	//_uiManager.GetForcedLoan();
-			//	break;
+			case "Forced Loan Input":
+				_uiManager.OnGetFocedLoanButtonClicked();
+				break;
 		}
 		_uiManager._actionsPanel.SetActive(false);
 	}

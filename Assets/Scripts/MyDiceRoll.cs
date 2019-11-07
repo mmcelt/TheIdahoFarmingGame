@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 [SerializeField]
 public class MyDiceRoll : MonoBehaviour
@@ -131,7 +134,9 @@ public class MyDiceRoll : MonoBehaviour
 			else if (isHarvestRoll)
 			{
 				harvestOkButtonText.text = Pip.ToString();
+				//send harvest roll msg to others
 				_hManager._dieRoll = Pip;
+				//SendHarvestRollMessage();	//MOVE TO HARVEST MANAGER
 				_hManager._rollButtonPressed = true;
 				yield return new WaitForSeconds(1.2f);
 				harvestOkButtonText.text = "OK";
@@ -145,40 +150,6 @@ public class MyDiceRoll : MonoBehaviour
 			buttonTxt.text = "ROLL";
 			harvestOkButtonText.text = "OK";
 		}
-	}
-
-	Color ChoosePlayerDieTint()
-	{
-		Color dieTint = Color.white;
-
-		switch (GameManager.Instance.myFarmerName)
-		{
-			case IFG.Becky:
-				dieTint = Color.white;
-				break;
-
-			case IFG.Jerry:
-				dieTint = new Color(0.6923f, 0.5518f, 0.7558f);
-				break;
-
-			case IFG.Kay:
-				dieTint = new Color(0.8773f,0.8773f,0.4345f);
-				break;
-
-			case IFG.Mike:
-				dieTint = new Color(0.8679f, 0.4134f, 0.4134f);
-				break;
-
-			case IFG.Ric:
-				dieTint = new Color(0.5188f, 0.5188f, 0.5188f);
-				break;
-
-			case IFG.Ron:
-				dieTint = new Color(0.5047f, 0.5047f, 1);
-				break;
-		}
-
-		return dieTint;
 	}
 
 	public void OnRollButton()
@@ -203,5 +174,55 @@ public class MyDiceRoll : MonoBehaviour
 	{
 		m_pip = Mathf.Clamp(_pip, 1, 7);
 		anm.Play("to" + m_pip.ToString());
+	}
+
+	Color ChoosePlayerDieTint()
+	{
+		Color dieTint = Color.white;
+
+		switch (GameManager.Instance.myFarmerName)
+		{
+			case IFG.Becky:
+				dieTint = Color.white;
+				break;
+
+			case IFG.Jerry:
+				dieTint = new Color(0.6923f, 0.5518f, 0.7558f);
+				break;
+
+			case IFG.Kay:
+				dieTint = new Color(0.8773f, 0.8773f, 0.4345f);
+				break;
+
+			case IFG.Mike:
+				dieTint = new Color(0.8679f, 0.4134f, 0.4134f);
+				break;
+
+			case IFG.Ric:
+				dieTint = new Color(0.5188f, 0.5188f, 0.5188f);
+				break;
+
+			case IFG.Ron:
+				dieTint = new Color(0.5047f, 0.5047f, 1);
+				break;
+		}
+
+		return dieTint;
+	}
+
+	void SendHarvestRollMessage()
+	{
+		//data - nickname, farmerName, die
+		object[] sndData = new object[] { PhotonNetwork.LocalPlayer.NickName, GameManager.Instance.myFarmerName, Pip };
+		//event options
+		RaiseEventOptions eventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.Others,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions sendOptions = new SendOptions() { Reliability = true };
+		//fire the event to the UIManagers
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Harvest_Roll_Message_Event_Code, sndData, eventOptions, sendOptions);
 	}
 }

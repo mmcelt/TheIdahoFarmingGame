@@ -58,7 +58,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	int numberOfPlayers;
 	int networthGameAmount;
-	int timedGameAmount;
+	float timedGameAmount;
 
 	#endregion
 

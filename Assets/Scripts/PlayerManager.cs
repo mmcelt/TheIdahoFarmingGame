@@ -127,7 +127,7 @@ public class PlayerManager : MonoBehaviourPun
 		//UpdateMyOtbCount(_myOtbCount);
 		//_rpUpdater.UpdateRemotePlayerData();
 
-		//Invoke("UpdateMyUI", 1.0f);
+		UpdateMyUI();
 		//StartCoroutine(UpdateOtbProperty(_myOtbs.Count));
 	}
 	#endregion
@@ -268,7 +268,26 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		ExitGames.Client.Photon.Hashtable networthProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Networth, _pNetworth = amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(networthProp);
-		if (photonView.IsMine)
+		if (GameManager.Instance._gameMode=="Networth Game")
+		{
+			if (_pNetworth >= GameManager.Instance._networthGameAmount)
+			{
+				//game over!
+				//data
+				object[] sndData = new object[] { PhotonNetwork.LocalPlayer.NickName, GameManager.Instance.myFarmerName, _pNetworth };
+				//event options
+				RaiseEventOptions eventOptions = new RaiseEventOptions()
+				{
+					Receivers = ReceiverGroup.All,
+					CachingOption = EventCaching.DoNotCache
+				};
+				//send options
+				SendOptions sendOptions = new SendOptions() { Reliability = true };
+				//fire it
+				PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.End_Networth_Game_Event_Code, sndData, eventOptions, sendOptions);
+			}
+		}
+		//if (photonView.IsMine)
 			_uiManager.UpdateUI();
 	}
 
@@ -334,7 +353,23 @@ public class PlayerManager : MonoBehaviourPun
 	//called by DeckManager
 	public void TetonDam()
 	{
+		if (!photonView.IsMine) return;
+		UpdateMyCash(500 * _pHay);
 		photonView.RPC("TetonDamRoutine", RpcTarget.Others);
+	}
+
+	[PunRPC]
+	void TetonDamRoutine()
+	{
+		if (_uiManager._ffPanel.activeSelf)
+			_uiManager._ffPanel.SetActive(false);
+
+		_uiManager._tetonDamPanel.SetActive(true);
+		_uiManager._completeModalPanel.SetActive(true);
+		_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
+		_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
+		_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
+		_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
 	}
 
 	public void OnTetonDamRollButtonClicked()
@@ -348,8 +383,56 @@ public class PlayerManager : MonoBehaviourPun
 		StartCoroutine(AsFateWillHaveIt());
 	}
 
+	IEnumerator AsFateWillHaveIt()
+	{
+			_uiManager._tetonHeaderText.enabled = false;
+			_uiManager._tetonMessageText.enabled = false;
+			//_uiManager._tetonDamImage.enabled = false;
+			_uiManager._tetonRollButton.enabled = false;
+
+			_diceRoll.OnRollButton();
+
+			yield return new WaitUntil(() => _diceRoll.Pip >= 1);
+
+			int roll = _diceRoll.Pip;
+
+			if (roll < 0)
+				roll = Random.Range(1, 7);
+
+		//Debug.Log("DICE ROLL: " + roll);
+
+		roll = 4;	//TESTING
+			yield return new WaitForSeconds(1.5f);
+
+			if (roll % 2 == 0)
+			{
+				//even Hit
+				//_uiManager._tetonDamImage.enabled = true;
+				_uiManager._tetonHeaderText.text = "You Were Hit!! " + roll;
+				_uiManager._tetonHeaderText.enabled = true;
+			Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
+				//play bad sound
+				AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
+			}
+			else
+			{
+				//odd escaped
+				//_uiManager._tetonDamImage.enabled = true;
+				_uiManager._tetonHeaderText.text = "You Escaped!! " + roll;
+				_uiManager._tetonHeaderText.enabled = true;
+				//play good sound
+				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
+			}
+
+			while (_uiManager._tetonDamPanel.activeSelf)
+				yield return null;
+
+			_diceRoll.isOtherRoll = false;
+	}
+
 	public void OnTetonOkButtonClicked()
 	{
+		UpdateMyCash(-(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
 		_uiManager._tetonDamPanel.SetActive(false);
 		_uiManager._completeModalPanel.SetActive(false);
 		_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
@@ -437,8 +520,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	void UpdateMyUI()
 	{
-		if(photonView.IsMine)
-			_uiManager.UpdateUI();
+		if (photonView.IsMine)
+			_uiManager.StartCoroutine(_uiManager.UpdateUIRoutine());
 	}
 
 	[PunRPC]
@@ -459,62 +542,6 @@ public class PlayerManager : MonoBehaviourPun
 
 		_uiManager._ffCardText.text = cardToShow;
 		_uiManager._ffPanel.SetActive(true);
-	}
-
-	[PunRPC]
-	void TetonDamRoutine()
-	{
-		if (_uiManager._ffPanel.activeSelf)
-			_uiManager._ffPanel.SetActive(false);
-
-		_uiManager._tetonDamPanel.SetActive(true);
-		_uiManager._completeModalPanel.SetActive(true);
-		_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
-		_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
-	}
-
-	IEnumerator AsFateWillHaveIt()
-	{
-		_uiManager._tetonHeaderText.enabled = false;
-		_uiManager._tetonMessageText.enabled = false;
-		_uiManager._tetonDamImage.enabled = false;
-		_uiManager._tetonRollButton.enabled = false;
-
-		_diceRoll.OnRollButton();
-
-		yield return new WaitUntil(() => _diceRoll.Pip >= 1);
-
-		int roll = _diceRoll.Pip;
-
-		if (roll < 0)
-			roll = Random.Range(1, 7);
-
-		//Debug.Log("DICE ROLL: " + roll);
-
-		yield return new WaitForSeconds(1.5f);
-
-		if (roll % 2 == 0)
-		{
-			//even Hit
-			_uiManager._tetonDamImage.enabled = true;
-			_uiManager._tetonHeaderText.text = "You Were Hit!! " + roll;
-			_uiManager._tetonHeaderText.enabled = true;
-			UpdateMyCash(-100 * (_pFruit + _pGrain + _pHay + _pSpuds));
-			//play bad sound
-		}
-		else
-		{
-			//TODO: odd escaped
-			_uiManager._tetonDamImage.enabled = true;
-			_uiManager._tetonHeaderText.text = "You Escaped!! " + roll;
-			_uiManager._tetonHeaderText.enabled = true;
-			//TODO: play good sound
-		}
-
-		while (_uiManager._tetonDamPanel.activeSelf)
-			yield return null;
-
-		_diceRoll.isOtherRoll = false;
 	}
 
 	void OnChangingActivePlayer(EventData eventData)

@@ -3,8 +3,8 @@
 public class IFG
 {
 	//Custom Properties
-	public const string Networth_Game = "nwg";
-	public const string Timed_Game = "tg";
+	public const string Networth_Game = "nwg";						//int
+	public const string Timed_Game = "tg";								//float
 	public const string Number_Of_Players = "nop";					//int
 	public const string Player_Ready = "playerReady";				//bool
 	public const string Selected_Farmer = "selectedFarmer";		//string
@@ -34,7 +34,7 @@ public class IFG
 	public const string Ric = "Ririe Ric";
 	public const string Ron = "Rigby Ron";
 	//Widely used Strings
-	public const string TetonDamMessageText = "HIDEOUS DISASTER! THE TETON DAM HAS BURST. ROLL THE DIE TO SEE YOUR FATE.\nODD: YOUR HIT\nEVEN: YOU ESCAPED";
+	public const string TetonDamMessageText = "HIDEOUS DISASTER! THE TETON DAM HAS BURST. ROLL THE DIE TO SEE YOUR FATE.\nEVEN: YOUR HIT\nODD: YOU ESCAPED";
 	public const string TetonDamHeaderText = "TETON DAM DISASTER";
 	public const string HarvestBaseMessage = "Please roll the die to get your gross Harvest Check...";
 	//Special Colors
@@ -68,6 +68,9 @@ public enum RaiseEventCodes
 	Shuffle_Deck_Event_Code = 16,
 	Update_Deck_Data_Event_Code = 17,
 	Complete_Farmer_Bonus_Given_Event_Code = 18,
-	Complete_Farmer_Message_Event_Code = 19
+	Complete_Farmer_Message_Event_Code = 19,
+	Harvest_Roll_Message_Event_Code = 20,
+	Shuffle_Message_Event_Code = 21,
+	End_Networth_Game_Event_Code = 22
 };
 

@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviourPun
 	public int _activePlayer;
 	public string _gameMode;
 	public int _numberOfPlayers;
+	public int _networthGameAmount;
+	public float _timedGameLength;
+
 	public List<Player> _cachedPlayerList;
 
 	#endregion
@@ -94,7 +97,7 @@ public class GameManager : MonoBehaviourPun
 					StartCoroutine(GameLoopRoutine());
 			}
 		}
-		SetTheGameMode();
+		//SetTheGameMode();
 	}
 
 	#endregion
@@ -150,11 +153,19 @@ public class GameManager : MonoBehaviourPun
 	{
 		object gameType;
 		if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(IFG.Networth_Game, out gameType))
+		{
 			_gameMode = "Networth Game";
+			_networthGameAmount = (int)gameType;
+			Debug.Log("Game Mode: " + _gameMode + " " + _networthGameAmount);
+		}
 		else
+		{
 			_gameMode = "Timed Game";
-
-		Debug.Log("Game Mode: " + _gameMode);
+			_timedGameLength = (float)gameType;
+			Debug.Log("Game Mode: " + _gameMode + " " + _timedGameLength);
+		}
+		//send event to UIManagers to update fields
+		//data -gameMode,length
 	}
 
 	int GetNumberOfPlayers()
@@ -334,7 +345,7 @@ public class GameManager : MonoBehaviourPun
 		}
 	}
 
-	Vector3 SplitColorToRGB(Color color)
+	public Vector3 SplitColorToRGB(Color color)
 	{
 		float r=0, g=0, b=0;
 

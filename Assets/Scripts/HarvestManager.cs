@@ -52,6 +52,7 @@ public class HarvestManager : MonoBehaviour
 	Button _ok1Button;
 	Button _ok2Button;
 	Button _ok3Button;
+	string _commodity;
 
 	//Garnished Stuff
 	Text _gMessageText;
@@ -140,6 +141,7 @@ public class HarvestManager : MonoBehaviour
 	public IEnumerator PerformHarvestRoutine(int space, string commodity, int amount)
 	{
 		_harvestCheck = 0;
+		_commodity = commodity;
 
 		Debug.Log("In PerformHarvestRoutine: " + space + " " + commodity + " " + amount);
 
@@ -174,6 +176,7 @@ public class HarvestManager : MonoBehaviour
 
 		yield return new WaitUntil(() => _okButton1Pressed);
 		Debug.Log("OK1 Pressed");
+		SendHarvestRollMessage();
 
 		//_dieRoll = 1;	//TESTING
 
@@ -851,5 +854,22 @@ public class HarvestManager : MonoBehaviour
 		_add50PerWheatAcre = false;
 		_cut50PerWheatAcre = false;
 	}
+
+	void SendHarvestRollMessage()
+	{
+		//data - nickname, farmerName, die, commodity
+		object[] sndData = new object[] { PhotonNetwork.LocalPlayer.NickName, GameManager.Instance.myFarmerName, _dieRoll, _commodity };
+		//event options
+		RaiseEventOptions eventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.Others,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions sendOptions = new SendOptions() { Reliability = true };
+		//fire the event to the UIManagers
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Harvest_Roll_Message_Event_Code, sndData, eventOptions, sendOptions);
+	}
+
 	#endregion
 }

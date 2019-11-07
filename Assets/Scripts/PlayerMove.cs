@@ -498,7 +498,7 @@ public class PlayerMove : MonoBehaviour
 			{
 				_currentSpace = 0;
 
-				AudioManager.Instance.PlaySound(AudioManager.Instance._passGo);
+				//AudioManager.Instance.PlaySound(AudioManager.Instance._passGo);
 
 				//Set the player to his Christmas Vacation spot.
 				switch (GameManager.Instance.myFarmerName)
@@ -534,7 +534,7 @@ public class PlayerMove : MonoBehaviour
 				if (!_pManager._pNoWages)
 				{
 					_pManager.UpdateMyCash(5000);
-					//_aManager.PlayClip(_aManager._passGo);
+					AudioManager.Instance.PlaySound(AudioManager.Instance._passGo);
 				}
 
 				_currentYear++;
@@ -607,7 +607,7 @@ public class PlayerMove : MonoBehaviour
 			{
 				_pManager._pCowsIncreased = false;
 				_cowCounter = 0;
-				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows + _pManager._pRangeCows, _pManager._pCowsIncreased);
+				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased);
 				GameManager.Instance.dManager.UpdateOwnedRangeStickers();
 			}
 		}
