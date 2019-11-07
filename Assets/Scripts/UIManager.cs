@@ -410,9 +410,7 @@ public class UIManager : MonoBehaviourPun
 			_pMove = GetComponentInParent<PlayerMove>();
 
 		_otbText.text = _pManager._myOtbs.Count.ToString();
-		//_playerCashText.text = _pManager._pCash.ToString("c0");
-		int cash = (int)PhotonNetwork.LocalPlayer.CustomProperties[IFG.Player_Cash];
-		_playerCashText.text = cash.ToString("c0");
+		_playerCashText.text = _pManager._pCash.ToString("c0");
 
 		if (_pManager._pCash <= 0)
 			_playerCashText.color = Color.red;

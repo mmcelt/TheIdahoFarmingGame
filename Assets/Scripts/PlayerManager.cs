@@ -101,7 +101,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived -= OnChangingActivePlayer;
 	}
 
-	void Start() 
+	void Start()
 	{
 		_uiManager = GameManager.Instance.uiManager;
 		_pMove = GetComponent<PlayerMove>();
@@ -136,7 +136,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyCash(int amount)
 	{
-		ExitGames.Client.Photon.Hashtable cashProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Cash, _pCash += amount } };
+		_pCash += amount;
+		ExitGames.Client.Photon.Hashtable cashProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Cash, _pCash } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(cashProp);
 		UpdateMyNetworth(CalculateNetworth());
 		if (photonView.IsMine)
@@ -150,14 +151,15 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyNotes(int amount)
 	{
-		ExitGames.Client.Photon.Hashtable notesProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Notes, _pNotes += amount } };
+		_pNotes += amount;
+		ExitGames.Client.Photon.Hashtable notesProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Notes, _pNotes } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(notesProp);
 		UpdateMyNetworth(CalculateNetworth());
 	}
 
 	public void UpdateMyOtbCount(int amount)
 	{
-		Debug.Log("In UpdateOTBCount: "+amount);
+		Debug.Log("In UpdateOTBCount: " + amount);
 		ExitGames.Client.Photon.Hashtable otbProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Otb_Count, _myOtbCount = amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(otbProp);
 		if (photonView.IsMine)
@@ -168,7 +170,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyHay(int amount)
 	{
-		ExitGames.Client.Photon.Hashtable hayProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Hay, _pHay += amount } };
+		_pHay += amount;
+		ExitGames.Client.Photon.Hashtable hayProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Hay, _pHay } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(hayProp);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
@@ -177,7 +180,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyGrain(int amount)
 	{
-		ExitGames.Client.Photon.Hashtable grainProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Hay, _pGrain += amount } };
+		_pGrain += amount;
+		ExitGames.Client.Photon.Hashtable grainProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Hay, _pGrain } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(grainProp);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
@@ -186,7 +190,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyFruit(int amount)
 	{
-		ExitGames.Client.Photon.Hashtable fruitProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Fruit, _pFruit += amount } };
+		_pFruit += amount;
+		ExitGames.Client.Photon.Hashtable fruitProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Fruit, _pFruit } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(fruitProp);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
@@ -195,7 +200,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyFCows(int amount)
 	{
-		ExitGames.Client.Photon.Hashtable fCowsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_FCows, _pFarmCows += amount } };
+		_pFarmCows += amount;
+		ExitGames.Client.Photon.Hashtable fCowsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_FCows, _pFarmCows } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(fCowsProp);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
@@ -204,7 +210,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyRCows(int amount)
 	{
-		ExitGames.Client.Photon.Hashtable rCowsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_RCows, _pRangeCows += amount } };
+		_pRangeCows += amount;
+		ExitGames.Client.Photon.Hashtable rCowsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_RCows, _pRangeCows } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(rCowsProp);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
@@ -213,7 +220,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMySpuds(int amount)
 	{
-		ExitGames.Client.Photon.Hashtable spudsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Spuds, _pSpuds += amount } };
+		_pSpuds += amount;
+		ExitGames.Client.Photon.Hashtable spudsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Spuds, _pSpuds } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(spudsProp);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
@@ -222,7 +230,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyTractor(bool status)
 	{
-		ExitGames.Client.Photon.Hashtable tractorProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Tractor, _pTractor = status } };
+		_pTractor = status;
+		ExitGames.Client.Photon.Hashtable tractorProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Tractor, _pTractor } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(tractorProp);
 		_uiManager._tractorImage.color = status ? Color.white : new Color(0.5943396f, 0.5943396f, 0.5943396f);
 		if (!IFG.CompleteFarmerBonusGiven)
@@ -232,7 +241,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyHarvester(bool status)
 	{
-		ExitGames.Client.Photon.Hashtable harvesterProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Harvester, _pHarvester = status } };
+		_pHarvester = status;
+		ExitGames.Client.Photon.Hashtable harvesterProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Harvester, _pHarvester } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(harvesterProp);
 		_uiManager._harvesterImage.color = status ? Color.white : new Color(0.5943396f, 0.5943396f, 0.5943396f);
 		if (!IFG.CompleteFarmerBonusGiven)
@@ -242,33 +252,38 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateOxfordRange(bool status)
 	{
-		ExitGames.Client.Photon.Hashtable oxfordProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Oxford_Range_Owned, _oxfordOwned = status } };
+		_oxfordOwned = status;
+		ExitGames.Client.Photon.Hashtable oxfordProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Oxford_Range_Owned, _oxfordOwned } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(oxfordProp);
 	}
 
 	public void UpdateTargheeRange(bool status)
 	{
-		ExitGames.Client.Photon.Hashtable targheeProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Targhee_Range_Owned, _targheeOwned = status } };
+		_targheeOwned = status;
+		ExitGames.Client.Photon.Hashtable targheeProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Targhee_Range_Owned, _targheeOwned } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(targheeProp);
 	}
 
 	public void UpdateLostRiverRange(bool status)
 	{
-		ExitGames.Client.Photon.Hashtable lostRiverProp = new ExitGames.Client.Photon.Hashtable() { { IFG.LostRiver_Range_Owned, _lostRiverOwned = status } };
+		_lostRiverOwned = status;
+		ExitGames.Client.Photon.Hashtable lostRiverProp = new ExitGames.Client.Photon.Hashtable() { { IFG.LostRiver_Range_Owned, _lostRiverOwned } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(lostRiverProp);
 	}
 
 	public void UpdateLemhiRange(bool status)
 	{
-		ExitGames.Client.Photon.Hashtable lemhiProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Lemhi_Range_Owned, _lemhiOwned = status } };
+		_lemhiOwned = status;
+		ExitGames.Client.Photon.Hashtable lemhiProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Lemhi_Range_Owned, _lemhiOwned } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(lemhiProp);
 	}
 
 	public void UpdateMyNetworth(int amount)
 	{
-		ExitGames.Client.Photon.Hashtable networthProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Networth, _pNetworth = amount } };
+		_pNetworth = amount;
+		ExitGames.Client.Photon.Hashtable networthProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Networth, _pNetworth } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(networthProp);
-		if (GameManager.Instance._gameMode=="Networth Game")
+		if (GameManager.Instance._gameMode == "Networth Game")
 		{
 			if (_pNetworth >= GameManager.Instance._networthGameAmount)
 			{
@@ -288,11 +303,11 @@ public class PlayerManager : MonoBehaviourPun
 			}
 		}
 		//if (photonView.IsMine)
-			_uiManager.UpdateUI();
+		_uiManager.UpdateUI();
 	}
 
 	//TESTING
-	
+
 	IEnumerator UpdateOtbProperty(int amount)
 	{
 		Debug.Log("In UpdateOTBCount: " + amount);
@@ -361,6 +376,8 @@ public class PlayerManager : MonoBehaviourPun
 	[PunRPC]
 	void TetonDamRoutine()
 	{
+		Debug.Log("This is: " + photonView.Owner.NickName);
+
 		if (_uiManager._ffPanel.activeSelf)
 			_uiManager._ffPanel.SetActive(false);
 
@@ -385,49 +402,49 @@ public class PlayerManager : MonoBehaviourPun
 
 	IEnumerator AsFateWillHaveIt()
 	{
-			_uiManager._tetonHeaderText.enabled = false;
-			_uiManager._tetonMessageText.enabled = false;
-			//_uiManager._tetonDamImage.enabled = false;
-			_uiManager._tetonRollButton.enabled = false;
+		_uiManager._tetonHeaderText.enabled = false;
+		_uiManager._tetonMessageText.enabled = false;
+		//_uiManager._tetonDamImage.enabled = false;
+		_uiManager._tetonRollButton.enabled = false;
 
-			_diceRoll.OnRollButton();
+		_diceRoll.OnRollButton();
 
-			yield return new WaitUntil(() => _diceRoll.Pip >= 1);
+		yield return new WaitUntil(() => _diceRoll.Pip >= 1);
 
-			int roll = _diceRoll.Pip;
+		int roll = _diceRoll.Pip;
 
-			if (roll < 0)
-				roll = Random.Range(1, 7);
+		if (roll < 0)
+			roll = Random.Range(1, 7);
 
 		//Debug.Log("DICE ROLL: " + roll);
 
-		roll = 4;	//TESTING
-			yield return new WaitForSeconds(1.5f);
+		roll = 4;   //TESTING
+		yield return new WaitForSeconds(1.5f);
 
-			if (roll % 2 == 0)
-			{
-				//even Hit
-				//_uiManager._tetonDamImage.enabled = true;
-				_uiManager._tetonHeaderText.text = "You Were Hit!! " + roll;
-				_uiManager._tetonHeaderText.enabled = true;
-			Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
-				//play bad sound
-				AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
-			}
-			else
-			{
-				//odd escaped
-				//_uiManager._tetonDamImage.enabled = true;
-				_uiManager._tetonHeaderText.text = "You Escaped!! " + roll;
-				_uiManager._tetonHeaderText.enabled = true;
-				//play good sound
-				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
-			}
+		if (roll % 2 == 0)
+		{
+			//even Hit
+			//_uiManager._tetonDamImage.enabled = true;
+			_uiManager._tetonHeaderText.text = "You Were Hit!! " + roll;
+			_uiManager._tetonHeaderText.enabled = true;
+			//Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
+			//play bad sound
+			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
+		}
+		else
+		{
+			//odd escaped
+			//_uiManager._tetonDamImage.enabled = true;
+			_uiManager._tetonHeaderText.text = "You Escaped!! " + roll;
+			_uiManager._tetonHeaderText.enabled = true;
+			//play good sound
+			AudioManager.Instance.PlaySound(AudioManager.Instance._good);
+		}
 
-			while (_uiManager._tetonDamPanel.activeSelf)
-				yield return null;
+		while (_uiManager._tetonDamPanel.activeSelf)
+			yield return null;
 
-			_diceRoll.isOtherRoll = false;
+		_diceRoll.isOtherRoll = false;
 	}
 
 	public void OnTetonOkButtonClicked()
@@ -443,7 +460,7 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._tetonRollButton.enabled = true;
 	}
 
-	public void CustomHireHarvester()	//called from DeckManager
+	public void CustomHireHarvester()   //called from DeckManager
 	{
 		int hitPlayers = 0;
 
@@ -460,7 +477,7 @@ public class PlayerManager : MonoBehaviourPun
 					hitPlayers++;
 					//fire a custom hire event to this player
 					//event data
-					object[] data = new object[] {  };
+					object[] data = new object[] { };
 					//event options
 					RaiseEventOptions eventOptions = new RaiseEventOptions
 					{
@@ -487,7 +504,7 @@ public class PlayerManager : MonoBehaviourPun
 	public void DiscardOtbCard(OTBCard discard)
 	{
 		//check to see if it's still in your hand...
-		for (int i=0; i<_myOtbs.Count; i++)
+		for (int i = 0; i < _myOtbs.Count; i++)
 		{
 			if (_myOtbs[i].cardNumber == discard.cardNumber)
 			{
@@ -499,7 +516,7 @@ public class PlayerManager : MonoBehaviourPun
 				UpdateMyUI();
 			}
 		}
-		
+
 		//return the card to the deck event...
 		//event data: //cardNum, description, summary, totalCost
 		object[] sendData = new object[] { discard.cardNumber, discard.description, discard.summary, discard.totalCost };
@@ -756,7 +773,7 @@ public class PlayerManager : MonoBehaviourPun
 			UpdateMyCash(5000);
 			//send event to MasterClient GameManager - so next message fires only once
 			//data - //player nickname, player.farmerName
-			object[] sndData = new object[] { PhotonNetwork.LocalPlayer.NickName , GameManager.Instance.myFarmerName};
+			object[] sndData = new object[] { PhotonNetwork.LocalPlayer.NickName, GameManager.Instance.myFarmerName };
 			//event options
 			RaiseEventOptions eventOptions = new RaiseEventOptions()
 			{
