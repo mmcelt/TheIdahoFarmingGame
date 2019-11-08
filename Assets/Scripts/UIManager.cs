@@ -75,6 +75,7 @@ public class UIManager : MonoBehaviourPun
 
 	[Header("Custom Hire Harvester Panel")]
 	public GameObject _customHarvesterPanel;
+	public Button _customHarvesterOkButton;
 
 	[Header("Uncle Cheester Panel")]
 	public GameObject _uncleCheesterPanel;

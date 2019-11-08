@@ -20209,6 +20209,7 @@ MonoBehaviour:
   _tetonRollButton: {fileID: 5334758245304718022}
   _tetonOkButton: {fileID: 3529101561188448339}
   _customHarvesterPanel: {fileID: 5948662519997043157}
+  _customHarvesterOkButton: {fileID: 8197710266532848738}
   _uncleCheesterPanel: {fileID: 3187273692116886646}
   _harvestPanel: {fileID: 2836429175879519234}
   _harvestMessageText: {fileID: 1040912351}

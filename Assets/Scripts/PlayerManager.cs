@@ -70,6 +70,8 @@ public class PlayerManager : MonoBehaviourPun
 	MyDiceRoll _diceRoll;
 	RemotePlayerUpdater _rpUpdater;
 
+	Button _customHireOkButton;
+
 	#endregion
 
 	#region Properties
@@ -90,6 +92,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived += OnFfCardReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived += OnChangingActivePlayer;
+		PhotonNetwork.NetworkingClient.EventReceived += OnTetonDamEventReceived;
 	}
 
 	void OnDisable()
@@ -99,6 +102,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived -= OnFfCardReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnChangingActivePlayer;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnTetonDamEventReceived;
 	}
 
 	void Start()
@@ -368,25 +372,37 @@ public class PlayerManager : MonoBehaviourPun
 	//called by DeckManager
 	public void TetonDam()
 	{
-		if (!photonView.IsMine) return;
 		UpdateMyCash(500 * _pHay);
-		photonView.RPC("TetonDamRoutine", RpcTarget.Others);
+		//FIRE THE TETON_DAM_EVENT...
+		object[] sndData = new object[] { };
+		//event options
+		RaiseEventOptions eventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.Others,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions sendOptions = new SendOptions() { Reliability = true };
+		//fire the event...
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Teton_Dam_Event_Code, sndData, eventOptions, sendOptions);
 	}
 
-	[PunRPC]
-	void TetonDamRoutine()
+	void OnTetonDamEventReceived(EventData eventData)
 	{
-		Debug.Log("This is: " + photonView.Owner.NickName);
+		if (eventData.Code == (byte)RaiseEventCodes.Teton_Dam_Event_Code)
+		{
+			if (_uiManager._ffPanel.activeSelf)
+				_uiManager._ffPanel.SetActive(false);
 
-		if (_uiManager._ffPanel.activeSelf)
-			_uiManager._ffPanel.SetActive(false);
+			_uiManager._tetonDamPanel.SetActive(true);
+			_uiManager._completeModalPanel.SetActive(true);
+			_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
+			_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
+			_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
+			_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
+			
 
-		_uiManager._tetonDamPanel.SetActive(true);
-		_uiManager._completeModalPanel.SetActive(true);
-		_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
-		_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
-		_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
-		_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
+		}
 	}
 
 	public void OnTetonDamRollButtonClicked()
@@ -402,6 +418,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	IEnumerator AsFateWillHaveIt()
 	{
+		int penalty = 0;
+
 		_uiManager._tetonHeaderText.enabled = false;
 		_uiManager._tetonMessageText.enabled = false;
 		//_uiManager._tetonDamImage.enabled = false;
@@ -423,6 +441,7 @@ public class PlayerManager : MonoBehaviourPun
 
 		if (roll % 2 == 0)
 		{
+			penalty = -(100 * (_pFruit + _pGrain + _pHay + _pSpuds));
 			//even Hit
 			//_uiManager._tetonDamImage.enabled = true;
 			_uiManager._tetonHeaderText.text = "You Were Hit!! " + roll;
@@ -444,12 +463,19 @@ public class PlayerManager : MonoBehaviourPun
 		while (_uiManager._tetonDamPanel.activeSelf)
 			yield return null;
 
+		Debug.Log("PENALTY B4 IF: " + penalty);
+
+		if (penalty < 0)
+		{
+			UpdateMyCash(penalty);
+			Debug.Log("PENALTY: " + penalty);
+		}
+
 		_diceRoll.isOtherRoll = false;
 	}
 
 	public void OnTetonOkButtonClicked()
 	{
-		UpdateMyCash(-(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
 		_uiManager._tetonDamPanel.SetActive(false);
 		_uiManager._completeModalPanel.SetActive(false);
 		_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
@@ -709,14 +735,21 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Custom_Hire_Harvester_Code)
 		{
+			_customHireOkButton = _uiManager._customHarvesterOkButton;
+			_customHireOkButton.onClick.AddListener(OnCustomHarvesterOkButtonClicked);
 			if (_uiManager._ffPanel.activeSelf)
 				_uiManager._ffPanel.SetActive(false);
 
 			_uiManager._customHarvesterPanel.SetActive(true);
-			UpdateMyCash(-2000);
-			//TODO: play bad sound
-			//TODO: show a message
 		}
+	}
+
+	public void OnCustomHarvesterOkButtonClicked()
+	{
+		UpdateMyCash(-2000);
+		//play bad sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
+		//_customHireOkButton.onClick.RemoveAllListeners();
 	}
 
 	int CalculateNetworth()

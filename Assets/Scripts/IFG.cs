@@ -71,6 +71,7 @@ public enum RaiseEventCodes
 	Complete_Farmer_Message_Event_Code = 19,
 	Harvest_Roll_Message_Event_Code = 20,
 	Shuffle_Message_Event_Code = 21,
-	End_Networth_Game_Event_Code = 22
+	End_Networth_Game_Event_Code = 22,
+	Teton_Dam_Event_Code= 23
 };
 
