@@ -329,6 +329,7 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnOtbDropdownValueChanged(int index)
 	{
+		_otbMessageText.text = "";
 		_stopBuying = false;
 		//Debug.Log("INDEX: " + index);
 
@@ -836,19 +837,65 @@ public class UIManager : MonoBehaviourPun
 
 	bool CheckIfAbleToBuyOption()
 	{
-		if ((_pMove._currentSpace <= 14) && (_pManager._pCash >= _minDownPayment) && (_pManager._pNotes <= 50000 - (_otbCost - _minDownPayment) && (_pManager._isMyTurn)))
+		if (_pManager._isMyTurn)
 		{
-			_stopBuying = false;
-			return true;
+			if(_pMove._currentSpace <= 14)
+			{
+				if (_pManager._pCash >= _minDownPayment)
+				{
+					if (_pManager._pNotes <= 50000 - (_otbCost - _downPayment))
+					{
+						_stopBuying = false;
+						return true;
+					}
+					else
+					{
+						if (_downPayment > _minDownPayment)
+						{
+							_isWarningMsg = true;
+							_otbMessageText.text = "You can't buy that because you have to much debt!";
+							_otbOkButton.gameObject.SetActive(true);
+							//return false;
+						}
+						return false;
+					}
+				}
+				else
+				{
+					_isWarningMsg = true;
+					_otbMessageText.text = "You can't buy that because you don't have enough cash on hand!";
+					_otbOkButton.gameObject.SetActive(true);
+					return false;
+				}
+			}
+			else
+			{
+				_isWarningMsg = true;
+				_otbMessageText.text = "You can't buy that because you're past Spring Planting!";
+				_otbOkButton.gameObject.SetActive(true);
+				return false;
+			}
 		}
 		else
 		{
 			_isWarningMsg = true;
-			_otbMessageText.text = "You can't buy that because of financial reasons, or it's not your turn!";
+			_otbMessageText.text = "You can't buy that because it's not your turn!";
 			_otbOkButton.gameObject.SetActive(true);
-
 			return false;
 		}
+		//if (() && () && ( && (_pManager._isMyTurn)))
+		//{
+		//	_stopBuying = false;
+		//	return true;
+		//}
+		//else
+		//{
+		//	_isWarningMsg = true;
+		//	_otbMessageText.text = "You can't buy that because of financial reasons, or it's not your turn!";
+		//	_otbOkButton.gameObject.SetActive(true);
+
+		//	return false;
+		//}
 	}
 
 	bool CheckIfRangeIsAlreadyOwned()

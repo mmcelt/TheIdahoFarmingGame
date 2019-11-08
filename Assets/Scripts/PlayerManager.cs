@@ -436,7 +436,7 @@ public class PlayerManager : MonoBehaviourPun
 
 		//Debug.Log("DICE ROLL: " + roll);
 
-		roll = 4;   //TESTING
+		//roll = 4;   //TESTING
 		yield return new WaitForSeconds(1.5f);
 
 		if (roll % 2 == 0)
@@ -714,21 +714,23 @@ public class PlayerManager : MonoBehaviourPun
 		//perform action
 		//Debug.Log("FF Action...");
 		if (photonView.IsMine)
+		{
 			DeckManager.Instance.PerformFfActions(cardToShow.cardNumber);
 
-		//return the card to the deck event...
-		//event data: //cardNum, description
-		object[] sendData = new object[] { cardToShow.cardNumber, cardToShow.description };
-		//event options
-		RaiseEventOptions eventOptions = new RaiseEventOptions
-		{
-			Receivers = ReceiverGroup.MasterClient,
-			CachingOption = EventCaching.DoNotCache
-		};
-		//send options
-		SendOptions sendOptions = new SendOptions { Reliability = true };
-		//fire the event...
-		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Replace_Ff_Event_Code, sendData, eventOptions, sendOptions);
+			//return the card to the deck event...
+			//event data: //cardNum, description
+			object[] sendData = new object[] { cardToShow.cardNumber, cardToShow.description };
+			//event options
+			RaiseEventOptions eventOptions = new RaiseEventOptions
+			{
+				Receivers = ReceiverGroup.MasterClient,
+				CachingOption = EventCaching.DoNotCache
+			};
+			//send options
+			SendOptions sendOptions = new SendOptions { Reliability = true };
+			//fire the event...
+			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Replace_Ff_Event_Code, sendData, eventOptions, sendOptions);
+		}
 	}
 
 	void OnCustomHireHarvester(EventData eventData)

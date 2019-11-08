@@ -69,7 +69,7 @@ public class InputFieldManager : MonoBehaviour
 				StartCoroutine(_uiManager.BuyOptionRoutine());
 
 
-				if (amount < _uiManager._minDownPayment)
+				if (amount < _uiManager._minDownPayment || amount > _pManager._pCash)
 				{
 					Debug.Log("INSIDE DP IF: " + amount);
 

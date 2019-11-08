@@ -755,64 +755,67 @@ public class DeckManager : MonoBehaviourPun
 
 	void MakeTheFfDeck()   //26 cards
 	{
-		//CreateAnFFCard(1,
-		//	"Income Taxes due.\n<color=red>PAY $7,000</color>.");
-		//CreateAnFFCard(2,
-		//	"The Apple Maggot Fly, cousin of the dreaded Med Fly, is found in an insect trap in your orchard. Your orchard is quarantined and you lose a lucrative export contract.\nPAY $500 per Fruit acre.");
-		//CreateAnFFCard(3,
-		//	"Banks raise Prime Rate.\n<color=red>PAY 10% of outstanding loan balance</color> as additional interest.");
-		//CreateAnFFCard(4,
-		//	"Valley Wide Co-op holds out for higher price. Processor gives in.\n<color=green>COLLECT $1,000</color>.");
-		//CreateAnFFCard(5,
-		//	"Custom hire bill due.\nIf you have no Tractor - PAY $3,000.");
-		//CreateAnFFCard(6,
-		//	"Custom hire bill due.\nIf you have no Tractor - PAY $3,000.");
-		//CreateAnFFCard(7,
-		//	"Some TV talk show host does a show on the dangers of a main control spray you use on your cherries. Even though the pseudo-science behind the inflated claims is nor more rigorous that a supermarket tabloid, the national cherry market crashes.\n<color=red>Cut your cherry crop in half</color> if you haven't already harvested this year.");
-		//CreateAnFFCard(8,
-		//	"Russian sale boosts wheat prices.\n<color=green>COLLECT $2,000</color>.");
-		//CreateAnFFCard(9,
-		//	"Cut worms eat sprouting Fruit buds. EPA bans control spray.\nPAY $300 per Fruit acre.");
+		CreateAnFFCard(1,
+			"Income Taxes due.\n<color=red>PAY $7,000</color>.");
+		CreateAnFFCard(2,
+			"The Apple Maggot Fly, cousin of the dreaded Med Fly, is found in an insect trap in your orchard. Your orchard is quarantined and you lose a lucrative export contract.\nPAY $500 per Fruit acre.");
+		CreateAnFFCard(3,
+			"Banks raise Prime Rate.\n<color=red>PAY 10% of outstanding loan balance</color> as additional interest.");
+		CreateAnFFCard(4,
+			"Valley Wide Co-op holds out for higher price. Processor gives in.\n<color=green>COLLECT $1,000</color>.");
+		CreateAnFFCard(5,
+			"Custom hire bill due.\nIf you have no Tractor - PAY $3,000.");
+		CreateAnFFCard(6,
+			"Custom hire bill due.\nIf you have no Tractor - PAY $3,000.");
+		CreateAnFFCard(7,
+			"Some TV talk show host does a show on the dangers of a main control spray you use on your cherries. Even though the pseudo-science behind the inflated claims is nor more rigorous that a supermarket tabloid, the national cherry market crashes.\n<color=red>Cut your cherry crop in half</color> if you haven't already harvested this year.");
+		CreateAnFFCard(8,
+			"Russian sale boosts wheat prices.\n<color=green>COLLECT $2,000</color>.");
+		CreateAnFFCard(9,
+			"Cut worms eat sprouting Fruit buds. EPA bans control spray.\nPAY $300 per Fruit acre.");
 		CreateAnFFCard(10,
 			"HIDEOUS DISASTER - THE TETON DAM BREAKS! You are luckily out the Flood Zone. Your flood-free Hay jumps in price.  COLLECT $500 per Hay acre.\nOther players must roll to see if they escaped. Odd - escaped; Even - hit. Flood hit players PAY $100 per acre (all acres) to clean up the mess.");
-		//CreateAnFFCard(11,
-		//	"Oil Company pays you $100 per acre for Oil and Gas lease on you farm.");
-		//CreateAnFFCard(12,
-		//	"Truckers strike delay Fruit in transport, lots of spoilage.\nPAY $1,000 per Fruit acre.");
-		//CreateAnFFCard(13,
-		//	"Custom hire out with your Harvester.\nIf you have a Harvester - COLLECT $2,000 from each player who has none.");
-		//CreateAnFFCard(14,
-		//	"<color=red>IRS garnishes your income after finding errors on your tax return. For the rest of the year, draw OPERATING EXPENSE cards during Harvests, but do not roll for Harvest check</color>.");
-		//CreateAnFFCard(15,
-		//"Uncle Cheester dies and leaves you 10 acres of Hay, if you can raise the $10,000 cash to pay Inheritance Tax and small remaining mortgage.");
-		//CreateAnFFCard(16,
-		//	"Drought year! Go to the 2nd week of January.\n<color=red>DO NOT COLLECT</color> your $5,000 year's wages.");
-		//CreateAnFFCard(17,
-		//	"Drought year! Go to the 2nd week of January.\n<color=red>DO NOT COLLECT</color> your $5,000 year's wages.");
-		//CreateAnFFCard(18,
-		//	"Held some of your calves and the market jumped.\nCOLLECT $2,000, if you have cows.");
-		//CreateAnFFCard(19,
-		//	"A leaking electrical motor at Feed Mill contaminates you load of feed with PCB. State Ag Inspector requires you to slaughter cows on your farm (not cows on lease range land) with no reimbursement.");
-		//CreateAnFFCard(20,
-		//	"Sharp management, production testing, and your computer record system cause your calf weaning weights to soar. RECEIVE a 50% bonus after you roll for your Livestock Harvest check each of the next two years.");
-		//CreateAnFFCard(21,
-		//	"The President slaps on a Grain Embargo while you're waiting for the custom harvester to show up. Instant market collapse.\nPAY $2,500 if you don't own your own Harvester.");
-		//CreateAnFFCard(22,
-		//	"Windy spring, didn't get your wheat sprayed. <color=red>Weeds cut your wheat crop in half</color>. Hold this card through Wheat Harvest for this year.");
-		//CreateAnFFCard(23,
-		//	"Federal Crop Disaster payment saves your bacon.\n<color=green>COLLECT $100 per Grain acre</color>.");
-		//CreateAnFFCard(24,
-		//	"Rich folks from the city bought the neighboring farm and pay you a premium for your best hay to feed their fancy show horses.\n<color=green>COLLECT $100 per Hay acre</color>.");
-		//CreateAnFFCard(25,
-		//	"Your Spuds are showing signs of Blight. Should have sprayed earlier.\nPAY $500 per Spud acre.");
-		//CreateAnFFCard(26,
-		//	"Your Spuds are in great demand!\nDOUBLE your Spud Harvest the next two years.");
+		CreateAnFFCard(11,
+			"Oil Company pays you $100 per acre for Oil and Gas lease on you farm.");
+		CreateAnFFCard(12,
+			"Truckers strike delay Fruit in transport, lots of spoilage.\nPAY $1,000 per Fruit acre.");
+		CreateAnFFCard(13,
+			"Custom hire out with your Harvester.\nIf you have a Harvester - COLLECT $2,000 from each player who has none.");
+		CreateAnFFCard(14,
+			"<color=red>IRS garnishes your income after finding errors on your tax return. For the rest of the year, draw OPERATING EXPENSE cards during Harvests, but do not roll for Harvest check</color>.");
+		CreateAnFFCard(15,
+		"Uncle Cheester dies and leaves you 10 acres of Hay, if you can raise the $10,000 cash to pay Inheritance Tax and small remaining mortgage.");
+		CreateAnFFCard(16,
+			"Drought year! Go to the 2nd week of January.\n<color=red>DO NOT COLLECT</color> your $5,000 year's wages.");
+		CreateAnFFCard(17,
+			"Drought year! Go to the 2nd week of January.\n<color=red>DO NOT COLLECT</color> your $5,000 year's wages.");
+		CreateAnFFCard(18,
+			"Held some of your calves and the market jumped.\nCOLLECT $2,000, if you have cows.");
+		CreateAnFFCard(19,
+			"A leaking electrical motor at Feed Mill contaminates you load of feed with PCB. State Ag Inspector requires you to slaughter cows on your farm (not cows on lease range land) with no reimbursement.");
+		CreateAnFFCard(20,
+			"Sharp management, production testing, and your computer record system cause your calf weaning weights to soar. RECEIVE a 50% bonus after you roll for your Livestock Harvest check each of the next two years.");
+		CreateAnFFCard(21,
+			"The President slaps on a Grain Embargo while you're waiting for the custom harvester to show up. Instant market collapse.\nPAY $2,500 if you don't own your own Harvester.");
+		CreateAnFFCard(22,
+			"Windy spring, didn't get your wheat sprayed. <color=red>Weeds cut your wheat crop in half</color>. Hold this card through Wheat Harvest for this year.");
+		CreateAnFFCard(23,
+			"Federal Crop Disaster payment saves your bacon.\n<color=green>COLLECT $100 per Grain acre</color>.");
+		CreateAnFFCard(24,
+			"Rich folks from the city bought the neighboring farm and pay you a premium for your best hay to feed their fancy show horses.\n<color=green>COLLECT $100 per Hay acre</color>.");
+		CreateAnFFCard(25,
+			"Your Spuds are showing signs of Blight. Should have sprayed earlier.\nPAY $500 per Spud acre.");
+		CreateAnFFCard(26,
+			"Your Spuds are in great demand!\nDOUBLE your Spud Harvest the next two years.");
 
-		//ShuffleFfDeck(_ffCards);
+		ShuffleFfDeck(_ffCards);
 	}
 
 	void CreateAnFFCard(int cardNum, string desc)
 	{
+		//cardNum = 14;			//TESTING
+		//desc = "GARNISHED!";	//TESTING
+
 		//declare an FFCard object
 		FFCard newFFCard = new FFCard();
 
@@ -914,7 +917,7 @@ public class DeckManager : MonoBehaviourPun
 			if (card.bottomCard)
 				break;
 		}
-		//event data: deck, otb Count,otb's left
+		//event data: deck, ff Count, ff's left
 		object[] deckData = new object[] { "FF", _ffCards.Count, ffsLeft };
 		//event options
 		RaiseEventOptions raiseEventOptions = new RaiseEventOptions()

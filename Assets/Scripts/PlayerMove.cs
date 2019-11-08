@@ -595,7 +595,9 @@ public class PlayerMove : MonoBehaviour
 			if (_spudCounter == 2)
 			{
 				_pManager._pSpudsDoubled = false;
-				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Spuds", _pManager._pSpuds, _pManager._pSpudsDoubled);
+				if (_pManager._pSpuds > 0)
+					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Spuds", _pManager._pSpuds, _pManager._pSpudsDoubled);
+
 				_spudCounter = 0;
 			}
 		}
@@ -607,8 +609,11 @@ public class PlayerMove : MonoBehaviour
 			{
 				_pManager._pCowsIncreased = false;
 				_cowCounter = 0;
-				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased);
-				GameManager.Instance.dManager.UpdateOwnedRangeStickers();
+				if (_pManager._pFarmCows > 0)
+					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased);
+
+				if (_pManager._pRangeCows >= 20)
+					GameManager.Instance.dManager.UpdateOwnedRangeStickers();
 			}
 		}
 	}

@@ -121,10 +121,10 @@ public class HarvestManager : MonoBehaviour
 		_messageText.text = "Your Harvest Check is: " + _harvestCheck;
 	}
 
-	public void OnOkButton2GarnishedClicked()
-	{
-		_ok2GButtonPressed = true;
-	}
+	//public void OnOkButton2GarnishedClicked()
+	//{
+	//	_ok2GButtonPressed = true;
+	//}
 
 	public void OnOkButton3Clicked()
 	{
@@ -133,10 +133,10 @@ public class HarvestManager : MonoBehaviour
 		_messageText.text = IFG.HarvestBaseMessage;
 	}
 
-	public void OnOkButton3GarnishedClicked()
-	{
+	//public void OnOkButton3GarnishedClicked()
+	//{
 
-	}
+	//}
 
 	public IEnumerator PerformHarvestRoutine(int space, string commodity, int amount)
 	{
@@ -253,16 +253,17 @@ public class HarvestManager : MonoBehaviour
 			_gMessageText = _uiManager._gHarvestMessageText;
 			_ok1GButton = _uiManager._ok1GarnishedButton;
 			_ok1GButton.onClick.AddListener(OnOkButton1GarnishedClicked);
-			_ok2GButton = _uiManager._ok2GarnishedButton;
-			_ok2GButton.onClick.AddListener(OnOkButton2GarnishedClicked);
+			//_ok2GButton = _uiManager._ok2GarnishedButton;
+			//_ok2GButton.onClick.AddListener(OnOkButton2GarnishedClicked);
 			_ok3GButton = _uiManager._ok3GarnishedButton;
-			_ok3GButton.onClick.AddListener(OnOkButton3GarnishedClicked);
+			//_ok3GButton.onClick.AddListener(OnOkButton3GarnishedClicked);
 		}
 		if (_pMove == null)
 			_pMove = GameManager.Instance.myFarmer.GetComponent<PlayerMove>();
 
 		_uiManager._gHarvestPanel.SetActive(true);
 		_gMessageText.text = "Wages Garnished - No Harvest Check!";
+		_ok1GButton.gameObject.SetActive(true);
 
 		yield return new WaitUntil(() => _ok1GButtonPressed);
 		_ok1GButtonPressed = false;
@@ -271,6 +272,7 @@ public class HarvestManager : MonoBehaviour
 		DrawOECard();
 		yield return new WaitUntil(() => !_waitingForOeCard);
 		_okButton1Pressed = false;
+		_ok3GButton.gameObject.SetActive(true);
 
 		yield return new WaitWhile(() => _uiManager._gHarvestPanel.activeSelf);
 
