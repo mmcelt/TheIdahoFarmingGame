@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using TMPro;
 
 [SerializeField]
 public class MyDiceRoll : MonoBehaviour
@@ -22,12 +23,13 @@ public class MyDiceRoll : MonoBehaviour
 	[SerializeField] AudioClip _dieRoll;
 	[SerializeField] float stopRollAmount = 10f;
 	[SerializeField] float startMoveAmount = 0.25f;
-	[SerializeField] Text harvestOkButtonText;
 
 	public int Pip { get { return m_pip; } }
 
 	public bool isOtherRoll;
 	public bool isHarvestRoll;
+	public bool isTetonDamRoll;
+	public bool tetonDamRollComplete;
 
 	RollStarte state;
 	Animator anm;
@@ -41,7 +43,12 @@ public class MyDiceRoll : MonoBehaviour
 	UIManager _uiManager;
 	PlayerManager _pManager;
 	HarvestManager _hManager;
-	
+
+	Button harvestOkButton;
+	Text harvestOkButtonText;
+	Button harvestRollButton;
+	TextMeshProUGUI tetonDamMessageText;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -50,8 +57,13 @@ public class MyDiceRoll : MonoBehaviour
 		rb = GetComponent<Rigidbody2D>();
 
 		_uiManager = GameManager.Instance.uiManager;
+		harvestRollButton = _uiManager._harvestRollButton;
+		harvestOkButton = _uiManager._harvestOk1Button;
 		buttonTxt = _uiManager._rollButton.GetComponentInChildren<Text>();
+		harvestRollButton = _uiManager._harvestRollButton;
 		harvestOkButtonText = _uiManager._harvestOk1Button.GetComponentInChildren<Text>();
+		tetonDamMessageText = _uiManager._tetonMessageText;
+
 		_sprite = GetComponent<SpriteRenderer>();
 		_pMove = GameManager.Instance.myFarmer.GetComponent<PlayerMove>();
 		_pManager = GameManager.Instance.myFarmer.GetComponent<PlayerManager>();
@@ -97,7 +109,10 @@ public class MyDiceRoll : MonoBehaviour
 			if(!isOtherRoll)
 				buttonTxt.text = "ROLL";
 			if (isHarvestRoll)
-				harvestOkButtonText.text = "OK";
+			{
+				harvestOkButtonText.text = "";
+				harvestOkButton.interactable = false;
+			}
 
 			rb.isKinematic = true;
 			transform.position = defPos;
@@ -134,12 +149,19 @@ public class MyDiceRoll : MonoBehaviour
 			else if (isHarvestRoll)
 			{
 				harvestOkButtonText.text = Pip.ToString();
+				harvestOkButton.interactable = true;
+
 				//send harvest roll msg to others
 				_hManager._dieRoll = Pip;
 				//SendHarvestRollMessage();	//MOVE TO HARVEST MANAGER
 				_hManager._rollButtonPressed = true;
 				yield return new WaitForSeconds(1.2f);
 				harvestOkButtonText.text = "OK";
+			}
+			else if (isTetonDamRoll)
+			{
+				tetonDamRollComplete = true;
+
 			}
 
 			toRoll = false;

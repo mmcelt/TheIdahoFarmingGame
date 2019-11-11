@@ -618,6 +618,9 @@ public class DeckManager : MonoBehaviourPun
 
 	void CreateAnOTBCard(int cardNum, string desc, string sum, int cost)
 	{
+		//cardNum = 20;  //HARVESTER	TESTING
+		//desc = "HARVESTER";
+
 		//declare an OTBCard object
 		OTBCard newOTBCard = new OTBCard();
 
@@ -813,8 +816,12 @@ public class DeckManager : MonoBehaviourPun
 
 	void CreateAnFFCard(int cardNum, string desc)
 	{
-		//cardNum = 14;			//TESTING
-		//desc = "GARNISHED!";	//TESTING
+		//cardNum = 14;					//TESTING
+		//desc = "GARNISHED!";			//TESTING
+		//cardNum = 13;					//TESTING
+		//desc = "CUSTOM HARVESTER";	//TESTING
+		//cardNum = 10;					//TESTING	
+		//desc = "TETON DAM!";			//TESTING
 
 		//declare an FFCard object
 		FFCard newFFCard = new FFCard();

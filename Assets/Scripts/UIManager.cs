@@ -32,7 +32,7 @@ public class UIManager : MonoBehaviourPun
 	[Header("Right Panel")]
 	[SerializeField] Text _gameTyeText, _gameEndText;
 	[SerializeField] Text[] _remotePlayerNameTexts;
-	[SerializeField] Text[] _remotePlayerNetworthTexts;
+	public Text[] _remotePlayerNetworthTexts;
 	[SerializeField] Text _otbShuffleText, _oeShuffleText, _ffShuffleText;
 	[SerializeField] Text _otbLeftText, _oeLeftText, _ffLeftText;
 	[SerializeField] Text _otbTotalText, _oeTotalText, _ffTotalText;
@@ -594,7 +594,8 @@ public class UIManager : MonoBehaviourPun
 	}
 	void StartRemotePlayerUpdating()
 	{
-		StartCoroutine(UpdateRemotePlayerInfo());
+		if (GameManager.Instance._numberOfPlayers > 1)
+			StartCoroutine("UpdateRemotePlayerInfo");
 	}
 	IEnumerator UpdateRemotePlayerInfo()
 	{
@@ -605,36 +606,37 @@ public class UIManager : MonoBehaviourPun
 			if (player.ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
 			{
 				_otherPlayerNameTexts[index].text = player.NickName;
-
+				_remotePlayerNameTexts[index].text = player.NickName;
 				object farmer;
 				if (player.CustomProperties.TryGetValue(IFG.Selected_Farmer, out farmer))
 				{
 					_otherPlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
+					_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
 				}
 
-				object cash;
-				if (player.CustomProperties.TryGetValue(IFG.Player_Cash, out cash))
-				{
-					int playersCash = 0;
-					playersCash = (int)cash;
-					_otherPlayerCashTexts[index].text = playersCash.ToString("c0");
-					if (playersCash <= 0)
-						_otherPlayerCashTexts[index].color = Color.red;
-					else
-						_otherPlayerCashTexts[index].color = Color.black;
-				}
+				//object cash;
+				//if (player.CustomProperties.TryGetValue(IFG.Player_Cash, out cash))
+				//{
+				//	int playersCash = 0;
+				//	playersCash = (int)cash;
+				//	_otherPlayerCashTexts[index].text = playersCash.ToString("c0");
+				//	if (playersCash <= 0)
+				//		_otherPlayerCashTexts[index].color = Color.red;
+				//	else
+				//		_otherPlayerCashTexts[index].color = Color.black;
+				//}
 
-				object notes;
-				if (player.CustomProperties.TryGetValue(IFG.Player_Notes, out notes))
-				{
-					int playersNotes = 0;
-					playersNotes = (int)notes;
-					_otherPlayerNotesTexts[index].text = playersNotes.ToString("c0");
-					if (playersNotes >= 50000)
-						_otherPlayerNotesTexts[index].color = Color.red;
-					else
-						_otherPlayerNotesTexts[index].color = Color.black;
-				}
+				//object notes;
+				//if (player.CustomProperties.TryGetValue(IFG.Player_Notes, out notes))
+				//{
+				//	int playersNotes = 0;
+				//	playersNotes = (int)notes;
+				//	_otherPlayerNotesTexts[index].text = playersNotes.ToString("c0");
+				//	if (playersNotes >= 50000)
+				//		_otherPlayerNotesTexts[index].color = Color.red;
+				//	else
+				//		_otherPlayerNotesTexts[index].color = Color.black;
+				//}
 
 				//object otbs;
 				//if (player.CustomProperties.TryGetValue(IFG.Player_Otb_Count, out otbs))
@@ -645,22 +647,25 @@ public class UIManager : MonoBehaviourPun
 				//	_otherPlayerOtbTexts[index].text = playersOtbs.ToString();
 				//}
 
-				object networth;
-				if (player.CustomProperties.TryGetValue(IFG.Player_Networth, out networth))
-				{
-					int playerNetworth = 0;
-					playerNetworth = (int)networth;
-					_remotePlayerNameTexts[index].text = player.NickName;
-					_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
-					_remotePlayerNetworthTexts[index].text = playerNetworth.ToString("c0");
-				}
+				//object networth;
+				//if (player.CustomProperties.TryGetValue(IFG.Player_Networth, out networth))
+				//{
+				//	int playerNetworth = 0;
+				//	playerNetworth = (int)networth;
+				//	_remotePlayerNameTexts[index].text = player.NickName;
+				//	_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
+				//	_remotePlayerNetworthTexts[index].text = playerNetworth.ToString("c0");
+				//}
 				index++;
 				//Debug.Log("Index: " + index);
 			}
 		}
 
-		yield return new WaitForSeconds(0.5f);
-		StartCoroutine(UpdateRemotePlayerInfo());
+		yield return new WaitForSeconds(1.0f);
+		if (_remotePlayerNameTexts[0].text != "")
+			StopCoroutine("UpdateRemotePlayerInfo");
+
+		StartCoroutine("UpdateRemotePlayerInfo");
 	}
 
 	void InitializeTheActionsPanel()

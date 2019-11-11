@@ -411,6 +411,7 @@ public class PlayerManager : MonoBehaviourPun
 			_diceRoll = GameManager.Instance.myDiceRoll;
 
 		_diceRoll.isOtherRoll = true;
+		_diceRoll.isTetonDamRoll = true;
 
 		//Debug.Log("TETON DAM BUTTON CLICKED");
 		StartCoroutine(AsFateWillHaveIt());
@@ -427,17 +428,17 @@ public class PlayerManager : MonoBehaviourPun
 
 		_diceRoll.OnRollButton();
 
-		yield return new WaitUntil(() => _diceRoll.Pip >= 1);
+		yield return new WaitUntil(() => _diceRoll.tetonDamRollComplete);
 
 		int roll = _diceRoll.Pip;
 
-		if (roll < 0)
-			roll = Random.Range(1, 7);
+		//if (roll < 0)
+		//	roll = Random.Range(1, 7);
 
 		//Debug.Log("DICE ROLL: " + roll);
 
 		//roll = 4;   //TESTING
-		yield return new WaitForSeconds(1.5f);
+		yield return new WaitForSeconds(0.5f);
 
 		if (roll % 2 == 0)
 		{
@@ -472,6 +473,8 @@ public class PlayerManager : MonoBehaviourPun
 		}
 
 		_diceRoll.isOtherRoll = false;
+		_diceRoll.isTetonDamRoll = false;
+		_diceRoll.tetonDamRollComplete = false;
 	}
 
 	public void OnTetonOkButtonClicked()

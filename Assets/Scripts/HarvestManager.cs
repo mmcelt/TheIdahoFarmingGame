@@ -24,7 +24,7 @@ public class HarvestManager : MonoBehaviour
 	[Header("Harvest 'Fudge-Factors'")]
 	[SerializeField] float _hayFudgeFactor = 1.10F;
 	[SerializeField] float _fruitFudgeFactor = 1.20F;
-	[SerializeField] float _spudFudgeFactor = 2.0F;
+	[SerializeField] float _spudFudgeFactor = 1.5F;
 
 	[Header("Misc Harvest Booleans")]
 	public bool _cutHarvestInHalf;
@@ -42,6 +42,7 @@ public class HarvestManager : MonoBehaviour
 
 	int _harvestCheck;
 	int _operatingExpenses;
+	int _netCheck;
 
 	bool _okButton1Pressed;
 	bool _okButton2Pressed;
@@ -232,7 +233,12 @@ public class HarvestManager : MonoBehaviour
 
 		Debug.Log("Operating Expense is: " + _operatingExpenses);
 
+		_pManager.UpdateMyCash(_netCheck);
+		if (_netCheck < 0)
+			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
+
 		_okButton1Pressed = false;
+		_netCheck = 0;
 
 		yield return new WaitWhile(() => _uiManager._harvestPanel.activeSelf);
 
@@ -262,6 +268,7 @@ public class HarvestManager : MonoBehaviour
 			_pMove = GameManager.Instance.myFarmer.GetComponent<PlayerMove>();
 
 		_uiManager._gHarvestPanel.SetActive(true);
+		yield return null;
 		_gMessageText.text = "Wages Garnished - No Harvest Check!";
 		_ok1GButton.gameObject.SetActive(true);
 
@@ -675,18 +682,17 @@ public class HarvestManager : MonoBehaviour
 		//assign the operating expense
 		_operatingExpenses = GetOperatingExpenses(drawnCard.cardNumber);
 
-		int netCheck = (_harvestCheck - _operatingExpenses);
+		_netCheck = (_harvestCheck - _operatingExpenses);
 
 		while (_uiManager._oePanel.activeSelf)
 			yield return null;
 		if (!_pManager._pWagesGarnished)
-			_messageText.text = "Your Harvest results are: You received $" + _harvestCheck + " for your commodity and your Operating Expenses were $" + _operatingExpenses + " for a net Harvest of $" + netCheck;
+			_messageText.text = "Your Harvest results are: You received $" + _harvestCheck + " for your commodity and your Operating Expenses were $" + _operatingExpenses + " for a net Harvest of $" + _netCheck;
 		else
-			_gMessageText.text= "Your Harvest results are: You received $" + _harvestCheck + " for your commodity and your Operating Expenses were $" + _operatingExpenses + " for a net Harvest of $" + netCheck;
-
-		_pManager.UpdateMyCash(netCheck);
+			_gMessageText.text= "Your Harvest results are: You received $" + _harvestCheck + " for your commodity and your Operating Expenses were $" + _operatingExpenses + " for a net Harvest of $" + _netCheck;
 
 		_waitingForOeCard = false;
+
 		if (!_pManager._pWagesGarnished)
 			_ok3Button.gameObject.SetActive(true);
 		else

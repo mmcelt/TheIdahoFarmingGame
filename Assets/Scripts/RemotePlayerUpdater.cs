@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
+//THIS SRIPT WILL UPDATE THE LOCAL PLAYER'S DATA ON THE REMOTE PLAYER'S REMOTE DATA FIELDS
 public class RemotePlayerUpdater : MonoBehaviourPun
 {
 	#region Public / Serialized Fields
@@ -29,7 +30,7 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 	{
 		_pManager = GetComponent<PlayerManager>();
 		_uiManager = GameManager.Instance.uiManager;
-		if (photonView.IsMine)
+		if (photonView.IsMine && GameManager.Instance._numberOfPlayers > 1)
 			StartCoroutine(UpdateRemotePlayerData());
 	}
 	#endregion
@@ -39,20 +40,16 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 	IEnumerator UpdateRemotePlayerData()
 	{
 		Debug.Log("NOP in URPD: " + GameManager.Instance._numberOfPlayers);
-		if (GameManager.Instance._numberOfPlayers > 1)
-		{
-			//object[] data = new object[] { _pManager._myOtbCount };
-			photonView.RPC("UpdateTheData", RpcTarget.Others, _pManager._myOtbs.Count);
-			yield return new WaitForSeconds(0.5f);
+			photonView.RPC("UpdateTheData", RpcTarget.Others, _pManager._pCash, _pManager._pNotes, _pManager._myOtbCount, _pManager._pNetworth);
+			yield return new WaitForSeconds(0.75f);
 			StartCoroutine(UpdateRemotePlayerData());
-		}
 	}
 	#endregion
 
 	#region Private Methods
 
 	[PunRPC]
-	void UpdateTheData(int myOtbs, PhotonMessageInfo info)
+	void UpdateTheData(int myCash, int myNotes, int myOtbs, int myNetworth, PhotonMessageInfo info)
 	{
 		if (_pManager == null)
 			_uiManager = GameManager.Instance.uiManager;
@@ -63,7 +60,20 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 		{
 			if (_uiManager._otherPlayerNameTexts[i].text == player)
 			{
+				_uiManager._otherPlayerCashTexts[i].text = myCash.ToString("c0");
+				if (myCash <= 0)
+					_uiManager._otherPlayerCashTexts[i].color = Color.red;
+				else
+					_uiManager._otherPlayerCashTexts[i].color = Color.black;
+
+				_uiManager._otherPlayerNotesTexts[i].text = myNotes.ToString("c0");
+				if (myNotes >= 50000)
+					_uiManager._otherPlayerNotesTexts[i].color = Color.red;
+				else
+					_uiManager._otherPlayerNotesTexts[i].color = Color.black;
+
 				_uiManager._otherPlayerOtbTexts[i].text = myOtbs.ToString();
+				_uiManager._remotePlayerNetworthTexts[i].text = myNetworth.ToString("c0");
 			}
 		}
 	}
