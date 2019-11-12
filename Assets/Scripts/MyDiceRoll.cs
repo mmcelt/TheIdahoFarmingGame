@@ -161,7 +161,6 @@ public class MyDiceRoll : MonoBehaviour
 			else if (isTetonDamRoll)
 			{
 				tetonDamRollComplete = true;
-
 			}
 
 			toRoll = false;

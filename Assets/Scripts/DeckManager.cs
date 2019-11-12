@@ -144,10 +144,13 @@ public class DeckManager : MonoBehaviourPun
 				break;
 
 			case 7:	//cut cherries in half - talk show host
-				if ((GameManager.Instance.myFarmer.GetComponent<PlayerMove>()._currentSpace == 6) || (GameManager.Instance.myFarmer.GetComponent<PlayerMove>()._currentSpace > 14 && _pManager._pFruit > 0))
+			if (_pManager._pFruit > 0 || GameManager.Instance.myFarmer.GetComponent<PlayerMove>()._currentSpace == 6)
 				{
-					_pManager._pCherriesCutInHalf = true;
-					_uiManager._cherriesCutInHalfWarning.SetActive(true);
+					if(GameManager.Instance.myFarmer.GetComponent<PlayerMove>()._currentSpace <= 25 && !_pManager._cherries)
+					{
+						_pManager._pCherriesCutInHalf = true;
+						_uiManager._cherriesCutInHalfWarning.SetActive(true);
+					}
 				}
 				break;
 
@@ -820,8 +823,8 @@ public class DeckManager : MonoBehaviourPun
 		//desc = "GARNISHED!";			//TESTING
 		//cardNum = 13;					//TESTING
 		//desc = "CUSTOM HARVESTER";	//TESTING
-		//cardNum = 10;					//TESTING	
-		//desc = "TETON DAM!";			//TESTING
+		cardNum = 10;              //TESTING	
+		desc = "TETON DAM!";       //TESTING
 
 		//declare an FFCard object
 		FFCard newFFCard = new FFCard();

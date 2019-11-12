@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class PlayerMove : MonoBehaviour
+public class PlayerMove : MonoBehaviourPun
 {
 	#region Public / Serialized Fields
 
@@ -222,8 +223,8 @@ public class PlayerMove : MonoBehaviour
 			startSpace++;
 			_currentSpace++;
 
-			//_aManager.PlayClip(_aManager._move);
-			//CmdPlayRemoteSOund();
+			AudioManager.Instance.PlaySound(AudioManager.Instance._move);
+			photonView.RPC("PlayRemoteMoveSound", RpcTarget.Others);
 			//Space west of Christmas Vacation.
 			if (_currentSpace == 1)
 			{
@@ -636,6 +637,12 @@ public class PlayerMove : MonoBehaviour
 		_pManager._spuds = false;
 		_pManager._apples = false;
 		_pManager._corn = false;
+	}
+
+	[PunRPC]
+	void PlayRemoteMoveSound()
+	{
+		AudioManager.Instance.PlaySound(AudioManager.Instance._move, 0.5f);
 	}
 	#endregion
 }

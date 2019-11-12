@@ -853,6 +853,8 @@ public class HarvestManager : MonoBehaviour
 
 		if (!_pManager._pWagesGarnished)
 			_rollButton.gameObject.SetActive(true);
+		else
+			_ok1GButton.gameObject.SetActive(true);
 	}
 
 	void ResetHarvestModifiers()

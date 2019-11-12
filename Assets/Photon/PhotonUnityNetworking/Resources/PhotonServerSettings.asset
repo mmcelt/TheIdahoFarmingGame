@@ -50,5 +50,7 @@ MonoBehaviour:
   - TetonDamRoutine
   - UpdateTimer
   - UpdateTheData
+  - PlayRemoteMoveSound
+  - RemoteTetonDamMethod
   DisableAutoOpenWizard: 1
   ShowSettings: 1

@@ -351,13 +351,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
-		UpdateRoomInfoText();
-
 		GameObject playerListGameobject = Instantiate(playerListPrefab, playerListContent);
 		playerListGameobject.transform.localScale = Vector3.one;
 		playerListGameobject.GetComponent<PlayerListEntryInitializer>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
 
 		playerListGameobjects.Add(newPlayer.ActorNumber, playerListGameobject);
+
+		UpdateRoomInfoText();
 
 		startGameButton.SetActive(CheckPlayersReady());
 	}
@@ -461,6 +461,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	void UpdateRoomInfoText()
 	{
 		string gameTypeString = "";
+		int gameAmount = 0;
 		string gameAmountString = "";
 
 		object gameType;
@@ -470,7 +471,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 			gameTypeString = "Timed Game";
 
 		if (gameTypeString == "Networth Game")
-			gameAmountString = networthGameAmount.ToString();
+		{
+			gameAmountString = networthGameAmount.ToString("c0");
+			gameAmount = (int)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Networth_Game];
+			gameAmountString = gameAmount.ToString("c0");
+		}
 		else
 			gameAmountString = timedGameAmount.ToString();
 

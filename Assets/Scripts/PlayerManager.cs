@@ -92,7 +92,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived += OnFfCardReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived += OnChangingActivePlayer;
-		PhotonNetwork.NetworkingClient.EventReceived += OnTetonDamEventReceived;
+		//PhotonNetwork.NetworkingClient.EventReceived += OnTetonDamEventReceived;
 	}
 
 	void OnDisable()
@@ -102,7 +102,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived -= OnFfCardReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnChangingActivePlayer;
-		PhotonNetwork.NetworkingClient.EventReceived -= OnTetonDamEventReceived;
+		//PhotonNetwork.NetworkingClient.EventReceived -= OnTetonDamEventReceived;
 	}
 
 	void Start()
@@ -373,40 +373,63 @@ public class PlayerManager : MonoBehaviourPun
 	public void TetonDam()
 	{
 		UpdateMyCash(500 * _pHay);
-		//FIRE THE TETON_DAM_EVENT...
-		object[] sndData = new object[] { };
-		//event options
-		RaiseEventOptions eventOptions = new RaiseEventOptions()
-		{
-			Receivers = ReceiverGroup.Others,
-			CachingOption = EventCaching.DoNotCache
-		};
-		//send options
-		SendOptions sendOptions = new SendOptions() { Reliability = true };
-		//fire the event...
-		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Teton_Dam_Event_Code, sndData, eventOptions, sendOptions);
+		////FIRE THE TETON_DAM_EVENT...
+		//object[] sndData = new object[] { photonView.Owner.ActorNumber };
+		////event options
+		//RaiseEventOptions eventOptions = new RaiseEventOptions()
+		//{
+		//	Receivers = ReceiverGroup.Others,
+		//	CachingOption = EventCaching.DoNotCache
+		//};
+		////send options
+		//SendOptions sendOptions = new SendOptions() { Reliability = true };
+		////fire the event...
+		//PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Teton_Dam_Event_Code, sndData, eventOptions, sendOptions);
+
+		photonView.RPC("RemoteTetonDamMethod", RpcTarget.Others);
+	}
+
+	[PunRPC]
+	void RemoteTetonDamMethod()
+	{
+		if (_uiManager._ffPanel.activeSelf)
+			_uiManager._ffPanel.SetActive(false);
+
+		_uiManager._tetonDamPanel.SetActive(true);
+		_uiManager._completeModalPanel.SetActive(true);
+		_uiManager._tetonRollButton.gameObject.SetActive(true);
+		_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
+		_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
+		_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
+		_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
 	}
 
 	void OnTetonDamEventReceived(EventData eventData)
 	{
+		if (!photonView.IsMine) return;
+
 		if (eventData.Code == (byte)RaiseEventCodes.Teton_Dam_Event_Code)
 		{
+			//extract data
+			object[] recData = (object[])eventData.CustomData;
+			int senderID = (int)recData[0];
+
 			if (_uiManager._ffPanel.activeSelf)
 				_uiManager._ffPanel.SetActive(false);
 
 			_uiManager._tetonDamPanel.SetActive(true);
 			_uiManager._completeModalPanel.SetActive(true);
+			_uiManager._tetonRollButton.gameObject.SetActive(true);
 			_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
 			_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
 			_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
 			_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
-			
-
 		}
 	}
 
 	public void OnTetonDamRollButtonClicked()
 	{
+
 		if (_diceRoll == null)
 			_diceRoll = GameManager.Instance.myDiceRoll;
 
@@ -419,12 +442,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	IEnumerator AsFateWillHaveIt()
 	{
-		int penalty = 0;
-
-		_uiManager._tetonHeaderText.enabled = false;
-		_uiManager._tetonMessageText.enabled = false;
-		//_uiManager._tetonDamImage.enabled = false;
-		_uiManager._tetonRollButton.enabled = false;
+		//_uiManager._tetonHeaderText.text = "";
+		_uiManager._tetonMessageText.text = "";
 
 		_diceRoll.OnRollButton();
 
@@ -432,22 +451,22 @@ public class PlayerManager : MonoBehaviourPun
 
 		int roll = _diceRoll.Pip;
 
-		//if (roll < 0)
-		//	roll = Random.Range(1, 7);
-
 		//Debug.Log("DICE ROLL: " + roll);
 
-		//roll = 4;   //TESTING
+		roll = 4;   //TESTING
 		yield return new WaitForSeconds(0.5f);
+
+		int penalty = 0;
+
+		_uiManager._tetonOkButton.gameObject.SetActive(true);
 
 		if (roll % 2 == 0)
 		{
 			penalty = -(100 * (_pFruit + _pGrain + _pHay + _pSpuds));
 			//even Hit
 			//_uiManager._tetonDamImage.enabled = true;
-			_uiManager._tetonHeaderText.text = "You Were Hit!! " + roll;
-			_uiManager._tetonHeaderText.enabled = true;
-			//Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
+			_uiManager._tetonMessageText.text = "You Were Hit!! " + roll;
+			Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
 			//play bad sound
 			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 		}
@@ -455,14 +474,14 @@ public class PlayerManager : MonoBehaviourPun
 		{
 			//odd escaped
 			//_uiManager._tetonDamImage.enabled = true;
-			_uiManager._tetonHeaderText.text = "You Escaped!! " + roll;
-			_uiManager._tetonHeaderText.enabled = true;
+			_uiManager._tetonMessageText.text = "You Escaped!! " + roll;
 			//play good sound
 			AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 		}
 
-		while (_uiManager._tetonDamPanel.activeSelf)
-			yield return null;
+		yield return new WaitWhile(() => _uiManager._tetonDamPanel.activeSelf);
+		//while (_uiManager._tetonDamPanel.activeSelf)
+		//	yield return null;
 
 		Debug.Log("PENALTY B4 IF: " + penalty);
 
@@ -470,6 +489,7 @@ public class PlayerManager : MonoBehaviourPun
 		{
 			UpdateMyCash(penalty);
 			Debug.Log("PENALTY: " + penalty);
+			penalty = 0;
 		}
 
 		_diceRoll.isOtherRoll = false;
@@ -485,8 +505,6 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._tetonHeaderText.enabled = true;
 		_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
 		_uiManager._tetonMessageText.enabled = true;
-		_uiManager._tetonOkButton.enabled = false;
-		_uiManager._tetonRollButton.enabled = true;
 	}
 
 	public void CustomHireHarvester()   //called from DeckManager
