@@ -160,6 +160,11 @@ public class HarvestManager : MonoBehaviour
 			_ok2Button.onClick.AddListener(OnOkButton2Clicked);
 			_ok3Button = _uiManager._harvestOk3Button;
 			_ok3Button.onClick.AddListener(OnOkButton3Clicked);
+			//Garnished Stuff
+			_gMessageText = _uiManager._gHarvestMessageText;
+			_ok1GButton = _uiManager._ok1GarnishedButton;
+			_ok1GButton.onClick.AddListener(OnOkButton1GarnishedClicked);
+			_ok3GButton = _uiManager._ok3GarnishedButton;
 		}
 		if (_myDiceRoll == null)
 			_myDiceRoll = GameManager.Instance.myDiceRoll;
@@ -233,14 +238,14 @@ public class HarvestManager : MonoBehaviour
 
 		Debug.Log("Operating Expense is: " + _operatingExpenses);
 
+		yield return new WaitWhile(() => _uiManager._harvestPanel.activeSelf);
+
 		_pManager.UpdateMyCash(_netCheck);
 		if (_netCheck < 0)
 			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 
 		_okButton1Pressed = false;
 		_netCheck = 0;
-
-		yield return new WaitWhile(() => _uiManager._harvestPanel.activeSelf);
 
 		PerformPostHarvestActions(space);
 		ResetHarvestModifiers();
@@ -262,7 +267,16 @@ public class HarvestManager : MonoBehaviour
 			//_ok2GButton = _uiManager._ok2GarnishedButton;
 			//_ok2GButton.onClick.AddListener(OnOkButton2GarnishedClicked);
 			_ok3GButton = _uiManager._ok3GarnishedButton;
-			//_ok3GButton.onClick.AddListener(OnOkButton3GarnishedClicked);
+			//Normal Harvest Stuff
+			_messageText = _uiManager._harvestMessageText;
+			_rollButton = _uiManager._harvestRollButton;
+			_rollButton.onClick.AddListener(OnHarvestRollButtonClicked);
+			_ok1Button = _uiManager._harvestOk1Button;
+			_ok1Button.onClick.AddListener(OnOkButton1Clicked);
+			_ok2Button = _uiManager._harvestOk2Button;
+			_ok2Button.onClick.AddListener(OnOkButton2Clicked);
+			_ok3Button = _uiManager._harvestOk3Button;
+			_ok3Button.onClick.AddListener(OnOkButton3Clicked);
 		}
 		if (_pMove == null)
 			_pMove = GameManager.Instance.myFarmer.GetComponent<PlayerMove>();
@@ -282,6 +296,10 @@ public class HarvestManager : MonoBehaviour
 		_ok3GButton.gameObject.SetActive(true);
 
 		yield return new WaitWhile(() => _uiManager._gHarvestPanel.activeSelf);
+
+		_pManager.UpdateMyCash(_netCheck);
+		if (_netCheck < 0)
+			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 
 		PerformPostHarvestActions(space);
 		ResetHarvestModifiers();
