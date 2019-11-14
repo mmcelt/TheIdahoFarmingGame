@@ -91,7 +91,7 @@ public class DeckManager : MonoBehaviourPun
 		//DontDestroyOnLoad(gameObject);
 	}
 
-	void Start() 
+	void Start()
 	{
 		_otbDeckShuffleCounter = -1;
 		_oeDeckShuffleCounter = -1;
@@ -121,7 +121,7 @@ public class DeckManager : MonoBehaviourPun
 
 		switch (card)
 		{
-			case 1:	//income tax
+			case 1:  //income tax
 				_pManager.UpdateMyCash(-7000);
 				break;
 
@@ -143,10 +143,10 @@ public class DeckManager : MonoBehaviourPun
 					_pManager.UpdateMyCash(-3000);
 				break;
 
-			case 7:	//cut cherries in half - talk show host
-			if (_pManager._pFruit > 0 || GameManager.Instance.myFarmer.GetComponent<PlayerMove>()._currentSpace == 6)
+			case 7:  //cut cherries in half - talk show host
+				if (_pManager._pFruit > 0 || GameManager.Instance.myFarmer.GetComponent<PlayerMove>()._currentSpace == 6)
 				{
-					if(GameManager.Instance.myFarmer.GetComponent<PlayerMove>()._currentSpace <= 25 && !_pManager._cherries)
+					if (GameManager.Instance.myFarmer.GetComponent<PlayerMove>()._currentSpace <= 25 && !_pManager._cherries)
 					{
 						_pManager._pCherriesCutInHalf = true;
 						_uiManager._cherriesCutInHalfWarning.SetActive(true);
@@ -160,15 +160,15 @@ public class DeckManager : MonoBehaviourPun
 
 			case 9:  //cut worms
 				if (_pManager._pFruit > 0)
-						_pManager.UpdateMyCash(-300 * _pManager._pFruit);
+					_pManager.UpdateMyCash(-300 * _pManager._pFruit);
 				break;
 
-			case 10:	//teton dam
+			case 10: //teton dam
 				_pManager.TetonDam();
 				break;
 
 			case 11: //oil company pays you
-				_pManager.UpdateMyCash(100*(_pManager._pFruit + _pManager._pGrain + _pManager._pHay + _pManager._pSpuds));
+				_pManager.UpdateMyCash(100 * (_pManager._pFruit + _pManager._pGrain + _pManager._pHay + _pManager._pSpuds));
 				break;
 
 			case 12: //trucker strike
@@ -195,7 +195,7 @@ public class DeckManager : MonoBehaviourPun
 				_pManager.UncleCheester();
 				break;
 
-			case 16:	//drought year
+			case 16: //drought year
 			case 17:
 				//TODO: play sound
 				AudioManager.Instance.PlaySound(AudioManager.Instance._droughtYear);
@@ -212,11 +212,11 @@ public class DeckManager : MonoBehaviourPun
 				}
 				break;
 
-			case 19:	//kill your farm cows
+			case 19: //kill your farm cows
 				if (_pManager._pFarmCows > 0)
 				{
 					_pManager.UpdateMyFCows(-_pManager._pFarmCows);
-					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased,true);
+					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased, true);
 					//play bad sound
 					AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 
@@ -225,7 +225,7 @@ public class DeckManager : MonoBehaviourPun
 
 			case 20: //increase cows 2 yrs
 				_pManager._pCowsIncreased = true;
-				if(_pManager._pFarmCows > 0)
+				if (_pManager._pFarmCows > 0)
 				{
 					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased);
 				}
@@ -257,7 +257,7 @@ public class DeckManager : MonoBehaviourPun
 				_pManager.UpdateMyCash(100 * _pManager._pHay);
 				break;
 
-			case 25:	//buggy spuds
+			case 25: //buggy spuds
 				if (_pManager._pSpuds > 0)
 				{
 					_pManager.UpdateMyCash(-500 * _pManager._pSpuds);
@@ -387,7 +387,7 @@ public class DeckManager : MonoBehaviourPun
 
 					//send event to MasterClient's GameManager for Spud Bonus (only once)
 					//event data
-					object[] sndData = new object[] {  PhotonNetwork.LocalPlayer.NickName, GameManager.Instance.myFarmerName };
+					object[] sndData = new object[] { PhotonNetwork.LocalPlayer.NickName, GameManager.Instance.myFarmerName };
 					//event options
 					RaiseEventOptions eventOptions = new RaiseEventOptions
 					{
@@ -426,7 +426,7 @@ public class DeckManager : MonoBehaviourPun
 		//Debug.Log("IN DM:InitializeDecks OE's " + _oeCards.Count);
 	}
 
-	void MakeTheOtbDeck()	//46 cards
+	void MakeTheOtbDeck()   //46 cards
 	{
 		CreateAnOTBCard(
 	01,
@@ -615,8 +615,8 @@ public class DeckManager : MonoBehaviourPun
 
 		ShuffleOtbDeck(_otbCards);
 
-		//foreach (OTBCard oTBCard in _otbCards)
-		//	print(oTBCard.cardNumber + ":" + oTBCard.bottomCard + ":" + oTBCard.summary);
+		foreach (OTBCard oTBCard in _otbCards)
+			print(oTBCard.cardNumber + ":" + oTBCard.bottomCard + ":" + oTBCard.totalCost);
 	}
 
 	void CreateAnOTBCard(int cardNum, string desc, string sum, int cost)
@@ -819,12 +819,12 @@ public class DeckManager : MonoBehaviourPun
 
 	void CreateAnFFCard(int cardNum, string desc)
 	{
-		//cardNum = 14;					//TESTING
-		//desc = "GARNISHED!";			//TESTING
+		//cardNum = 14;              //TESTING
+		//desc = "GARNISHED!";       //TESTING
 		//cardNum = 13;					//TESTING
 		//desc = "CUSTOM HARVESTER";	//TESTING
-		cardNum = 10;              //TESTING	
-		desc = "TETON DAM!";       //TESTING
+		//cardNum = 10;              //TESTING	
+		//desc = "TETON DAM!";       //TESTING
 
 		//declare an FFCard object
 		FFCard newFFCard = new FFCard();

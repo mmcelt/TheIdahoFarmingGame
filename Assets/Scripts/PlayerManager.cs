@@ -72,6 +72,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	Button _customHireOkButton;
 
+	int loopCounter;
+
 	#endregion
 
 	#region Properties
@@ -92,7 +94,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived += OnFfCardReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived += OnChangingActivePlayer;
-		//PhotonNetwork.NetworkingClient.EventReceived += OnTetonDamEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnTetonDamEventReceived;
 	}
 
 	void OnDisable()
@@ -102,7 +104,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived -= OnFfCardReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnChangingActivePlayer;
-		//PhotonNetwork.NetworkingClient.EventReceived -= OnTetonDamEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnTetonDamEventReceived;
 	}
 
 	void Start()
@@ -110,6 +112,9 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager = GameManager.Instance.uiManager;
 		_pMove = GetComponent<PlayerMove>();
 		_rpUpdater = GetComponent<RemotePlayerUpdater>();
+
+		_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
+		_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
 
 		UpdateMyCash(5000);
 		UpdateMyNotes(5000);
@@ -140,13 +145,15 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyCash(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		_pCash += amount;
 		ExitGames.Client.Photon.Hashtable cashProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Cash, _pCash } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(cashProp);
 		UpdateMyNetworth(CalculateNetworth());
 		if (photonView.IsMine)
 		{
-			if (amount < 0)
+			if (_pCash < 0)
 			{
 				StartCoroutine(GetForcedLoanRoutine());
 			}
@@ -155,6 +162,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyNotes(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		_pNotes += amount;
 		ExitGames.Client.Photon.Hashtable notesProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Notes, _pNotes } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(notesProp);
@@ -163,17 +172,22 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyOtbCount(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		Debug.Log("In UpdateOTBCount: " + amount);
 		ExitGames.Client.Photon.Hashtable otbProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Otb_Count, _myOtbCount = amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(otbProp);
-		if (photonView.IsMine)
-		{
-			_uiManager.UpdateUI();
-		}
+		//if (photonView.IsMine)
+		//{
+		//	_uiManager.UpdateUI();
+		//}
+		UpdateMyUI();
 	}
 
 	public void UpdateMyHay(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		_pHay += amount;
 		ExitGames.Client.Photon.Hashtable hayProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Hay, _pHay } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(hayProp);
@@ -184,6 +198,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyGrain(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		_pGrain += amount;
 		ExitGames.Client.Photon.Hashtable grainProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Hay, _pGrain } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(grainProp);
@@ -194,6 +210,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyFruit(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		_pFruit += amount;
 		ExitGames.Client.Photon.Hashtable fruitProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Fruit, _pFruit } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(fruitProp);
@@ -204,6 +222,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyFCows(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		_pFarmCows += amount;
 		ExitGames.Client.Photon.Hashtable fCowsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_FCows, _pFarmCows } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(fCowsProp);
@@ -214,6 +234,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyRCows(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		_pRangeCows += amount;
 		ExitGames.Client.Photon.Hashtable rCowsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_RCows, _pRangeCows } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(rCowsProp);
@@ -224,6 +246,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMySpuds(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		_pSpuds += amount;
 		ExitGames.Client.Photon.Hashtable spudsProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Spuds, _pSpuds } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(spudsProp);
@@ -234,28 +258,32 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyTractor(bool status)
 	{
+		if (!photonView.IsMine) return;
+
 		_pTractor = status;
 		ExitGames.Client.Photon.Hashtable tractorProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Tractor, _pTractor } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(tractorProp);
 		_uiManager._tractorImage.color = status ? Color.white : new Color(0.5943396f, 0.5943396f, 0.5943396f);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
-		UpdateMyNetworth(CalculateNetworth());
 	}
 
 	public void UpdateMyHarvester(bool status)
 	{
+		if (!photonView.IsMine) return;
+
 		_pHarvester = status;
 		ExitGames.Client.Photon.Hashtable harvesterProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Harvester, _pHarvester } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(harvesterProp);
 		_uiManager._harvesterImage.color = status ? Color.white : new Color(0.5943396f, 0.5943396f, 0.5943396f);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
-		UpdateMyNetworth(CalculateNetworth());
 	}
 
 	public void UpdateOxfordRange(bool status)
 	{
+		if (!photonView.IsMine) return;
+
 		_oxfordOwned = status;
 		ExitGames.Client.Photon.Hashtable oxfordProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Oxford_Range_Owned, _oxfordOwned } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(oxfordProp);
@@ -263,6 +291,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateTargheeRange(bool status)
 	{
+		if (!photonView.IsMine) return;
+
 		_targheeOwned = status;
 		ExitGames.Client.Photon.Hashtable targheeProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Targhee_Range_Owned, _targheeOwned } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(targheeProp);
@@ -270,6 +300,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateLostRiverRange(bool status)
 	{
+		if (!photonView.IsMine) return;
+
 		_lostRiverOwned = status;
 		ExitGames.Client.Photon.Hashtable lostRiverProp = new ExitGames.Client.Photon.Hashtable() { { IFG.LostRiver_Range_Owned, _lostRiverOwned } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(lostRiverProp);
@@ -277,6 +309,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateLemhiRange(bool status)
 	{
+		if (!photonView.IsMine) return;
+
 		_lemhiOwned = status;
 		ExitGames.Client.Photon.Hashtable lemhiProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Lemhi_Range_Owned, _lemhiOwned } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(lemhiProp);
@@ -284,6 +318,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	public void UpdateMyNetworth(int amount)
 	{
+		if (!photonView.IsMine) return;
+
 		_pNetworth = amount;
 		ExitGames.Client.Photon.Hashtable networthProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Networth, _pNetworth } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(networthProp);
@@ -306,22 +342,20 @@ public class PlayerManager : MonoBehaviourPun
 				PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.End_Networth_Game_Event_Code, sndData, eventOptions, sendOptions);
 			}
 		}
-		//if (photonView.IsMine)
-		_uiManager.UpdateUI();
+		UpdateMyUI();
 	}
 
 	//TESTING
 
-	IEnumerator UpdateOtbProperty(int amount)
-	{
-		Debug.Log("In UpdateOTBCount: " + amount);
-		ExitGames.Client.Photon.Hashtable otbProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Otb_Count, amount } };
-		PhotonNetwork.LocalPlayer.SetCustomProperties(otbProp);
-		if (photonView.IsMine)
-			_uiManager.UpdateUI();
-		yield return new WaitForSeconds(0.5f);
-		StartCoroutine(UpdateOtbProperty(amount));
-	}
+	//IEnumerator UpdateOtbProperty(int amount)
+	//{
+	//	Debug.Log("In UpdateOTBCount: " + amount);
+	//	ExitGames.Client.Photon.Hashtable otbProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Otb_Count, amount } };
+	//	PhotonNetwork.LocalPlayer.SetCustomProperties(otbProp);
+	//	UpdateMyUI();
+	//	yield return new WaitForSeconds(0.5f);
+	//	StartCoroutine(UpdateOtbProperty(amount));
+	//}
 	#endregion
 
 	#region Public Methods
@@ -373,36 +407,36 @@ public class PlayerManager : MonoBehaviourPun
 	public void TetonDam()
 	{
 		UpdateMyCash(500 * _pHay);
-		////FIRE THE TETON_DAM_EVENT...
-		//object[] sndData = new object[] { photonView.Owner.ActorNumber };
-		////event options
-		//RaiseEventOptions eventOptions = new RaiseEventOptions()
-		//{
-		//	Receivers = ReceiverGroup.Others,
-		//	CachingOption = EventCaching.DoNotCache
-		//};
-		////send options
-		//SendOptions sendOptions = new SendOptions() { Reliability = true };
-		////fire the event...
-		//PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Teton_Dam_Event_Code, sndData, eventOptions, sendOptions);
-
-		photonView.RPC("RemoteTetonDamMethod", RpcTarget.Others);
+		//FIRE THE TETON_DAM_EVENT...
+		object[] sndData = new object[] { photonView.Owner.ActorNumber };
+		//event options
+		RaiseEventOptions eventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.Others,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions sendOptions = new SendOptions() { Reliability = true };
+		//fire the event...
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Teton_Dam_Event_Code, sndData, eventOptions, sendOptions);
+		//if (photonView.IsMine)
+		//photonView.RPC("RemoteTetonDamMethod", RpcTarget.Others);
 	}
 
-	[PunRPC]
-	void RemoteTetonDamMethod()
-	{
-		if (_uiManager._ffPanel.activeSelf)
-			_uiManager._ffPanel.SetActive(false);
+	//[PunRPC]
+	//void RemoteTetonDamMethod(PhotonMessageInfo info)
+	//{
+	//	if (_uiManager._ffPanel.activeSelf)
+	//		_uiManager._ffPanel.SetActive(false);
 
-		_uiManager._tetonDamPanel.SetActive(true);
-		_uiManager._completeModalPanel.SetActive(true);
-		_uiManager._tetonRollButton.gameObject.SetActive(true);
-		_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
-		_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
-		_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
-		_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
-	}
+	//	_uiManager._tetonDamPanel.SetActive(true);
+	//	_uiManager._completeModalPanel.SetActive(true);
+	//	_uiManager._tetonRollButton.gameObject.SetActive(true);
+	//	_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
+	//	_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
+	//	_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
+	//	_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
+	//}
 
 	void OnTetonDamEventReceived(EventData eventData)
 	{
@@ -410,6 +444,8 @@ public class PlayerManager : MonoBehaviourPun
 
 		if (eventData.Code == (byte)RaiseEventCodes.Teton_Dam_Event_Code)
 		{
+			Debug.Log("TETON EVENT RECEIVED");
+
 			//extract data
 			object[] recData = (object[])eventData.CustomData;
 			int senderID = (int)recData[0];
@@ -420,15 +456,16 @@ public class PlayerManager : MonoBehaviourPun
 			_uiManager._tetonDamPanel.SetActive(true);
 			_uiManager._completeModalPanel.SetActive(true);
 			_uiManager._tetonRollButton.gameObject.SetActive(true);
-			_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
-			_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
 			_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
 			_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
+
+			loopCounter = 0;
 		}
 	}
 
 	public void OnTetonDamRollButtonClicked()
 	{
+		if (!photonView.IsMine) return;
 
 		if (_diceRoll == null)
 			_diceRoll = GameManager.Instance.myDiceRoll;
@@ -436,75 +473,89 @@ public class PlayerManager : MonoBehaviourPun
 		_diceRoll.isOtherRoll = true;
 		_diceRoll.isTetonDamRoll = true;
 
-		//Debug.Log("TETON DAM BUTTON CLICKED");
-		StartCoroutine(AsFateWillHaveIt());
+		Debug.Log("TETON DAM ROLL BUTTON CLICKED LC: " + loopCounter);
+
+		if (loopCounter == 0)
+			StartCoroutine(AsFateWillHaveIt());
 	}
 
 	IEnumerator AsFateWillHaveIt()
 	{
-		//_uiManager._tetonHeaderText.text = "";
-		_uiManager._tetonMessageText.text = "";
 
-		_diceRoll.OnRollButton();
-
-		yield return new WaitUntil(() => _diceRoll.tetonDamRollComplete);
-
-		int roll = _diceRoll.Pip;
-
-		//Debug.Log("DICE ROLL: " + roll);
-
-		roll = 4;   //TESTING
-		yield return new WaitForSeconds(0.5f);
-
-		int penalty = 0;
-
-		_uiManager._tetonOkButton.gameObject.SetActive(true);
-
-		if (roll % 2 == 0)
+		if(loopCounter == 0)
 		{
-			penalty = -(100 * (_pFruit + _pGrain + _pHay + _pSpuds));
-			//even Hit
-			//_uiManager._tetonDamImage.enabled = true;
-			_uiManager._tetonMessageText.text = "You Were Hit!! " + roll;
-			Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
-			//play bad sound
-			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
+			Debug.Log("LOOP COUNTER IN AFWHI: " + loopCounter);
+
+			//_uiManager._tetonHeaderText.text = "";
+			_uiManager._tetonMessageText.text = "";
+
+			_diceRoll.OnRollButton();
+
+			yield return new WaitUntil(() => _diceRoll.tetonDamRollComplete);
+
+			int roll = _diceRoll.Pip;
+
+			//Debug.Log("DICE ROLL: " + roll);
+
+			//roll = 4;   //TESTING
+			yield return new WaitForSeconds(0.5f);
+
+			int penalty = 0;
+
+			_uiManager._tetonOkButton.gameObject.SetActive(true);
+
+			if (roll % 2 == 0)
+			{
+				penalty = -(100 * (_pFruit + _pGrain + _pHay + _pSpuds));
+				//even Hit
+				//_uiManager._tetonDamImage.enabled = true;
+				_uiManager._tetonMessageText.text = "You Were Hit!! " + roll;
+				Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
+				//play bad sound
+				AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
+			}
+			else
+			{
+				//odd escaped
+				//_uiManager._tetonDamImage.enabled = true;
+				_uiManager._tetonMessageText.text = "You Escaped!! " + roll;
+				//play good sound
+				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
+			}
+
+			yield return new WaitWhile(() => _uiManager._tetonDamPanel.activeSelf);
+			//while (_uiManager._tetonDamPanel.activeSelf)
+			//	yield return null;
+
+			Debug.Log("PENALTY B4 IF: " + penalty);
+
+			loopCounter++;
+
+			if (penalty < 0)
+			{
+				UpdateMyCash(penalty);
+				Debug.Log("PENALTY: " + penalty);
+				penalty = 0;
+			}
 		}
-		else
-		{
-			//odd escaped
-			//_uiManager._tetonDamImage.enabled = true;
-			_uiManager._tetonMessageText.text = "You Escaped!! " + roll;
-			//play good sound
-			AudioManager.Instance.PlaySound(AudioManager.Instance._good);
-		}
-
-		yield return new WaitWhile(() => _uiManager._tetonDamPanel.activeSelf);
-		//while (_uiManager._tetonDamPanel.activeSelf)
-		//	yield return null;
-
-		Debug.Log("PENALTY B4 IF: " + penalty);
-
-		if (penalty < 0)
-		{
-			UpdateMyCash(penalty);
-			Debug.Log("PENALTY: " + penalty);
-			penalty = 0;
-		}
-
-		_diceRoll.isOtherRoll = false;
-		_diceRoll.isTetonDamRoll = false;
-		_diceRoll.tetonDamRollComplete = false;
 	}
 
 	public void OnTetonOkButtonClicked()
 	{
+		if (_diceRoll==null)
+			_diceRoll = GameManager.Instance.myDiceRoll;
+
 		_uiManager._tetonDamPanel.SetActive(false);
 		_uiManager._completeModalPanel.SetActive(false);
 		_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
 		_uiManager._tetonHeaderText.enabled = true;
 		_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
 		_uiManager._tetonMessageText.enabled = true;
+		_diceRoll.isOtherRoll = false;
+		_diceRoll.isTetonDamRoll = false;
+		_diceRoll.tetonDamRollComplete = false;
+		loopCounter = 0;
+		Debug.Log("LOOP COUNTER AFTER RESET: " + loopCounter);
 	}
 
 	public void CustomHireHarvester()   //called from DeckManager
@@ -585,7 +636,10 @@ public class PlayerManager : MonoBehaviourPun
 	void UpdateMyUI()
 	{
 		if (photonView.IsMine)
-			_uiManager.StartCoroutine(_uiManager.UpdateUIRoutine());
+		{
+			//_uiManager.StartCoroutine(_uiManager.UpdateUIRoutine());
+			_uiManager.UpdateUI();
+		}
 	}
 
 	[PunRPC]
@@ -679,11 +733,12 @@ public class PlayerManager : MonoBehaviourPun
 			drawnCard.totalCost = cost;
 
 			//TESTING
-			//Debug.Log("OTB card count:" + _myOtbs.Count);
-			//Debug.Log("Card Number: " + drawnCard.cardNumber);
-			//Debug.Log("Description: " + drawnCard.description);
-			//Debug.Log("Summary: " + drawnCard.summary);
-			//Debug.Log("Total Cost: " + drawnCard.totalCost);
+			Debug.Log("DRAWN OTB CARD DATA:");
+			Debug.Log("OTB card count:" + _myOtbs.Count);
+			Debug.Log("Card Number: " + drawnCard.cardNumber);
+			Debug.Log("Description: " + drawnCard.description);
+			Debug.Log("Summary: " + drawnCard.summary);
+			Debug.Log("Total Cost: " + drawnCard.totalCost);
 
 			StartCoroutine(ShowOtbCardRoutine(drawnCard));
 		}

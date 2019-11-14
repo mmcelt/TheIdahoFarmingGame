@@ -197,7 +197,7 @@ public class UIManager : MonoBehaviourPun
 		_rpUpdater = GameManager.Instance.myFarmer.GetComponent<RemotePlayerUpdater>();
 
 		InitialPlayerInfoUpdate();
-		UpdateUI();
+		StartCoroutine(UpdateUIRoutine());
 
 		if (GameManager.Instance._gameMode=="Networth Game")
 		{
@@ -574,10 +574,13 @@ public class UIManager : MonoBehaviourPun
 	//TESTING
 	public IEnumerator UpdateUIRoutine()
 	{
-		Debug.Log("IN UPDATE ROUTINE");
-		UpdateUI();
-		yield return new WaitForSeconds(0.5f);
-		StartCoroutine(UpdateUIRoutine());
+		for (int i = 0; i < 10; i++)
+		{
+			Debug.Log("IN UPDATE ROUTINE");
+			UpdateUI();
+			yield return new WaitForSeconds(0.5f);
+	}
+		//StartCoroutine(UpdateUIRoutine());
 	}
 	//END TESTING
 
@@ -1192,7 +1195,7 @@ public class UIManager : MonoBehaviourPun
 			string commodity = (string)recData[3];
 
 			Color fontColor = SelectFontColorForFarmer(rollersFarmer);
-			string message = rollersName + " rolled a " + rollAmount + " on his/her " + commodity + " Harvest.";
+			string message = rollersName + " rolled a " + rollAmount + " on his/her " + commodity;
 			StartCoroutine(ShowMessageRoutine("Routine", message, fontColor));
 		}
 	}
