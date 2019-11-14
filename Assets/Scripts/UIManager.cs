@@ -87,7 +87,7 @@ public class UIManager : MonoBehaviourPun
 
 	[Header("Garnished Harvest Panel")]
 	public GameObject _gHarvestPanel;
-	public Button _ok1GarnishedButton, _ok2GarnishedButton, _ok3GarnishedButton;
+	public Button _ok1GarnishedButton, _ok2GarnishedButton;
 	public Text _gHarvestMessageText;
 
 	[Header("Forced Loan Panel")]

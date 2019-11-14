@@ -57,7 +57,7 @@ public class HarvestManager : MonoBehaviour
 
 	//Garnished Stuff
 	Text _gMessageText;
-	Button _ok1GButton, _ok2GButton, _ok3GButton;
+	Button _ok1GButton, _ok2GButton;
 	bool _ok1GButtonPressed;
 	bool _ok2GButtonPressed;
 
@@ -106,8 +106,7 @@ public class HarvestManager : MonoBehaviour
 		_myDiceRoll.isOtherRoll = false;
 		_okButton1Pressed = true;
 		_messageText.text = "Performing Harvest Calculations...";
-		//_ok2Button.gameObject.SetActive(true);
-		Invoke("OnOkButton2Clicked", 0.4f);
+		Invoke("OnOkButton2Clicked", 0.3f);
 	}
 
 	public void OnOkButton1GarnishedClicked()
@@ -122,22 +121,12 @@ public class HarvestManager : MonoBehaviour
 		_messageText.text = "Your Harvest Check is: " + _harvestCheck;
 	}
 
-	//public void OnOkButton2GarnishedClicked()
-	//{
-	//	_ok2GButtonPressed = true;
-	//}
-
 	public void OnOkButton3Clicked()
 	{
 		_uiManager._harvestPanel.SetActive(false);
 		_ok3Button.gameObject.SetActive(false);
 		_messageText.text = IFG.HarvestBaseMessage;
 	}
-
-	//public void OnOkButton3GarnishedClicked()
-	//{
-
-	//}
 
 	public IEnumerator PerformHarvestRoutine(int space, string commodity, int amount)
 	{
@@ -164,7 +153,7 @@ public class HarvestManager : MonoBehaviour
 			_gMessageText = _uiManager._gHarvestMessageText;
 			_ok1GButton = _uiManager._ok1GarnishedButton;
 			_ok1GButton.onClick.AddListener(OnOkButton1GarnishedClicked);
-			_ok3GButton = _uiManager._ok3GarnishedButton;
+			_ok2GButton = _uiManager._ok2GarnishedButton;
 		}
 		if (_myDiceRoll == null)
 			_myDiceRoll = GameManager.Instance.myDiceRoll;
@@ -264,9 +253,7 @@ public class HarvestManager : MonoBehaviour
 			_gMessageText = _uiManager._gHarvestMessageText;
 			_ok1GButton = _uiManager._ok1GarnishedButton;
 			_ok1GButton.onClick.AddListener(OnOkButton1GarnishedClicked);
-			//_ok2GButton = _uiManager._ok2GarnishedButton;
-			//_ok2GButton.onClick.AddListener(OnOkButton2GarnishedClicked);
-			_ok3GButton = _uiManager._ok3GarnishedButton;
+			_ok2GButton = _uiManager._ok2GarnishedButton;
 			//Normal Harvest Stuff
 			_messageText = _uiManager._harvestMessageText;
 			_rollButton = _uiManager._harvestRollButton;
@@ -293,7 +280,7 @@ public class HarvestManager : MonoBehaviour
 		DrawOECard();
 		yield return new WaitUntil(() => !_waitingForOeCard);
 		_okButton1Pressed = false;
-		_ok3GButton.gameObject.SetActive(true);
+		_ok2GButton.gameObject.SetActive(true);
 
 		yield return new WaitWhile(() => _uiManager._gHarvestPanel.activeSelf);
 
@@ -714,7 +701,7 @@ public class HarvestManager : MonoBehaviour
 		if (!_pManager._pWagesGarnished)
 			_ok3Button.gameObject.SetActive(true);
 		else
-			_ok3GButton.gameObject.SetActive(true);
+			_ok2GButton.gameObject.SetActive(true);
 
 		//return the card to the deck
 		//fire the replace OE event...

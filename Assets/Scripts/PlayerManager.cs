@@ -419,24 +419,7 @@ public class PlayerManager : MonoBehaviourPun
 		SendOptions sendOptions = new SendOptions() { Reliability = true };
 		//fire the event...
 		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Teton_Dam_Event_Code, sndData, eventOptions, sendOptions);
-		//if (photonView.IsMine)
-		//photonView.RPC("RemoteTetonDamMethod", RpcTarget.Others);
 	}
-
-	//[PunRPC]
-	//void RemoteTetonDamMethod(PhotonMessageInfo info)
-	//{
-	//	if (_uiManager._ffPanel.activeSelf)
-	//		_uiManager._ffPanel.SetActive(false);
-
-	//	_uiManager._tetonDamPanel.SetActive(true);
-	//	_uiManager._completeModalPanel.SetActive(true);
-	//	_uiManager._tetonRollButton.gameObject.SetActive(true);
-	//	_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
-	//	_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
-	//	_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
-	//	_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
-	//}
 
 	void OnTetonDamEventReceived(EventData eventData)
 	{

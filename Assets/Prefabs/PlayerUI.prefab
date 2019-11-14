@@ -20206,7 +20206,7 @@ MonoBehaviour:
   _harvestOk3Button: {fileID: 4088248230013261406}
   _gHarvestPanel: {fileID: 1674768697301334120}
   _ok1GarnishedButton: {fileID: 4823458268244170052}
-  _ok2GarnishedButton: {fileID: 0}
+  _ok2GarnishedButton: {fileID: 6427477648457230362}
   _ok3GarnishedButton: {fileID: 6427477648457230362}
   _gHarvestMessageText: {fileID: 300683895886379092}
   _forcedLoanPanel: {fileID: 6003574734206552149}
