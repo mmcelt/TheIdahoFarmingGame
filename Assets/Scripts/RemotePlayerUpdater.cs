@@ -37,16 +37,26 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 
 	#region Public Methods
 
-	IEnumerator UpdateRemotePlayerData()
+	public void UpdateMyDataToOthers()
 	{
-		Debug.Log("NOP in URPD: " + GameManager.Instance._numberOfPlayers);
-			photonView.RPC("UpdateTheData", RpcTarget.Others, _pManager._pCash, _pManager._pNotes, _pManager._myOtbCount, _pManager._pNetworth);
-			yield return new WaitForSeconds(0.75f);
-			StartCoroutine(UpdateRemotePlayerData());
+		Debug.Log("In UpdtMyData2Others");
+		photonView.RPC("UpdateTheData", RpcTarget.Others, _pManager._pCash, _pManager._pNotes, _pManager._myOtbCount, _pManager._pNetworth);
 	}
+
 	#endregion
 
 	#region Private Methods
+
+	IEnumerator UpdateRemotePlayerData()
+	{
+		//for (int i=0; i<4; i++)
+		//{
+			Debug.Log("NOP in URPD: " + GameManager.Instance._numberOfPlayers);
+			photonView.RPC("UpdateTheData", RpcTarget.Others, _pManager._pCash, _pManager._pNotes, _pManager._myOtbCount, _pManager._pNetworth);
+			yield return new WaitForSeconds(0.75f);
+		//}
+		StartCoroutine(UpdateRemotePlayerData());
+	}
 
 	[PunRPC]
 	void UpdateTheData(int myCash, int myNotes, int myOtbs, int myNetworth, PhotonMessageInfo info)

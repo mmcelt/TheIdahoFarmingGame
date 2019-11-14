@@ -687,34 +687,41 @@ public class DeckManager : MonoBehaviourPun
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Draw_Otb_Event_Code)
 		{
-			//target player
-			object[] recData = (object[])eventData.CustomData;
-			int targetPlayer = (int)recData[0];
-
-			OTBCard drawnCard = _otbCards[0];
-			_otbCards.RemoveAt(0);
-			//shuffle the deck if required...
-			if (drawnCard.bottomCard)
-				ShuffleOtbDeck(_otbCards);
-
-			//Raise the return event to the sender only...
-			//event data: cardNumber/description/summary/totalCost
-			object[] sndData = new object[] { drawnCard.cardNumber, drawnCard.description, drawnCard.summary, drawnCard.totalCost };
-			//event options
-			RaiseEventOptions eventOptions = new RaiseEventOptions
+			if (_otbCards.Count > 0)
 			{
-				TargetActors = new int[] { targetPlayer },
-				CachingOption = EventCaching.AddToRoomCache
-			};
-			//send option
-			SendOptions sendOptions = new SendOptions
-			{
-				Reliability = true
-			};
-			//fire the event...
-			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Receive_Otb_Event_code, sndData, eventOptions, sendOptions);
+				//target player
+				object[] recData = (object[])eventData.CustomData;
+				int targetPlayer = (int)recData[0];
 
-			UpdateOtbDeckInfo();
+				OTBCard drawnCard = _otbCards[0];
+				_otbCards.RemoveAt(0);
+				//shuffle the deck if required...
+				if (drawnCard.bottomCard)
+					ShuffleOtbDeck(_otbCards);
+
+				//Raise the return event to the sender only...
+				//event data: cardNumber/description/summary/totalCost
+				object[] sndData = new object[] { drawnCard.cardNumber, drawnCard.description, drawnCard.summary, drawnCard.totalCost };
+				//event options
+				RaiseEventOptions eventOptions = new RaiseEventOptions
+				{
+					TargetActors = new int[] { targetPlayer },
+					CachingOption = EventCaching.AddToRoomCache
+				};
+				//send option
+				SendOptions sendOptions = new SendOptions
+				{
+					Reliability = true
+				};
+				//fire the event...
+				PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Receive_Otb_Event_code, sndData, eventOptions, sendOptions);
+
+				UpdateOtbDeckInfo();
+			}
+			else
+			{
+				SendOutOfOtbsMessage();
+			}
 		}
 	}
 
@@ -1179,6 +1186,24 @@ public class DeckManager : MonoBehaviourPun
 		{
 			_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Lemhi", _pManager._pCowsIncreased);
 		}
+	}
+
+	void SendOutOfOtbsMessage()
+	{
+		//send out of OTB msg to UI<Managers
+		string msg = "There are No OTB Cards left in the Deck!!";
+		//event data
+		object[] sndData = new object[] { msg };
+		//event options
+		RaiseEventOptions eventOptions = new RaiseEventOptions()
+		{
+			Receivers = ReceiverGroup.All,
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions sendOptions = new SendOptions() { Reliability = true };
+		//fire the event
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Out_Of_Otbs_Event_Code, sndData, eventOptions, sendOptions);	
 	}
 	#endregion
 }

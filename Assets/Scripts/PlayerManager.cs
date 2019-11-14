@@ -72,7 +72,7 @@ public class PlayerManager : MonoBehaviourPun
 
 	Button _customHireOkButton;
 
-	int loopCounter;
+	//int loopCounter;
 
 	#endregion
 
@@ -85,6 +85,7 @@ public class PlayerManager : MonoBehaviourPun
 
 	void Awake()
 	{
+		_rpUpdater = GetComponent<RemotePlayerUpdater>();
 	}
 
 	void OnEnable()
@@ -111,7 +112,6 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		_uiManager = GameManager.Instance.uiManager;
 		_pMove = GetComponent<PlayerMove>();
-		_rpUpdater = GetComponent<RemotePlayerUpdater>();
 
 		_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
 		_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
@@ -266,6 +266,8 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._tractorImage.color = status ? Color.white : new Color(0.5943396f, 0.5943396f, 0.5943396f);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
+
+		UpdateMyNetworth(CalculateNetworth());
 	}
 
 	public void UpdateMyHarvester(bool status)
@@ -278,6 +280,8 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._harvesterImage.color = status ? Color.white : new Color(0.5943396f, 0.5943396f, 0.5943396f);
 		if (!IFG.CompleteFarmerBonusGiven)
 			CheckForCompleteFarmerBonus();
+
+		UpdateMyNetworth(CalculateNetworth());
 	}
 
 	public void UpdateOxfordRange(bool status)
@@ -442,7 +446,7 @@ public class PlayerManager : MonoBehaviourPun
 			_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
 			_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
 
-			loopCounter = 0;
+			//loopCounter = 0;
 		}
 	}
 
@@ -456,18 +460,18 @@ public class PlayerManager : MonoBehaviourPun
 		_diceRoll.isOtherRoll = true;
 		_diceRoll.isTetonDamRoll = true;
 
-		Debug.Log("TETON DAM ROLL BUTTON CLICKED LC: " + loopCounter);
+		//Debug.Log("TETON DAM ROLL BUTTON CLICKED LC: " + loopCounter);
 
-		if (loopCounter == 0)
+		//if (loopCounter == 0)
 			StartCoroutine(AsFateWillHaveIt());
 	}
 
 	IEnumerator AsFateWillHaveIt()
 	{
 
-		if(loopCounter == 0)
-		{
-			Debug.Log("LOOP COUNTER IN AFWHI: " + loopCounter);
+		//if(loopCounter == 0)
+		//{
+			//Debug.Log("LOOP COUNTER IN AFWHI: " + loopCounter);
 
 			//_uiManager._tetonHeaderText.text = "";
 			_uiManager._tetonMessageText.text = "";
@@ -512,7 +516,7 @@ public class PlayerManager : MonoBehaviourPun
 
 			Debug.Log("PENALTY B4 IF: " + penalty);
 
-			loopCounter++;
+			//loopCounter++;
 
 			if (penalty < 0)
 			{
@@ -520,7 +524,7 @@ public class PlayerManager : MonoBehaviourPun
 				Debug.Log("PENALTY: " + penalty);
 				penalty = 0;
 			}
-		}
+		//}
 	}
 
 	public void OnTetonOkButtonClicked()
@@ -537,8 +541,8 @@ public class PlayerManager : MonoBehaviourPun
 		_diceRoll.isOtherRoll = false;
 		_diceRoll.isTetonDamRoll = false;
 		_diceRoll.tetonDamRollComplete = false;
-		loopCounter = 0;
-		Debug.Log("LOOP COUNTER AFTER RESET: " + loopCounter);
+		//loopCounter = 0;
+		//Debug.Log("LOOP COUNTER AFTER RESET: " + loopCounter);
 	}
 
 	public void CustomHireHarvester()   //called from DeckManager
@@ -622,6 +626,8 @@ public class PlayerManager : MonoBehaviourPun
 		{
 			//_uiManager.StartCoroutine(_uiManager.UpdateUIRoutine());
 			_uiManager.UpdateUI();
+			//if (GameManager.Instance._cachedPlayerList.Count > 1)
+			//	_rpUpdater.UpdateMyDataToOthers();
 		}
 	}
 

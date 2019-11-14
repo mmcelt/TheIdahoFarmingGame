@@ -167,6 +167,7 @@ public class UIManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived += OnCompleteFarmerBonusMessageEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnHarvestRollMessageReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnEndOfNetworthGameReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnOutOfOtbCardsMessageReceived;
 	}
 
 	void OnDisable()
@@ -177,6 +178,7 @@ public class UIManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived -= OnCompleteFarmerBonusMessageEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnHarvestRollMessageReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnEndOfNetworthGameReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnOutOfOtbCardsMessageReceived;
 	}
 
 	void Awake()
@@ -603,72 +605,76 @@ public class UIManager : MonoBehaviourPun
 	IEnumerator UpdateRemotePlayerInfo()
 	{
 		//update the remote players info...
-		int index = 0;
-		foreach (Player player in PhotonNetwork.PlayerList)
+		for (int i=0; i<9; i++)
 		{
-			if (player.ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+			int index = 0;
+			foreach (Player player in PhotonNetwork.PlayerList)
 			{
-				_otherPlayerNameTexts[index].text = player.NickName;
-				_remotePlayerNameTexts[index].text = player.NickName;
-				object farmer;
-				if (player.CustomProperties.TryGetValue(IFG.Selected_Farmer, out farmer))
+				if (player.ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
 				{
-					_otherPlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
-					_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
+					_otherPlayerNameTexts[index].text = player.NickName;
+					_remotePlayerNameTexts[index].text = player.NickName;
+					object farmer;
+					if (player.CustomProperties.TryGetValue(IFG.Selected_Farmer, out farmer))
+					{
+						_otherPlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
+						_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
+					}
+
+					//object cash;
+					//if (player.CustomProperties.TryGetValue(IFG.Player_Cash, out cash))
+					//{
+					//	int playersCash = 0;
+					//	playersCash = (int)cash;
+					//	_otherPlayerCashTexts[index].text = playersCash.ToString("c0");
+					//	if (playersCash <= 0)
+					//		_otherPlayerCashTexts[index].color = Color.red;
+					//	else
+					//		_otherPlayerCashTexts[index].color = Color.black;
+					//}
+
+					//object notes;
+					//if (player.CustomProperties.TryGetValue(IFG.Player_Notes, out notes))
+					//{
+					//	int playersNotes = 0;
+					//	playersNotes = (int)notes;
+					//	_otherPlayerNotesTexts[index].text = playersNotes.ToString("c0");
+					//	if (playersNotes >= 50000)
+					//		_otherPlayerNotesTexts[index].color = Color.red;
+					//	else
+					//		_otherPlayerNotesTexts[index].color = Color.black;
+					//}
+
+					//object otbs;
+					//if (player.CustomProperties.TryGetValue(IFG.Player_Otb_Count, out otbs))
+					//{
+					//	int playersOtbs = 0;
+					//	playersOtbs = (int)otbs;
+					//	Debug.Log("In UpdateRemoteOTB: " + playersOtbs);
+					//	_otherPlayerOtbTexts[index].text = playersOtbs.ToString();
+					//}
+
+					//object networth;
+					//if (player.CustomProperties.TryGetValue(IFG.Player_Networth, out networth))
+					//{
+					//	int playerNetworth = 0;
+					//	playerNetworth = (int)networth;
+					//	_remotePlayerNameTexts[index].text = player.NickName;
+					//	_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
+					//	_remotePlayerNetworthTexts[index].text = playerNetworth.ToString("c0");
+					//}
+					index++;
+					//Debug.Log("Index: " + index);
 				}
-
-				//object cash;
-				//if (player.CustomProperties.TryGetValue(IFG.Player_Cash, out cash))
-				//{
-				//	int playersCash = 0;
-				//	playersCash = (int)cash;
-				//	_otherPlayerCashTexts[index].text = playersCash.ToString("c0");
-				//	if (playersCash <= 0)
-				//		_otherPlayerCashTexts[index].color = Color.red;
-				//	else
-				//		_otherPlayerCashTexts[index].color = Color.black;
-				//}
-
-				//object notes;
-				//if (player.CustomProperties.TryGetValue(IFG.Player_Notes, out notes))
-				//{
-				//	int playersNotes = 0;
-				//	playersNotes = (int)notes;
-				//	_otherPlayerNotesTexts[index].text = playersNotes.ToString("c0");
-				//	if (playersNotes >= 50000)
-				//		_otherPlayerNotesTexts[index].color = Color.red;
-				//	else
-				//		_otherPlayerNotesTexts[index].color = Color.black;
-				//}
-
-				//object otbs;
-				//if (player.CustomProperties.TryGetValue(IFG.Player_Otb_Count, out otbs))
-				//{
-				//	int playersOtbs = 0;
-				//	playersOtbs = (int)otbs;
-				//	Debug.Log("In UpdateRemoteOTB: " + playersOtbs);
-				//	_otherPlayerOtbTexts[index].text = playersOtbs.ToString();
-				//}
-
-				//object networth;
-				//if (player.CustomProperties.TryGetValue(IFG.Player_Networth, out networth))
-				//{
-				//	int playerNetworth = 0;
-				//	playerNetworth = (int)networth;
-				//	_remotePlayerNameTexts[index].text = player.NickName;
-				//	_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
-				//	_remotePlayerNetworthTexts[index].text = playerNetworth.ToString("c0");
-				//}
-				index++;
-				//Debug.Log("Index: " + index);
 			}
+			Debug.Log("IN Update Remote Player Info");
+
+			yield return new WaitForSeconds(1.0f);
 		}
+		//if (_remotePlayerNameTexts[0].text != "")
+		//	StopCoroutine("UpdateRemotePlayerInfo");
 
-		yield return new WaitForSeconds(1.0f);
-		if (_remotePlayerNameTexts[0].text != "")
-			StopCoroutine("UpdateRemotePlayerInfo");
-
-		StartCoroutine("UpdateRemotePlayerInfo");
+		//StartCoroutine("UpdateRemotePlayerInfo");
 	}
 
 	void InitializeTheActionsPanel()
@@ -1036,6 +1042,7 @@ public class UIManager : MonoBehaviourPun
 				_bonusMessageText.text = msg;
 				_bonusMessageText.color = fontColor;
 				_bonusMessageText.gameObject.SetActive(true);
+				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				break;
 
 			case "Routine":
@@ -1216,6 +1223,18 @@ public class UIManager : MonoBehaviourPun
 			_endTurnButton.interactable = false;
 			_actionsPanel.SetActive(false);
 			StartCoroutine(ShowMessageRoutine("Game Over", message, fontColor));
+		}
+	}
+
+	void OnOutOfOtbCardsMessageReceived(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Out_Of_Otbs_Event_Code)
+		{
+			//extract data - message
+			object[] recData = (object[])eventData.CustomData;
+			string message = (string)recData[0];
+			Color fontColor = Color.red;
+			StartCoroutine(ShowMessageRoutine("Routine", message, fontColor));
 		}
 	}
 	#endregion
