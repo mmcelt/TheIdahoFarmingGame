@@ -7290,7 +7290,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1382173359}
-        m_MethodName: OnJoinButtonClicked
+        m_MethodName: OnCancelButtonClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

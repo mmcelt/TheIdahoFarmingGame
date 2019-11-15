@@ -9,6 +9,7 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 {
 	#region Public / Serialized Fields
 
+	public bool _coroutineStopped;
 
 	#endregion
 
@@ -39,6 +40,9 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 
 	public void UpdateMyDataToOthers()
 	{
+		if (_pManager == null)
+			_pManager = GetComponent<PlayerManager>();
+
 		Debug.Log("In UpdtMyData2Others");
 		photonView.RPC("UpdateTheData", RpcTarget.Others, _pManager._pCash, _pManager._pNotes, _pManager._myOtbCount, _pManager._pNetworth);
 	}
@@ -47,15 +51,16 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 
 	#region Private Methods
 
-	IEnumerator UpdateRemotePlayerData()
+	public IEnumerator UpdateRemotePlayerData()
 	{
-		//for (int i=0; i<4; i++)
-		//{
+		for (int i = 0; i < 4; i++)
+		{
 			Debug.Log("NOP in URPD: " + GameManager.Instance._numberOfPlayers);
 			photonView.RPC("UpdateTheData", RpcTarget.Others, _pManager._pCash, _pManager._pNotes, _pManager._myOtbCount, _pManager._pNetworth);
 			yield return new WaitForSeconds(0.75f);
-		//}
-		StartCoroutine(UpdateRemotePlayerData());
+		}
+		//StartCoroutine(UpdateRemotePlayerData());
+		_coroutineStopped = true;
 	}
 
 	[PunRPC]

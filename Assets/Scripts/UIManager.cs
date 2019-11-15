@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviourPun
 	[SerializeField] Text _gameTyeText, _gameEndText;
 	[SerializeField] Text[] _remotePlayerNameTexts;
 	public Text[] _remotePlayerNetworthTexts;
+	public Text _activePlayerText;
 	[SerializeField] Text _otbShuffleText, _oeShuffleText, _ffShuffleText;
 	[SerializeField] Text _otbLeftText, _oeLeftText, _ffLeftText;
 	[SerializeField] Text _otbTotalText, _oeTotalText, _ffTotalText;

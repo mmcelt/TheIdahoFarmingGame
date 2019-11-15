@@ -616,8 +616,8 @@ public class DeckManager : MonoBehaviourPun
 
 		ShuffleOtbDeck(_otbCards);
 
-		foreach (OTBCard oTBCard in _otbCards)
-			print(oTBCard.cardNumber + ":" + oTBCard.bottomCard + ":" + oTBCard.totalCost);
+		//foreach (OTBCard oTBCard in _otbCards)
+		//	print(oTBCard.cardNumber + ":" + oTBCard.bottomCard + ":" + oTBCard.totalCost);
 	}
 
 	void CreateAnOTBCard(int cardNum, string desc, string sum, int cost)

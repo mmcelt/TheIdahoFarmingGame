@@ -134,7 +134,7 @@ public class PlayerManager : MonoBehaviourPun
 		UpdateLemhiRange(false);
 		_myOtbCount = _myOtbs.Count;
 		//UpdateMyOtbCount(_myOtbCount);
-		//_rpUpdater.UpdateRemotePlayerData();
+		_rpUpdater.UpdateMyDataToOthers();
 
 		UpdateMyUI();
 		//StartCoroutine(UpdateOtbProperty(_myOtbs.Count));
@@ -457,6 +457,7 @@ public class PlayerManager : MonoBehaviourPun
 		if (_diceRoll == null)
 			_diceRoll = GameManager.Instance.myDiceRoll;
 
+		_diceRoll.isHarvestRoll = false;
 		_diceRoll.isOtherRoll = true;
 		_diceRoll.isTetonDamRoll = true;
 
@@ -535,9 +536,9 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._tetonDamPanel.SetActive(false);
 		_uiManager._completeModalPanel.SetActive(false);
 		_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
-		_uiManager._tetonHeaderText.enabled = true;
+		//_uiManager._tetonHeaderText.enabled = true;
 		_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
-		_uiManager._tetonMessageText.enabled = true;
+		//_uiManager._tetonMessageText.enabled = true;
 		_diceRoll.isOtherRoll = false;
 		_diceRoll.isTetonDamRoll = false;
 		_diceRoll.tetonDamRollComplete = false;
@@ -626,8 +627,8 @@ public class PlayerManager : MonoBehaviourPun
 		{
 			//_uiManager.StartCoroutine(_uiManager.UpdateUIRoutine());
 			_uiManager.UpdateUI();
-			//if (GameManager.Instance._cachedPlayerList.Count > 1)
-			//	_rpUpdater.UpdateMyDataToOthers();
+			if (GameManager.Instance._cachedPlayerList.Count > 1 && _rpUpdater._coroutineStopped)
+				_rpUpdater.UpdateMyDataToOthers();
 		}
 	}
 
@@ -666,6 +667,7 @@ public class PlayerManager : MonoBehaviourPun
 				_uiManager._rollButton.interactable = true;
 				_isMyTurn = true;
 				AudioManager.Instance.PlaySound(AudioManager.Instance._yourTurn);
+				photonView.RPC("UpdateActivePlayerText", RpcTarget.All);
 			}
 			else
 			{
@@ -675,6 +677,14 @@ public class PlayerManager : MonoBehaviourPun
 			}
 			//Debug.Log("INSIDE IF!");
 		}
+	}
+
+	[PunRPC]
+	void UpdateActivePlayerText(PhotonMessageInfo info)
+	{
+		_uiManager._activePlayerText.text = GameManager.Instance._cachedPlayerList
+			[GameManager.Instance._activePlayer - 1].NickName;
+		_uiManager._activePlayerText.color = _uiManager.SelectFontColorForFarmer((string)info.Sender.CustomProperties[IFG.Selected_Farmer]);
 	}
 
 	void OnReceiveInitialOtbCards(EventData eventData)
@@ -708,12 +718,17 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Receive_Otb_Event_code)
 		{
+			if (!photonView.IsMine) return;
+
 			//recover the card's field values...
 			object[] recData = (object[])eventData.CustomData;
 			int cardNum = (int)recData[0];
 			string desc = (string)recData[1];
 			string summary = (string)recData[2];
 			int cost = (int)recData[3];
+
+			if (cost == 0)
+				cost = SetOtbTotalCost(cardNum);
 
 			OTBCard drawnCard = new OTBCard();
 			drawnCard.cardNumber = cardNum;
@@ -884,6 +899,82 @@ public class PlayerManager : MonoBehaviourPun
 			SendOptions sendOptions = new SendOptions() { Reliability = true };
 			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Complete_Farmer_Bonus_Given_Event_Code, sndData, eventOptions, sendOptions);
 		}
+	}
+
+	int SetOtbTotalCost(int cardNumber)
+	{
+		int tCost = 0;
+
+		switch (cardNumber)
+		{
+			case 1:  //grain
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 12: //hay
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+			case 38: //oxford range
+			case 39:
+			case 40:
+			case 41: //spuds
+			case 42:
+			case 43:
+			case 44:
+			case 45:
+			case 46:
+				tCost = 20000;
+				return tCost;
+
+			case 6:  //livestock
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+			case 11:
+				tCost = 5000;
+				return tCost;
+
+			case 17: //tractor
+			case 18:
+			case 19:
+			case 20: //harvester
+			case 21:
+			case 22:
+				tCost = 10000;
+				return tCost;
+
+			case 23: //fruit
+			case 24:
+			case 25:
+			case 26:
+			case 27:
+			case 28:
+				tCost = 25000;
+				return tCost;
+
+			case 29: //lemhi range
+			case 30:
+			case 31:
+				tCost = 50000;
+				return tCost;
+
+			case 32: //lost river range
+			case 33:
+			case 34:
+				tCost = 40000;
+				return tCost;
+
+			case 35: //targhee range
+			case 36:
+			case 37:
+				tCost = 30000;
+				return tCost;
+		}
+		return 0;
 	}
 	#endregion
 }
