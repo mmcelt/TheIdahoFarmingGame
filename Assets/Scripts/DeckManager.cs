@@ -1203,7 +1203,7 @@ public class DeckManager : MonoBehaviourPun
 		//send options
 		SendOptions sendOptions = new SendOptions() { Reliability = true };
 		//fire the event
-		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Out_Of_Otbs_Event_Code, sndData, eventOptions, sendOptions);	
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Out_Of_Otbs_Event_Code, sndData, eventOptions, sendOptions);
 	}
 	#endregion
 }

@@ -77,7 +77,7 @@ public class MyDiceRoll : MonoBehaviour
 
 	void OnCollisionEnter2D(Collision2D collision)
 	{
-		Debug.Log(rb.velocity.sqrMagnitude);
+		//Debug.Log(rb.velocity.sqrMagnitude);
 
 		ac.Play();
 		if (rb.velocity.sqrMagnitude < stopRollAmount)	//10
@@ -95,7 +95,7 @@ public class MyDiceRoll : MonoBehaviour
 		yield return new WaitForSeconds(1.0f);
 		if (!isOtherRoll)
 		{
-			Debug.Log("MOVE! " + Pip);
+			//Debug.Log("MOVE! " + Pip);
 			_pMove.InitMove(Pip);
 		}
 		yield return new WaitForSeconds(0.95f);

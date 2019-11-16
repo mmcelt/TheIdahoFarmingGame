@@ -266,7 +266,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 			ExitGames.Client.Photon.Hashtable networthProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Networth_Game, networthGameAmount } };
 			PhotonNetwork.CurrentRoom.SetCustomProperties(networthProp);
 
-			Debug.Log("SETTING NETWORTH FOR GAME " + networthGameAmount);
+			//Debug.Log("SETTING NETWORTH FOR GAME " + networthGameAmount);
 		}
 		else if (timedToggle.isOn)
 		{
@@ -392,7 +392,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 		foreach (RoomInfo room in roomList)
 		{
-			Debug.Log("Room: " + room.Name);
+			//Debug.Log("Room: " + room.Name);
 
 			if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
 			{

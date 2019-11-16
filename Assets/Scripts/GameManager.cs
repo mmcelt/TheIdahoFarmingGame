@@ -156,13 +156,13 @@ public class GameManager : MonoBehaviourPun
 		{
 			_gameMode = "Networth Game";
 			_networthGameAmount = (int)gameType;
-			Debug.Log("Game Mode: " + _gameMode + " " + _networthGameAmount);
+			//Debug.Log("Game Mode: " + _gameMode + " " + _networthGameAmount);
 		}
 		else
 		{
 			_gameMode = "Timed Game";
 			_timedGameLength = (float)gameType;
-			Debug.Log("Game Mode: " + _gameMode + " " + _timedGameLength);
+			//Debug.Log("Game Mode: " + _gameMode + " " + _timedGameLength);
 		}
 		//send event to UIManagers to update fields
 		//data -gameMode,length

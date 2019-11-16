@@ -41,12 +41,17 @@ public class UIManager : MonoBehaviourPun
 	[Header("Actions Panel")]
 	public GameObject _actionsPanel;
 	public Text _cashText, _notesText, _otbMessageText;
-	public Button _sellOtbButton, _buyOptionButton, _payInFullButton, _cancelButton, _otbOkButton;
+	public Button _sellOtbToBankButton, _sellOtbToPlayerButton, _buyOptionButton, _payInFullButton, _cancelButton, _otbOkButton;
 	public Button _repayLoanButton, _getLoanButton;
 	public Dropdown _otbDropdown;
 	public InputField _downPaymentInput;
 	public InputField _getLoanInput;
 	public InputField _repayLoanInput;
+
+	[Header("Sell OTB to Player Panel")]
+	[SerializeField] GameObject _sellOtbToPlayerPanel;
+	[SerializeField] Text _sellOtbToPlayerMessageText;
+	[SerializeField] Button _cancelSaleButton, _sellTheOtbToPlayerButton;
 
 	[Header("Board Space Panel")]
 	public GameObject _boardSpacePanel;
@@ -106,6 +111,7 @@ public class UIManager : MonoBehaviourPun
 	[Header("Modal Panels")]
 	public GameObject _modalPanel;
 	public GameObject _completeModalPanel;
+	public GameObject _actionsPanelModalPanel;
 
 	[Header("Misc Stuff")]
 	public int _tempCash;
@@ -269,12 +275,26 @@ public class UIManager : MonoBehaviourPun
 		}
 	}
 
-	public void OnSellOtbButtonClicked()
+	public void OnSellOtbToBankButtonClicked()
 	{
 		if (_pManager._isMyTurn)
 		{
 			_isSellMsg = true;
 			StartCoroutine("SellOtbRoutine");
+		}
+		else
+		{
+			_isWarningMsg = true;
+			_otbMessageText.text = "You can only sell an OTB card on your turn...";
+			_otbOkButton.gameObject.SetActive(true);
+		}
+	}
+
+	public void OnSellOtbToPlayerButtonClicked()
+	{
+		if (_pManager._isMyTurn)
+		{
+			StartCoroutine("SellOtbToPlayerRoutine");
 		}
 		else
 		{
@@ -350,8 +370,10 @@ public class UIManager : MonoBehaviourPun
 
 			if (_pManager._isMyTurn)
 			{
-				_sellOtbButton.gameObject.SetActive(true);
-				_sellOtbButton.interactable = true;
+				_sellOtbToBankButton.gameObject.SetActive(true);
+				_sellOtbToBankButton.interactable = true;
+				_sellOtbToPlayerButton.gameObject.SetActive(true);
+				_sellOtbToPlayerButton.interactable = true;
 			}
 
 			if (_pManager._pCash >= _otbCost)
@@ -364,7 +386,8 @@ public class UIManager : MonoBehaviourPun
 			StopCoroutine("BuyOptionRoutine");
 			ResetOtbListPanel();
 			_repayLoanInput.Select();
-			_sellOtbButton.interactable = false;
+			_sellOtbToBankButton.interactable = false;
+			_sellOtbToPlayerButton.interactable = false;
 		}
 	}
 
@@ -402,6 +425,18 @@ public class UIManager : MonoBehaviourPun
 			_transactionBlocked = true;
 		else
 			_transactionBlocked = false;
+	}
+
+	public void OnCancelOtbSaleToPlayerButtonClicked()
+	{
+		_actionsPanelModalPanel.SetActive(false);
+		_sellOtbToPlayerPanel.SetActive(false);
+		ResetOtbListPanel();
+	}
+
+	public void OnDoOtbSaleToPlayerButtonClicked()
+	{
+		Debug.Log("Sell the OTB to the Player...");
 	}
 	#endregion
 
@@ -697,7 +732,7 @@ public class UIManager : MonoBehaviourPun
 		_otbCards.Clear();
 		_otbDropdown.ClearOptions();
 
-		string dummyEntry = "                  My OTB Cards";
+		string dummyEntry = "               My OTB Cards";
 		_otbCards.Add(dummyEntry); //this will be index 0
 
 		foreach (OTBCard card in _pManager._myOtbs)
@@ -719,7 +754,7 @@ public class UIManager : MonoBehaviourPun
 		_minDownPayment = 0;
 		_downPaymentInput.text = "";
 		_downPaymentInput.placeholder.GetComponent<Text>().text = "Enter your Downpayment...";
-		_sellOtbButton.interactable = false;
+		_sellOtbToBankButton.interactable = false;
 		_buyOptionButton.interactable = false;
 		_payInFullButton.interactable = false;
 		_stopBuying = false;
@@ -738,7 +773,7 @@ public class UIManager : MonoBehaviourPun
 		yield return new WaitWhile(() => _otbMessageText.text != "");
 
 		//Debug.Log("OUT OF SELL WAIT");
-		_sellOtbButton.gameObject.SetActive(false);
+		_sellOtbToBankButton.gameObject.SetActive(false);
 		if (!_cancelOtbSale)
 		{
 			_pManager.UpdateMyCash(_sellingPrice);
@@ -749,6 +784,15 @@ public class UIManager : MonoBehaviourPun
 		_cancelOtbSale = false;
 		ResetOtbListPanel();
 		_actionsPanel.SetActive(false);
+	}
+
+	IEnumerator SellOtbToPlayerRoutine()
+	{
+		_actionsPanelModalPanel.SetActive(true);
+		_sellOtbToPlayerPanel.SetActive(true);
+		_sellOtbToPlayerMessageText.text = "You are selling " + _selectedCard.summary;
+		yield return null;
+		Debug.Log("SELLING OTB TO PLAYER ROUTINE...");
 	}
 
 	string SelectSellMessageText()

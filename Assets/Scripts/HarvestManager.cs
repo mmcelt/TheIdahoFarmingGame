@@ -111,6 +111,8 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnOkButton1GarnishedClicked()
 	{
+		Debug.Log("OK1G BUTTON CLICKED");
+
 		_gMessageText.text = "Getting your Operating Expenses...";
 		_ok1GButtonPressed = true;
 	}
@@ -133,7 +135,7 @@ public class HarvestManager : MonoBehaviour
 		_harvestCheck = 0;
 		_commodity = commodity;
 
-		Debug.Log("In PerformHarvestRoutine: " + space + " " + commodity + " " + amount);
+		//Debug.Log("In PerformHarvestRoutine: " + space + " " + commodity + " " + amount);
 
 		if (_pManager == null)
 			_pManager = GameManager.Instance.myFarmer.GetComponent<PlayerManager>();
@@ -166,11 +168,11 @@ public class HarvestManager : MonoBehaviour
 
 		//WAIT roll the die
 		yield return new WaitUntil(() => _rollButtonPressed);
-		Debug.Log("Roll Button Pressed");
+		//Debug.Log("Roll Button Pressed");
 		_myDiceRoll.isHarvestRoll = false;
 
 		yield return new WaitUntil(() => _okButton1Pressed);
-		Debug.Log("OK1 Pressed");
+		//Debug.Log("OK1 Pressed");
 		SendHarvestRollMessage();
 
 		//_dieRoll = 1;	//TESTING
@@ -179,8 +181,8 @@ public class HarvestManager : MonoBehaviour
 		{
 			case "Hay":
 				_harvestCheck = GetHayCheck(_dieRoll, amount);
-				Debug.Log("Die: " + _dieRoll);
-				Debug.Log("CHART AMOUNT: "+_harvestCheck);
+				//Debug.Log("Die: " + _dieRoll);
+				//Debug.Log("CHART AMOUNT: "+_harvestCheck);
 				//special conditions
 				SpecialBoardConditions(commodity);
 				SpecialPlayerConditions(commodity);
@@ -225,7 +227,7 @@ public class HarvestManager : MonoBehaviour
 
 		yield return new WaitUntil(() => !_waitingForOeCard);
 
-		Debug.Log("Operating Expense is: " + _operatingExpenses);
+		//Debug.Log("Operating Expense is: " + _operatingExpenses);
 
 		yield return new WaitWhile(() => _uiManager._harvestPanel.activeSelf);
 
@@ -243,7 +245,6 @@ public class HarvestManager : MonoBehaviour
 	public IEnumerator PerformGarnishedHarvestRoutine(int space)
 	{
 		_harvestCheck = 0;
-
 
 		if (_pManager == null)
 			_pManager = GameManager.Instance.myFarmer.GetComponent<PlayerManager>();
@@ -268,10 +269,11 @@ public class HarvestManager : MonoBehaviour
 		if (_pMove == null)
 			_pMove = GameManager.Instance.myFarmer.GetComponent<PlayerMove>();
 
+		_ok1GButtonPressed = false;
 		_uiManager._gHarvestPanel.SetActive(true);
-		yield return null;
-		_gMessageText.text = "Wages Garnished - No Harvest Check!";
 		_ok1GButton.gameObject.SetActive(true);
+		_gMessageText.text = "Wages Garnished - No Harvest Check!";
+		//_ok1GButton.gameObject.SetActive(true);
 
 		yield return new WaitUntil(() => _ok1GButtonPressed);
 		_ok1GButtonPressed = false;

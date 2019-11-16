@@ -174,7 +174,7 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		if (!photonView.IsMine) return;
 
-		Debug.Log("In UpdateOTBCount: " + amount);
+		//Debug.Log("In UpdateOTBCount: " + amount);
 		ExitGames.Client.Photon.Hashtable otbProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Otb_Count, _myOtbCount = amount } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(otbProp);
 		//if (photonView.IsMine)
@@ -431,7 +431,7 @@ public class PlayerManager : MonoBehaviourPun
 
 		if (eventData.Code == (byte)RaiseEventCodes.Teton_Dam_Event_Code)
 		{
-			Debug.Log("TETON EVENT RECEIVED");
+			//Debug.Log("TETON EVENT RECEIVED");
 
 			//extract data
 			object[] recData = (object[])eventData.CustomData;
@@ -498,7 +498,7 @@ public class PlayerManager : MonoBehaviourPun
 				//even Hit
 				//_uiManager._tetonDamImage.enabled = true;
 				_uiManager._tetonMessageText.text = "You Were Hit!! " + roll;
-				Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
+				//Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
 				//play bad sound
 				AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 			}
@@ -515,14 +515,14 @@ public class PlayerManager : MonoBehaviourPun
 			//while (_uiManager._tetonDamPanel.activeSelf)
 			//	yield return null;
 
-			Debug.Log("PENALTY B4 IF: " + penalty);
+			//Debug.Log("PENALTY B4 IF: " + penalty);
 
 			//loopCounter++;
 
 			if (penalty < 0)
 			{
 				UpdateMyCash(penalty);
-				Debug.Log("PENALTY: " + penalty);
+				//Debug.Log("PENALTY: " + penalty);
 				penalty = 0;
 			}
 		//}
