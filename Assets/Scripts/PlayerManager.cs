@@ -96,6 +96,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived += OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived += OnChangingActivePlayer;
 		PhotonNetwork.NetworkingClient.EventReceived += OnTetonDamEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnSellOtbToOtherPlayerEventReceived;
 	}
 
 	void OnDisable()
@@ -106,6 +107,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived -= OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnChangingActivePlayer;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnTetonDamEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnSellOtbToOtherPlayerEventReceived;
 	}
 
 	void Start()
@@ -621,10 +623,13 @@ public class PlayerManager : MonoBehaviourPun
 
 	#region Private Methods
 
-	void UpdateMyUI()
+	public void UpdateMyUI()
 	{
 		if (photonView.IsMine)
 		{
+			if (_uiManager == null)
+				_uiManager = GameManager.Instance.uiManager;
+
 			//_uiManager.StartCoroutine(_uiManager.UpdateUIRoutine());
 			_uiManager.UpdateUI();
 			if (GameManager.Instance._cachedPlayerList.Count > 1 && _rpUpdater._coroutineStopped)
@@ -735,6 +740,7 @@ public class PlayerManager : MonoBehaviourPun
 			drawnCard.description = desc;
 			drawnCard.summary = summary;
 			drawnCard.totalCost = cost;
+			drawnCard.bottomCard = false;
 
 			//TESTING
 			Debug.Log("DRAWN OTB CARD DATA:");
@@ -975,6 +981,30 @@ public class PlayerManager : MonoBehaviourPun
 				return tCost;
 		}
 		return 0;
+	}
+	#endregion
+
+	#region Photon Event Handlers
+
+	void OnSellOtbToOtherPlayerEventReceived(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Sell_Otb_To_Player_Event_Code)
+		{
+			//extract data - cardNum,cardDesc,cardSummary,cardTotalCost,salePrice
+			object[] recData = (object[])eventData.CustomData;
+			OTBCard boughtCard = new OTBCard();
+			boughtCard.cardNumber = (int)recData[0];
+			boughtCard.description = (string)recData[1];
+			boughtCard.summary = (string)recData[2];
+			boughtCard.totalCost = (int)recData[3];
+			boughtCard.bottomCard = false;
+
+			_myOtbs.Add(boughtCard);
+			_myOtbCount = _myOtbs.Count;
+			UpdateMyCash(-(int)recData[4]);
+			UpdateMyUI();
+		}
+
 	}
 	#endregion
 }

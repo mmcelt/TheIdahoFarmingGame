@@ -22,7 +22,7 @@ public class AudioManager : MonoBehaviour
 	public AudioClip _goBonus;
 	public AudioClip _hurtBack;
 	public AudioClip _farmingLikeAnIdiot;
-	public AudioClip _fireworks;
+	public AudioClip _shuffle;
 
 	[HideInInspector] public AudioSource _aSource;
 

@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour
 {
 	#region Public / Serialized Fields
 
 	[SerializeField] HarvestManager _hManager;
+	[SerializeField] GameObject _fireworksPrefab;
 
 	#endregion
 
@@ -24,6 +26,9 @@ public class BoardManager : MonoBehaviour
 	Text _headerText;
 	TextMeshProUGUI _spaceText;
 	Button _okButton;
+
+	SpriteRenderer _gameboardRenderer;
+	List<SpriteRenderer> _activeSprites;
 
 	#endregion
 
@@ -46,6 +51,8 @@ public class BoardManager : MonoBehaviour
 		_headerText = _uiManager._headerText;
 		_spaceText = _uiManager._spaceText;
 		_okButton = _uiManager._okButton;   //TODO: make an OnClick() in code
+
+		_gameboardRenderer = GetComponent<SpriteRenderer>();
 
 		//Debug.Log("GM FARMER: " + GameManager.Instance.myFarmerName);
 	}
@@ -615,8 +622,9 @@ public class BoardManager : MonoBehaviour
 				}
 				break;
 
-			case 25:	//independence day - END OF CHERRY HARVEST
-				//fireworks...
+			case 25: //independence day - END OF CHERRY HARVEST
+						//fireworks...
+				StartCoroutine(PlayFireworksRoutine());
 				if(_pManager._pFruit > 0 && !_pManager._cherries)
 				{
 					if(!_pManager._pWagesGarnished)
@@ -998,6 +1006,67 @@ public class BoardManager : MonoBehaviour
 				Debug.LogWarning("OOPS, Space not found " + space);
 				break;
 		}
+	}
+
+	IEnumerator PlayFireworksRoutine()
+	{
+		yield return new WaitWhile(() => _uiManager._harvestPanel.activeSelf || _uiManager._gHarvestPanel.activeSelf);
+		_activeSprites = new List<SpriteRenderer>();
+		CyclePlayersAndStickers(false);
+		_gameboardRenderer.enabled = false;
+		GameObject fireworks = Instantiate(_fireworksPrefab);
+		yield return new WaitForSeconds(6f);
+		CyclePlayersAndStickers(true);
+		_gameboardRenderer.enabled = true;
+		Destroy(fireworks);
+	}
+
+	void CyclePlayersAndStickers(bool status)
+	{
+		//players
+		GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+		foreach (GameObject sprite in players)
+			sprite.GetComponent<SpriteRenderer>().enabled = status;
+
+		//hay
+		GameObject[] hayStickers = GameObject.FindGameObjectsWithTag("HaySticker");
+		foreach (GameObject sprite in hayStickers)
+			sprite.GetComponent<SpriteRenderer>().enabled = status;
+
+		//grain
+		GameObject[] grainStickers = GameObject.FindGameObjectsWithTag("GrainSticker");
+		foreach (GameObject sprite in grainStickers)
+			sprite.GetComponent<SpriteRenderer>().enabled = status;
+
+		//fruit
+		GameObject[] fruitStickers = GameObject.FindGameObjectsWithTag("FruitSticker");
+		foreach (GameObject sprite in fruitStickers)
+			sprite.GetComponent<SpriteRenderer>().enabled = status;
+
+		//cows
+		GameObject[] cowStickers = GameObject.FindGameObjectsWithTag("CowSticker");
+		foreach (GameObject sprite in cowStickers)
+			sprite.GetComponent<SpriteRenderer>().enabled = status;
+
+		//spuds
+		GameObject[] spudStickers = GameObject.FindGameObjectsWithTag("SpudsSticker");
+		foreach (GameObject sprite in spudStickers)
+			sprite.GetComponent<SpriteRenderer>().enabled = status;
+
+		//harvester
+		GameObject[] harvesterStickers = GameObject.FindGameObjectsWithTag("HarvesterSticker");
+		foreach (GameObject sprite in harvesterStickers)
+			sprite.GetComponent<SpriteRenderer>().enabled = status;
+
+		//tractor
+		GameObject[] tractorStickers = GameObject.FindGameObjectsWithTag("TractorSticker");
+		foreach (GameObject sprite in tractorStickers)
+			sprite.GetComponent<SpriteRenderer>().enabled = status;
+
+		//ranges
+		GameObject[] rangeStickers = GameObject.FindGameObjectsWithTag("RangeSticker");
+		foreach (GameObject sprite in rangeStickers)
+			sprite.GetComponent<SpriteRenderer>().enabled = status;
 	}
 	#endregion
 }

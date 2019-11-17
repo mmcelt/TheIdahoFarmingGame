@@ -51,7 +51,11 @@ public class UIManager : MonoBehaviourPun
 	[Header("Sell OTB to Player Panel")]
 	[SerializeField] GameObject _sellOtbToPlayerPanel;
 	[SerializeField] Text _sellOtbToPlayerMessageText;
-	[SerializeField] Button _cancelSaleButton, _sellTheOtbToPlayerButton;
+	public Button _cancelSaleButton, _sellTheOtbToPlayerButton;
+	[SerializeField] Dropdown _playerSelectionDropdown;
+	[SerializeField] Sprite[] _farmerSprites;
+	[SerializeField] Sprite _headerSprite;
+	[SerializeField] InputField _salePriceInput;
 
 	[Header("Board Space Panel")]
 	public GameObject _boardSpacePanel;
@@ -113,6 +117,9 @@ public class UIManager : MonoBehaviourPun
 	public GameObject _completeModalPanel;
 	public GameObject _actionsPanelModalPanel;
 
+	//[Header("Fireworks Stuff")]
+	//public SpriteRenderer _gameboardRenderer;
+
 	[Header("Misc Stuff")]
 	public int _tempCash;
 	public int _tempNotes;
@@ -123,6 +130,11 @@ public class UIManager : MonoBehaviourPun
 	public int _loanAmount;
 	public bool _transactionBlocked;
 	public bool _stopBuying;
+	public int _sellingPrice;
+	public int _minSalePrice;
+	public int _salePrice;
+
+	[HideInInspector] public OTBCard _selectedCard;
 
 	#endregion
 
@@ -136,11 +148,11 @@ public class UIManager : MonoBehaviourPun
 	RemotePlayerUpdater _rpUpdater;
 
 	//OTB Stuff
-	List<string> _otbCards = new List<string>();
+	List<string> _otbCards = new List<string>();			//for the myOTB Dropdown
+	public List<Dropdown.OptionData> _otherPlayers = new List<Dropdown.OptionData>();	//for the playerSelection Dropdown
 
 	int _selectedIndex;
-	OTBCard _selectedCard;
-	int _sellingPrice;
+	int _selectedPlayer;
 
 	bool _isSellMsg;
 	bool _isWarningMsg;
@@ -372,8 +384,18 @@ public class UIManager : MonoBehaviourPun
 			{
 				_sellOtbToBankButton.gameObject.SetActive(true);
 				_sellOtbToBankButton.interactable = true;
-				_sellOtbToPlayerButton.gameObject.SetActive(true);
-				_sellOtbToPlayerButton.interactable = true;
+				if (GameManager.Instance._cachedPlayerList.Count > 1)
+				{
+					_sellOtbToPlayerButton.gameObject.SetActive(true);
+					_sellOtbToPlayerButton.interactable = true;
+				}
+			}
+			else
+			{
+				_sellOtbToBankButton.gameObject.SetActive(false);
+				_sellOtbToBankButton.interactable = false;
+				_sellOtbToPlayerButton.gameObject.SetActive(false);
+				_sellOtbToPlayerButton.interactable = false;
 			}
 
 			if (_pManager._pCash >= _otbCost)
@@ -388,6 +410,32 @@ public class UIManager : MonoBehaviourPun
 			_repayLoanInput.Select();
 			_sellOtbToBankButton.interactable = false;
 			_sellOtbToPlayerButton.interactable = false;
+		}
+	}
+
+	public void OnPlayerSelectionDropdownValueChanged(int index)
+	{
+		_selectedIndex = index;
+		
+		for(int i=1; i<_otherPlayers.Count; i++)
+		{
+			for(int p=0; p<GameManager.Instance._cachedPlayerList.Count; p++)
+			{
+				if (GameManager.Instance._cachedPlayerList[p].NickName == _otherPlayers[i].text)
+				{
+					_selectedPlayer = GameManager.Instance._cachedPlayerList[p].ActorNumber;
+				}
+			}
+		}
+		
+		Debug.Log("In Select Buying Player: " + _selectedPlayer);
+		if (index > 0)
+		{
+			_salePriceInput.interactable = true;
+		}
+		else
+		{
+			_salePriceInput.interactable = false;
 		}
 	}
 
@@ -431,12 +479,34 @@ public class UIManager : MonoBehaviourPun
 	{
 		_actionsPanelModalPanel.SetActive(false);
 		_sellOtbToPlayerPanel.SetActive(false);
-		ResetOtbListPanel();
 	}
 
 	public void OnDoOtbSaleToPlayerButtonClicked()
 	{
+		_sellTheOtbToPlayerButton.interactable = false;
 		Debug.Log("Sell the OTB to the Player...");
+		//get the money for the sale
+		_pManager.UpdateMyCash(_salePrice);
+		//create an Event to the receiving player...
+		//data - cardNum,cardDesc,cardSummary,cardTotalCost,salePrice
+		object[] sndData = new object[] { _selectedCard.cardNumber, _selectedCard.description, _selectedCard.summary, _selectedCard.totalCost, _salePrice };
+		//event options
+		RaiseEventOptions eventOptions = new RaiseEventOptions()
+		{
+			TargetActors = new int[] { _selectedPlayer },
+			CachingOption = EventCaching.DoNotCache
+		};
+		//send options
+		SendOptions sendOptions = new SendOptions() { Reliability = true };
+		//fire the event...
+		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Sell_Otb_To_Player_Event_Code, sndData, eventOptions, sendOptions);
+		//remove the selectedCard from seller's hand...
+		_pManager._myOtbs.Remove(_selectedCard);
+		_pManager._myOtbCount = _pManager._myOtbs.Count;
+		_pManager.UpdateMyUI();
+
+		_actionsPanelModalPanel.SetActive(false);
+		_sellOtbToPlayerPanel.SetActive(false);
 	}
 	#endregion
 
@@ -561,6 +631,13 @@ public class UIManager : MonoBehaviourPun
 		return Color.black;
 	}
 
+	public Color SelectColorFromPlayerNumber(int player)
+	{
+		string farmer = (string)GameManager.Instance._cachedPlayerList[player].CustomProperties[IFG.Selected_Farmer];
+
+		return SelectFontColorForFarmer(farmer);
+	}
+
 	public IEnumerator BuyOptionRoutine()
 	{
 		_transactionBlocked = true;
@@ -605,6 +682,93 @@ public class UIManager : MonoBehaviourPun
 		_getFlButton.interactable = !_transactionBlocked;
 	}
 
+	public int GetSalePrice()
+	{
+		int salePrice = 0;
+
+		switch (_selectedCard.cardNumber)
+		{
+			case 1:  //grain
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+				salePrice = 4000;
+				return salePrice;
+
+			case 6:  //livestock
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+			case 11:
+				salePrice = 1000;
+				return salePrice;
+
+			case 12: //hay
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+				salePrice = 4000;
+				return salePrice;
+
+			case 17: //tractor
+			case 18:
+			case 19:
+				salePrice = 2000;
+				return salePrice;
+
+			case 20: //harvester
+			case 21:
+			case 22:
+				salePrice = 2000;
+				return salePrice;
+
+			case 23: //fruit
+			case 24:
+			case 25:
+			case 26:
+			case 27:
+			case 28:
+				salePrice = 5000;
+				return salePrice;
+
+			case 29: //lemhi range
+			case 30:
+			case 31:
+				salePrice = 5000;
+				return salePrice;
+
+			case 32: //lost river range
+			case 33:
+			case 34:
+				salePrice = 4000;
+				return salePrice;
+
+			case 35: //targhee range
+			case 36:
+			case 37:
+				salePrice = 4000;
+				return salePrice;
+
+			case 38: //oxford range
+			case 39:
+			case 40:
+				salePrice = 2000;
+				return salePrice;
+
+			case 41: //spuds
+			case 42:
+			case 43:
+			case 44:
+			case 45:
+			case 46:
+				salePrice = 4000;
+				return salePrice;
+		}
+		return 0;
+	}
 	#endregion
 
 	#region Private Methods
@@ -633,11 +797,13 @@ public class UIManager : MonoBehaviourPun
 
 		_currentYearText.text = _pMove._currentYear.ToString();
 	}
+
 	void StartRemotePlayerUpdating()
 	{
 		if (GameManager.Instance._numberOfPlayers > 1)
 			StartCoroutine("UpdateRemotePlayerInfo");
 	}
+
 	IEnumerator UpdateRemotePlayerInfo()
 	{
 		//update the remote players info...
@@ -716,7 +882,7 @@ public class UIManager : MonoBehaviourPun
 	void InitializeTheActionsPanel()
 	{
 		ResetTempFunds();
-		PopulateOtbDropdown();
+		PopulateDropdown(_otbDropdown.name);
 		_repayLoanInput.Select();
 	}
 
@@ -727,24 +893,57 @@ public class UIManager : MonoBehaviourPun
 		UpdateActionsPanelFunds(_tempCash, _tempNotes);
 	}
 
-	void PopulateOtbDropdown()
+	void PopulateDropdown(string target)
 	{
-		_otbCards.Clear();
-		_otbDropdown.ClearOptions();
+		string headerEntry = "";
 
-		string dummyEntry = "               My OTB Cards";
-		_otbCards.Add(dummyEntry); //this will be index 0
-
-		foreach (OTBCard card in _pManager._myOtbs)
+		if (target == _otbDropdown.name)
 		{
-			_otbCards.Add(card.cardNumber + " : " + card.summary);
-		}
+			_otbCards.Clear();
+			_otbDropdown.ClearOptions();
 
-		_otbDropdown.AddOptions(_otbCards);
-		_otbDropdown.value = 0;
-		_otbDropdown.Select();
-		_otbDropdown.RefreshShownValue();
-		_selectedIndex = 0;
+			headerEntry = "               My OTB Cards";
+			_otbCards.Add(headerEntry); //this will be index 0
+
+			foreach (OTBCard card in _pManager._myOtbs)
+			{
+				_otbCards.Add(card.cardNumber + " : " + card.summary);
+			}
+
+			_otbDropdown.AddOptions(_otbCards);
+			_otbDropdown.value = 0;
+			_otbDropdown.Select();
+			_otbDropdown.RefreshShownValue();
+			_selectedIndex = 0;
+		}
+		if (target == _playerSelectionDropdown.name)
+		{
+			_otherPlayers.Clear();
+			_playerSelectionDropdown.ClearOptions();
+
+			headerEntry = "   Select the Receiving Player";
+			Sprite headerSprite = _farmerSprites[0];
+			var headerOption = new Dropdown.OptionData(headerEntry, headerSprite);
+			_otherPlayers.Add(headerOption);
+
+			foreach (Player player in GameManager.Instance._cachedPlayerList)
+			{
+				if (player.ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+				{
+					string thePlayer = player.NickName;
+					string theFarmer = (string)player.CustomProperties[IFG.Selected_Farmer];
+					Sprite theSprite = _farmerSprites[SelectSpriteForFarmer(theFarmer)];
+					
+					var option = new Dropdown.OptionData(thePlayer, theSprite);
+					_otherPlayers.Add(option);
+				}
+			}
+			_playerSelectionDropdown.AddOptions(_otherPlayers);
+			_playerSelectionDropdown.value = 0;
+			_playerSelectionDropdown.Select();
+			_playerSelectionDropdown.RefreshShownValue();
+			_selectedIndex = 0;
+		}
 	}
 
 	void ResetOtbListPanel()
@@ -760,7 +959,7 @@ public class UIManager : MonoBehaviourPun
 		_stopBuying = false;
 		StopCoroutine("BuyOptionRoutine");
 		ResetTempFunds();
-		PopulateOtbDropdown();
+		PopulateDropdown(_otbDropdown.name);
 	}
 
 	//called by the otbOk button
@@ -779,7 +978,7 @@ public class UIManager : MonoBehaviourPun
 			_pManager.UpdateMyCash(_sellingPrice);
 			_pManager.DiscardOtbCard(_selectedCard);
 			ResetOtbListPanel();
-			PopulateOtbDropdown();
+			PopulateDropdown(_otbDropdown.name);
 		}
 		_cancelOtbSale = false;
 		ResetOtbListPanel();
@@ -791,8 +990,43 @@ public class UIManager : MonoBehaviourPun
 		_actionsPanelModalPanel.SetActive(true);
 		_sellOtbToPlayerPanel.SetActive(true);
 		_sellOtbToPlayerMessageText.text = "You are selling " + _selectedCard.summary;
-		yield return null;
+		_sellOtbToPlayerMessageText.text += "\n\nMinimum Sale price is: " + GetSalePrice().ToString("c0");
+		PopulateDropdown(_playerSelectionDropdown.name);
+
+		yield return new WaitWhile(() => _sellOtbToPlayerPanel.activeSelf);
 		Debug.Log("SELLING OTB TO PLAYER ROUTINE...");
+		_selectedPlayer = 0;
+		_sellingPrice = 0;
+		_salePrice = 0;
+		_minSalePrice = 0;
+		_sellTheOtbToPlayerButton.interactable = false;
+		ResetOtbListPanel();
+		_actionsPanel.SetActive(false);
+	}
+
+	int SelectSpriteForFarmer(string farmer)
+	{
+		switch (farmer)
+		{
+			case "Blackfoot Becky":
+				return 0;
+
+			case "Jerome Jerry":
+				return 1;
+
+			case "Kimberly Kay":
+				return 2;
+
+			case "Menan Mike":
+				return 3;
+
+			case "Ririe Ric":
+				return 4;
+
+			case "Rigby Ron":
+				return 5;
+		}
+		return 0;
 	}
 
 	string SelectSellMessageText()
@@ -1100,6 +1334,7 @@ public class UIManager : MonoBehaviourPun
 				_shuffleMessageText.text = msg;
 				_shuffleMessageText.color = fontColor;
 				_shuffleMessageText.gameObject.SetActive(true);
+				AudioManager.Instance.PlaySound(AudioManager.Instance._shuffle);
 				break;
 
 			case "Game Over":
@@ -1108,7 +1343,7 @@ public class UIManager : MonoBehaviourPun
 				_gameOverMessageText.gameObject.SetActive(true);
 				break;
 		}
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(4f);
 
 		_bonusMessageText.gameObject.SetActive(false);
 		_bonusMessageText.text = "";
@@ -1119,7 +1354,6 @@ public class UIManager : MonoBehaviourPun
 		_shuffleMessageText.text = "";
 		_shuffleMessageText.color = Color.black;
 		_shuffleMessageText.gameObject.SetActive(false);
-
 	}
 	#endregion
 

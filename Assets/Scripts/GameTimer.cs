@@ -52,7 +52,6 @@ public class GameTimer : MonoBehaviourPun
 	{
 		_time = _startTime + Time.time;
 		photonView.RPC("UpdateTimer", RpcTarget.All, _time);
-		_testTime++;
 		yield return new WaitForSecondsRealtime(1.0f);
 
 		StartCoroutine(Timer());

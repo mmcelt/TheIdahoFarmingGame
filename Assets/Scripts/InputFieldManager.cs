@@ -62,7 +62,7 @@ public class InputFieldManager : MonoBehaviour
 
 		if (amount > 0)
 		{
-			if (target.name=="Downpayment Input")
+			if (target.name == "Downpayment Input")
 			{
 				StopCoroutine("BuyOptionRoutine");
 				_uiManager._transactionBlocked = true;
@@ -88,25 +88,55 @@ public class InputFieldManager : MonoBehaviour
 				}
 			}
 
-			if(target.name=="Repay Loan Input")
+			if(target.name == "Repay Loan Input")
 			{
 				_uiManager.UpdateActionsPanelFunds(_uiManager._tempCash -= amount, _uiManager._tempNotes -= amount);
-				_uiManager._repayLoanAmount = amount;
+				if (_uiManager._tempCash >= 0 && (_uiManager._tempNotes >= 0) && _uiManager._tempNotes <= 50000)
+				{
+					_uiManager._repayLoanAmount = amount;
+					_uiManager._repayLoanButton.interactable = true;
+				}
+				else
+					_uiManager._repayLoanButton.interactable = false;
 			}
 
-			if (target.name=="Get Loan Input")
+			if (target.name == "Get Loan Input")
 			{
 				//add 20% up-front loan fee
 				_uiManager.UpdateActionsPanelFunds(_uiManager._tempCash += amount, _uiManager._tempNotes += amount + (int)(amount * 0.2f));
-				_uiManager._loanAmount = amount;
-				Debug.Log("IFM LoanAmt: " + _uiManager._loanAmount);
+				if (_uiManager._tempCash >= 0 && (_uiManager._tempNotes >= 0) && _uiManager._tempNotes <= 50000)
+				{
+					_uiManager._loanAmount = amount;
+					_uiManager._getLoanButton.interactable = true;
+				}
+				else
+				{
+					_uiManager._getLoanButton.interactable = false;
+				}
 			}
 
-			if (target.name=="Forced Loan Input")
+			if (target.name == "Forced Loan Input")
 			{
 				ResetTempFunds();
 				_uiManager.UpdateForcedLoanFunds(_uiManager._tempCash += amount, _uiManager._tempNotes += amount + (int)(amount * 0.2f));
 				_uiManager._loanAmount = amount;
+			}
+
+			if (target.name == "Selling Price Input")
+			{
+				Debug.Log("In IFM SELL OTB 2 PLAYER: " + amount);
+
+				_uiManager._minSalePrice = _uiManager.GetSalePrice();
+
+				if (amount >= _uiManager._minSalePrice)
+				{
+					_uiManager._sellTheOtbToPlayerButton.interactable = true;
+					_uiManager._salePrice = amount;
+				}
+				else
+				{
+					_uiManager._sellTheOtbToPlayerButton.interactable = false;
+				}
 			}
 		}
 	}

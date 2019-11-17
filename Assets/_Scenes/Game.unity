@@ -231,7 +231,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!224 &48134770
 RectTransform:
@@ -1140,7 +1140,7 @@ MonoBehaviour:
   _goBonus: {fileID: 8300000, guid: ae22e857db506ea459451840133c295f, type: 3}
   _hurtBack: {fileID: 8300000, guid: e99f192f7267e8f46aa93a4278548421, type: 3}
   _farmingLikeAnIdiot: {fileID: 8300000, guid: 6194b1aef10b54445b46094afd845a98, type: 3}
-  _fireworks: {fileID: 0}
+  _shuffle: {fileID: 8300000, guid: 7ec66774afad0ec46aece3e5c56d5fee, type: 3}
   _aSource: {fileID: 0}
 --- !u!82 &383173912
 AudioSource:
@@ -2174,6 +2174,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hManager: {fileID: 258946703}
+  _fireworksPrefab: {fileID: 8316397311946834085, guid: 22b93f7dcdfcc394cba93a9d9e67dcac,
+    type: 3}
 --- !u!114 &681520324
 MonoBehaviour:
   m_ObjectHideFlags: 0

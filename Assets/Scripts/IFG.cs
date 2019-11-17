@@ -73,6 +73,7 @@ public enum RaiseEventCodes
 	Shuffle_Message_Event_Code = 21,
 	End_Networth_Game_Event_Code = 22,
 	Teton_Dam_Event_Code = 23,
-	Out_Of_Otbs_Event_Code = 24
+	Out_Of_Otbs_Event_Code = 24,
+	Sell_Otb_To_Player_Event_Code = 25
 };
 
