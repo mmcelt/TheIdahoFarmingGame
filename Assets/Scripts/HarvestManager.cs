@@ -65,6 +65,7 @@ public class HarvestManager : MonoBehaviour
 	UIManager _uiManager;
 	MyDiceRoll _myDiceRoll;
 	PlayerMove _pMove;
+	BoardManager _bManager;
 
 	#endregion
 
@@ -816,6 +817,9 @@ public class HarvestManager : MonoBehaviour
 
 	void PerformPostHarvestActions(int space)
 	{
+		if (_bManager == null)
+			_bManager = GameManager.Instance.bManager;
+
 		switch (space)
 		{
 			case 20: //draw OTB
@@ -833,6 +837,10 @@ public class HarvestManager : MonoBehaviour
 			case 49:
 				_pManager.DrawFFCard();
 				AudioManager.Instance.PlaySound(AudioManager.Instance._ff);
+				break;
+
+			case 25: //fireworks
+				StartCoroutine(_bManager.PlayFireworksRoutine());
 				break;
 
 			case 28: //goto Harvest Moon

@@ -331,6 +331,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.LocalPlayer.SetCustomProperties(networthProp);
 		if (GameManager.Instance._gameMode == "Networth Game")
 		{
+			//CHECK FOR END OF THE GAME...
 			if (_pNetworth >= GameManager.Instance._networthGameAmount)
 			{
 				//game over!

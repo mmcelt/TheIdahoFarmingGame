@@ -624,7 +624,6 @@ public class BoardManager : MonoBehaviour
 
 			case 25: //independence day - END OF CHERRY HARVEST
 						//fireworks...
-				StartCoroutine(PlayFireworksRoutine());
 				if(_pManager._pFruit > 0 && !_pManager._cherries)
 				{
 					if(!_pManager._pWagesGarnished)
@@ -634,6 +633,8 @@ public class BoardManager : MonoBehaviour
 
 					_pManager._cherries = true;
 				}
+				else
+					StartCoroutine(PlayFireworksRoutine());
 				break;
 
 			case 26: //START 2ND HAY CUT - double harvest check
@@ -1008,9 +1009,8 @@ public class BoardManager : MonoBehaviour
 		}
 	}
 
-	IEnumerator PlayFireworksRoutine()
+	 public IEnumerator PlayFireworksRoutine()
 	{
-		yield return new WaitWhile(() => _uiManager._harvestPanel.activeSelf || _uiManager._gHarvestPanel.activeSelf);
 		_activeSprites = new List<SpriteRenderer>();
 		CyclePlayersAndStickers(false);
 		_gameboardRenderer.enabled = false;

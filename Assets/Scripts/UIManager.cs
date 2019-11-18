@@ -134,6 +134,8 @@ public class UIManager : MonoBehaviourPun
 	public int _minSalePrice;
 	public int _salePrice;
 
+	public GameObject _winnerListPrefab;
+
 	[HideInInspector] public OTBCard _selectedCard;
 
 	#endregion
@@ -366,6 +368,7 @@ public class UIManager : MonoBehaviourPun
 	{
 		_otbMessageText.text = "";
 		_stopBuying = false;
+		StopCoroutine("BuyOptionRoutine");
 		//Debug.Log("INDEX: " + index);
 
 		if (index > 0)
@@ -652,6 +655,14 @@ public class UIManager : MonoBehaviourPun
 		if (_selectedCard.cardNumber >= 6 && _selectedCard.cardNumber <= 11)
 		{
 			yield return new WaitUntil(() => !CheckIfMaxFarmCowsReached());
+		}
+		if (_selectedCard.cardNumber>=17 && _selectedCard.cardNumber <= 19)
+		{
+			yield return new WaitUntil(() => !CheckIfEquipmentIsAlreadyOwned("Tractor"));
+		}
+		if (_selectedCard.cardNumber >= 20 && _selectedCard.cardNumber <= 122)
+		{
+			yield return new WaitUntil(() => !CheckIfEquipmentIsAlreadyOwned("Harvester"));
 		}
 		yield return new WaitUntil(() => !_transactionBlocked);
 		//Debug.Log("Past TB");
@@ -1292,7 +1303,40 @@ public class UIManager : MonoBehaviourPun
 			maxReached = true;
 		}
 
+		if (!_pManager._pHarvester)
+			maxReached = false;
+		else
+		{
+
+		}
 		return maxReached;
+	}
+
+	bool CheckIfEquipmentIsAlreadyOwned(string equipment)
+	{
+		bool alreadyOwned = true;
+
+		if (equipment == "Tractor")
+		{
+			if (_pManager._pTractor)
+			{
+				alreadyOwned = true;
+				_otbMessageText.text = "You already have a Tractor!";
+			}
+			else
+				alreadyOwned = false;
+		}
+		if (equipment == "Harvester")
+		{
+			if (_pManager._pHarvester)
+			{
+				alreadyOwned = true;
+				_otbMessageText.text = "You already have a Harvester!";
+			}
+			else
+				alreadyOwned = false;
+		}
+		return alreadyOwned;
 	}
 
 	void UseOtb(OTBCard cardToUse)
@@ -1313,7 +1357,7 @@ public class UIManager : MonoBehaviourPun
 		ResetOtbListPanel();
 	}
 
-	public IEnumerator ShowMessageRoutine(string typeOfMessage, string msg, Color fontColor)
+	public IEnumerator ShowMessageRoutine(string typeOfMessage, string msg, Color fontColor, float duration = 4f)
 	{
 		switch (typeOfMessage)
 		{
@@ -1341,9 +1385,15 @@ public class UIManager : MonoBehaviourPun
 				_gameOverMessageText.text = msg;
 				_gameOverMessageText.color = fontColor;
 				_gameOverMessageText.gameObject.SetActive(true);
+				_modalPanel.SetActive(true);
+				if (PhotonNetwork.IsMasterClient)
+				{
+					//save the winner data
+					//show the winner list to all
+				}
 				break;
 		}
-		yield return new WaitForSeconds(4f);
+		yield return new WaitForSeconds(duration);
 
 		_bonusMessageText.gameObject.SetActive(false);
 		_bonusMessageText.text = "";
@@ -1354,6 +1404,9 @@ public class UIManager : MonoBehaviourPun
 		_shuffleMessageText.text = "";
 		_shuffleMessageText.color = Color.black;
 		_shuffleMessageText.gameObject.SetActive(false);
+		_gameOverMessageText.text = "";
+		_gameOverMessageText.color = Color.black;
+		_gameOverMessageText.gameObject.SetActive(false);
 	}
 	#endregion
 
@@ -1486,6 +1539,18 @@ public class UIManager : MonoBehaviourPun
 		}
 	}
 
+	void OnOutOfOtbCardsMessageReceived(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Out_Of_Otbs_Event_Code)
+		{
+			//extract data - message
+			object[] recData = (object[])eventData.CustomData;
+			string message = (string)recData[0];
+			Color fontColor = Color.red;
+			StartCoroutine(ShowMessageRoutine("Routine", message, fontColor));
+		}
+	}
+
 	void OnEndOfNetworthGameReceived(EventData eventData)
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.End_Networth_Game_Event_Code)
@@ -1501,19 +1566,13 @@ public class UIManager : MonoBehaviourPun
 			_rollButton.interactable = false;
 			_endTurnButton.interactable = false;
 			_actionsPanel.SetActive(false);
-			StartCoroutine(ShowMessageRoutine("Game Over", message, fontColor));
-		}
-	}
+			StartCoroutine(ShowMessageRoutine("Game Over", message, fontColor, 5f));
 
-	void OnOutOfOtbCardsMessageReceived(EventData eventData)
-	{
-		if (eventData.Code == (byte)RaiseEventCodes.Out_Of_Otbs_Event_Code)
-		{
-			//extract data - message
-			object[] recData = (object[])eventData.CustomData;
-			string message = (string)recData[0];
-			Color fontColor = Color.red;
-			StartCoroutine(ShowMessageRoutine("Routine", message, fontColor));
+			if (PhotonNetwork.IsMasterClient)
+			{
+				//save the winner data...
+
+			}
 		}
 	}
 	#endregion
