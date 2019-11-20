@@ -14614,7 +14614,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Date        Player      Winning Networth  Game Ending  NOP
+  m_Text: Date        Player      Winning Networth  Game End/Time  NOP
 --- !u!1 &1431288000812428142
 GameObject:
   m_ObjectHideFlags: 0
@@ -21906,6 +21906,7 @@ GameObject:
   - component: {fileID: 5176420491339200362}
   - component: {fileID: 507356794}
   - component: {fileID: 2215742475685135937}
+  - component: {fileID: 3499930308920151390}
   m_Layer: 5
   m_Name: PlayerUI
   m_TagString: Untagged
@@ -22197,6 +22198,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85bf78bb806362d428a01c50abbd4ccd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3499930308920151390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5176420491339200363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c25ce9e2c9f7c746a513cfe38b73b4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _content: {fileID: 5046216010151065128}
+  _winnerEntryPerfab: {fileID: 1044759180186301940, guid: 8a33c37f3a252224da920600c137d9c6,
+    type: 3}
 --- !u!1 &5192725889307687326
 GameObject:
   m_ObjectHideFlags: 0

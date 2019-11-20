@@ -294,6 +294,7 @@ public class UIManager : MonoBehaviourPun
 		if (_pManager._isMyTurn)
 		{
 			_isSellMsg = true;
+			_otbMessageText.text = "";
 			StartCoroutine("SellOtbRoutine");
 		}
 		else
@@ -660,7 +661,7 @@ public class UIManager : MonoBehaviourPun
 		{
 			yield return new WaitUntil(() => !CheckIfEquipmentIsAlreadyOwned("Tractor"));
 		}
-		if (_selectedCard.cardNumber >= 20 && _selectedCard.cardNumber <= 122)
+		if (_selectedCard.cardNumber >= 20 && _selectedCard.cardNumber <= 22)
 		{
 			yield return new WaitUntil(() => !CheckIfEquipmentIsAlreadyOwned("Harvester"));
 		}
@@ -1566,7 +1567,7 @@ public class UIManager : MonoBehaviourPun
 			_rollButton.interactable = false;
 			_endTurnButton.interactable = false;
 			_actionsPanel.SetActive(false);
-			StartCoroutine(ShowMessageRoutine("Game Over", message, fontColor, 5f));
+			StartCoroutine(ShowMessageRoutine("Game Over", message, fontColor, 5.0f));
 
 			if (PhotonNetwork.IsMasterClient)
 			{

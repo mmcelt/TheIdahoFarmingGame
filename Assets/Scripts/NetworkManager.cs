@@ -359,7 +359,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 		UpdateRoomInfoText();
 
-		startGameButton.SetActive(CheckPlayersReady());
+		if (PhotonNetwork.PlayerList.Length == numberOfPlayers)
+			startGameButton.SetActive(CheckPlayersReady());
 	}
 
 
