@@ -33,6 +33,10 @@ public class IFG
 	public const string Mike = "Menan Mike";
 	public const string Ric = "Ririe Ric";
 	public const string Ron = "Rigby Ron";
+
+	//Winner List
+	public const string Save_Separator = "#SAVE-VALUE#";
+
 	//Widely used Strings
 	public const string TetonDamMessageText = "HIDEOUS DISASTER! THE TETON DAM HAS BURST. ROLL THE DIE TO SEE YOUR FATE.\nEVEN: YOUR HIT\nODD: YOU ESCAPED";
 	public const string TetonDamHeaderText = "TETON DAM DISASTER";
@@ -74,6 +78,8 @@ public enum RaiseEventCodes
 	End_Networth_Game_Event_Code = 22,
 	Teton_Dam_Event_Code = 23,
 	Out_Of_Otbs_Event_Code = 24,
-	Sell_Otb_To_Player_Event_Code = 25
+	Sell_Otb_To_Player_Event_Code = 25,
+	Update_WinnersList_Event_Code = 26,
+	Client_End_Of_Networth_Game_Message_Event_Code = 27
 };
 

@@ -329,6 +329,8 @@ public class PlayerManager : MonoBehaviourPun
 		_pNetworth = amount;
 		ExitGames.Client.Photon.Hashtable networthProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Networth, _pNetworth } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(networthProp);
+		UpdateMyUI();
+
 		if (GameManager.Instance._gameMode == "Networth Game")
 		{
 			//CHECK FOR END OF THE GAME...
@@ -340,7 +342,7 @@ public class PlayerManager : MonoBehaviourPun
 				//event options
 				RaiseEventOptions eventOptions = new RaiseEventOptions()
 				{
-					Receivers = ReceiverGroup.All,
+					Receivers = ReceiverGroup.MasterClient,
 					CachingOption = EventCaching.DoNotCache
 				};
 				//send options
@@ -349,7 +351,6 @@ public class PlayerManager : MonoBehaviourPun
 				PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.End_Networth_Game_Event_Code, sndData, eventOptions, sendOptions);
 			}
 		}
-		UpdateMyUI();
 	}
 
 	//TESTING

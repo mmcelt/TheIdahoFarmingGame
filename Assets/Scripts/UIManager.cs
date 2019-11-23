@@ -117,8 +117,9 @@ public class UIManager : MonoBehaviourPun
 	public GameObject _completeModalPanel;
 	public GameObject _actionsPanelModalPanel;
 
-	//[Header("Fireworks Stuff")]
-	//public SpriteRenderer _gameboardRenderer;
+	[Header("Winners List")]
+	public Button _optionsButton;
+	public GameObject _winnersListPanel;
 
 	[Header("Misc Stuff")]
 	public int _tempCash;
@@ -133,9 +134,6 @@ public class UIManager : MonoBehaviourPun
 	public int _sellingPrice;
 	public int _minSalePrice;
 	public int _salePrice;
-
-	public GameObject _winnerListPrefab;
-
 	[HideInInspector] public OTBCard _selectedCard;
 
 	#endregion
@@ -189,6 +187,7 @@ public class UIManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived += OnHarvestRollMessageReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnEndOfNetworthGameReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnOutOfOtbCardsMessageReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnClientEndOfNetworthGameMessageReceived;
 	}
 
 	void OnDisable()
@@ -200,6 +199,7 @@ public class UIManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived -= OnHarvestRollMessageReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnEndOfNetworthGameReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnOutOfOtbCardsMessageReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnClientEndOfNetworthGameMessageReceived;
 	}
 
 	void Awake()
@@ -512,6 +512,17 @@ public class UIManager : MonoBehaviourPun
 		_actionsPanelModalPanel.SetActive(false);
 		_sellOtbToPlayerPanel.SetActive(false);
 	}
+
+	public void OnOptionsButtonClicked()
+	{
+		_winnersListPanel.SetActive(true);
+		//WinnerList.Instance.AddWinnerListEntry("Rinky", IFG.Ron, 440000, 400000, 1, null, null, null);
+
+		//WinnerList.Instance.AddWinnerListEntry("Old Yeller", IFG.Kay, 408470, 400000, 2, new string[] { "Wicket" }, new string[] { IFG.Ron }, new int[] { 177070 });
+		//WinnerList.Instance.AddWinnerListEntry("Big Red", IFG.Kay, 356605, 350000, 3, new string[] { "Weeto Grail", "Detective Mittens The Crime Solving Cat" }, new string[] { IFG.Ron, IFG.Jerry }, new int[] { 340780, 293920 });
+
+		WinnerList.Instance.PopulateAndShowWinnersList();
+	}
 	#endregion
 
 	#region Public Methods
@@ -614,22 +625,22 @@ public class UIManager : MonoBehaviourPun
 	{
 		switch (farmer)
 		{
-			case "Rigby Ron":
+			case IFG.Ron:
 				return Color.blue;
 
-			case "Kimberly Kay":
+			case IFG.Kay:
 				return Color.yellow;
 
-			case "Jerome Jerry":
+			case IFG.Jerry:
 				return IFG.Purple;
 
-			case "Ririe Ric":
+			case IFG.Ric:
 				return Color.black;
 
-			case "Menan Mike":
+			case IFG.Mike:
 				return Color.red;
 
-			case "Blackfoot Becky":
+			case IFG.Becky:
 				return Color.white;
 		}
 		return Color.black;
@@ -1387,11 +1398,6 @@ public class UIManager : MonoBehaviourPun
 				_gameOverMessageText.color = fontColor;
 				_gameOverMessageText.gameObject.SetActive(true);
 				_modalPanel.SetActive(true);
-				if (PhotonNetwork.IsMasterClient)
-				{
-					//save the winner data
-					//show the winner list to all
-				}
 				break;
 		}
 		yield return new WaitForSeconds(duration);
@@ -1552,6 +1558,7 @@ public class UIManager : MonoBehaviourPun
 		}
 	}
 
+	//sent only to MasterClient
 	void OnEndOfNetworthGameReceived(EventData eventData)
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.End_Networth_Game_Event_Code)
@@ -1569,11 +1576,72 @@ public class UIManager : MonoBehaviourPun
 			_actionsPanel.SetActive(false);
 			StartCoroutine(ShowMessageRoutine("Game Over", message, fontColor, 5.0f));
 
-			if (PhotonNetwork.IsMasterClient)
+			//send message event to others...
+			//data - winners: nickname,farmer,networth
+			object[] msgData = new object[] { winnerName, farmerName, networth };
+			//event options
+			RaiseEventOptions eventOptions = new RaiseEventOptions
 			{
-				//save the winner data...
+				Receivers = ReceiverGroup.Others,
+				CachingOption = EventCaching.DoNotCache
+			};
+			//send options
+			SendOptions sendOptions = new SendOptions() { Reliability = true };
+			//fire the event
+			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Client_End_Of_Networth_Game_Message_Event_Code, msgData, eventOptions, sendOptions);
 
+			//add & save the winner data
+			int gameEnd = (int)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Networth_Game];
+			int nop = GameManager.Instance._numberOfPlayers;
+			string[] ruNames = new string[nop - 1];
+			string[] ruFarmers = new string[nop - 1];
+			int[] ruNetworths = new int[nop - 1];
+
+			if (nop > 1)
+			{
+				Debug.Log("GM CPL.COUNT: " + GameManager.Instance._cachedPlayerList.Count);
+
+				for (int i=0; i<GameManager.Instance._cachedPlayerList.Count; i++)
+				{
+					if (GameManager.Instance._cachedPlayerList[i].NickName == winnerName)
+						continue;
+					ruNames[i] = GameManager.Instance._cachedPlayerList[i].NickName;
+					ruFarmers[i] = (string)GameManager.Instance._cachedPlayerList[i].CustomProperties[IFG.Selected_Farmer];
+					ruNetworths[i] = (int)GameManager.Instance._cachedPlayerList[i].CustomProperties[IFG.Player_Networth];
+
+					Debug.Log("i: " + i);
+					Debug.Log("Remote Player: " + ruNames[i]);
+					Debug.Log("Remote Farmer: " + ruFarmers[i]);
+					Debug.Log("Remote Networth: " + ruNetworths[i]);
+				}
 			}
+			else
+			{
+				ruNames = null;
+				ruFarmers = null;
+				ruNetworths = null;
+			}
+			WinnerList.Instance.AddWinnerListEntry(winnerName, farmerName, networth, gameEnd, nop, ruNames, ruFarmers, ruNetworths);
+
+			WinnerList.Instance.SendListToOthers();
+		}
+	}
+	void OnClientEndOfNetworthGameMessageReceived(EventData eventData)
+	{
+		if (eventData.Code == (byte)RaiseEventCodes.Client_End_Of_Networth_Game_Message_Event_Code)
+		{
+			//extract the data - nickname,farmer,networth
+			object[] recData = (object[])eventData.CustomData;
+			string winnerName = (string)recData[0];
+			string farmerName = (string)recData[1];
+			int networth = (int)recData[2];
+
+			string message = winnerName + " HAS WON THE GAME WITH A NETWORTH OF: " + networth.ToString("c0");
+			Color fontColor = SelectFontColorForFarmer(farmerName);
+			_rollButton.interactable = false;
+			_endTurnButton.interactable = false;
+			_actionsPanel.SetActive(false);
+			StartCoroutine(ShowMessageRoutine("Game Over", message, fontColor, 5.0f));
 		}
 	}
 	#endregion
