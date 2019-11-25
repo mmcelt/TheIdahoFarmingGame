@@ -63,12 +63,15 @@ public class WinnerInitializer : MonoBehaviour
 		foreach (GameObject prefab in runnerUpPrefabs)
 			Destroy(prefab);
 
-		for (int i = 0; i < _nop - 1; i++)
+		for (int i = 0; i < _nop; i++)	//change _nop-1 to _nop
 		{
-			GameObject ruGO = Instantiate(WinnerList.Instance._runnerUpEntryPrefab, WinnerList.Instance._ruContent);
-			ruGO.transform.Find("Name Text").GetComponent<Text>().text = _ruPlayers[i];
-			ruGO.transform.Find("Name Text").GetComponent<Text>().color = GameManager.Instance.uiManager.SelectFontColorForFarmer(_ruFarmers[i]);
-			ruGO.transform.Find("Networth Text").GetComponent<Text>().text = _ruNetworths[i].ToString("C0");
+			if (_ruNetworths[i] > 0)
+			{
+				GameObject ruGO = Instantiate(WinnerList.Instance._runnerUpEntryPrefab, WinnerList.Instance._ruContent);
+				ruGO.transform.Find("Name Text").GetComponent<Text>().text = _ruPlayers[i];
+				ruGO.transform.Find("Name Text").GetComponent<Text>().color = GameManager.Instance.uiManager.SelectFontColorForFarmer(_ruFarmers[i]);
+				ruGO.transform.Find("Networth Text").GetComponent<Text>().text = _ruNetworths[i].ToString("C0");
+			}
 		}
 	}
 	#endregion

@@ -22,7 +22,7 @@ public class WinnerList : MonoBehaviour
 
 	#region Private Fields / References
 
-	//UIManager _uiManager;
+	UIManager _uiManager;
 	Winners _winners;
 	
 	#endregion
@@ -56,8 +56,10 @@ public class WinnerList : MonoBehaviour
 	void Start()
 	{
 		//PlayerPrefs.DeleteAll();
-		
-		SendListToOthers();
+		_uiManager = GameManager.Instance.uiManager;
+
+		if (GameManager.Instance._numberOfPlayers > 1)
+			SendListToOthers();
 	}
 
 	#endregion
@@ -66,6 +68,13 @@ public class WinnerList : MonoBehaviour
 
 	public void AddWinnerListEntry(string pName, string fName, int nw, int endGameNW, int nop, string[] runnersUpNames, string[] runnerUpFarmers, int[] runnerUpNetworkths)
 	{
+		//Debug.Log("IN ADD WINNER: " + pName + "," + fName + "," + nw + "," + runnersUpNames.Length);
+		//if (nop > 1)
+		//{
+		//	for (int i=0; i<nop; i++)
+		//		Debug.Log("Runner up: " + runnersUpNames[i]);
+		//}
+
 		//string testDate = "11/21/2019";
 		//create WinnerListEntry
 		WinnerEntry winnerListEntry = new WinnerEntry
@@ -86,9 +95,9 @@ public class WinnerList : MonoBehaviour
 		//_winners = JsonUtility.FromJson<Winners>(jsonString);
 
 		//load saved data...
-		if (File.Exists(Application.dataPath + "/WinnerList.txt"))
+		if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
 		{
-			string jsonString = File.ReadAllText(Application.dataPath + "/WinnerList.txt");
+			string jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
 			_winners = JsonUtility.FromJson<Winners>(jsonString);
 		}
 		else
@@ -117,21 +126,26 @@ public class WinnerList : MonoBehaviour
 
 		//save updated Winners
 		string json = JsonUtility.ToJson(_winners);
-		File.WriteAllText(Application.dataPath + "/WinnerList.txt", json);
+		File.WriteAllText(Application.persistentDataPath + "/WinnerList.txt", json);
+
+		if (GameManager.Instance._numberOfPlayers > 1)
+			SendListToOthers();
 	}
 
 	public void SendListToOthers()
 	{
-			//load saved data...
-			if (File.Exists(Application.dataPath + "/WinnerList.txt"))
-			{
-				string jsonString = File.ReadAllText(Application.dataPath + "/WinnerList.txt");
-				_winners = JsonUtility.FromJson<Winners>(jsonString);
-			}
-			else
-			{
-				Debug.LogWarning("NO DAMN LIST PRESENT");
-			}
+		if (!PhotonNetwork.IsMasterClient) return;
+
+		//load saved data...
+		if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
+		{
+			string jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
+			_winners = JsonUtility.FromJson<Winners>(jsonString);
+		}
+		else
+		{
+			Debug.LogWarning("NO DAMN LIST PRESENT");
+		}
 
 		if (GameManager.Instance._numberOfPlayers > 1)
 		{
@@ -139,7 +153,7 @@ public class WinnerList : MonoBehaviour
 			if (PhotonNetwork.IsMasterClient)
 			{
 				//event data
-				string myList = File.ReadAllText(Application.dataPath + "/WinnerList.txt");
+				string myList = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
 				object[] sndData = new object[] { myList };
 				//event options
 				RaiseEventOptions eventOptions = new RaiseEventOptions
@@ -157,17 +171,37 @@ public class WinnerList : MonoBehaviour
 
 	public void PopulateAndShowWinnersList()
 	{
-		List<GameObject> winnerPrefabs = GameObject.FindGameObjectsWithTag("WinnerPrefab").ToList();
-		foreach (GameObject prefab in winnerPrefabs)
-			Destroy(prefab);
+		_uiManager._winnersListPanel.SetActive(true);
 
+		List<GameObject> winnerPrefabs = GameObject.FindGameObjectsWithTag("WinnerPrefab").ToList();
+
+		//Debug.LogWarning("INSIDE PASWL...");
+
+		for (int i = 0; i < winnerPrefabs.Count; i++)
+		{
+			//Debug.Log("INSIDE DESTROY");
+			Destroy(winnerPrefabs[i]);
+		}
+
+		if (_winners == null)
+		{
+			if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
+			{
+				string jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
+				_winners = JsonUtility.FromJson<Winners>(jsonString);
+			}
+		}
 		foreach (WinnerEntry winnerEntry in _winners.winnerListEntryList)
 		{
+			//Debug.Log("INSIDE FOREACH");
 			//main winner entries
 			GameObject listEntry = Instantiate(_winnerEntryPerfab, _content);
 			listEntry.transform.localScale = Vector3.one;
 			listEntry.GetComponent<WinnerInitializer>().Initialize(winnerEntry.date, winnerEntry.playerName, winnerEntry.farmerName, winnerEntry.networth, winnerEntry.endGameNetworth, winnerEntry.numberOfPlayers, winnerEntry.rPlayerNames, winnerEntry.rFarmerNames, winnerEntry.rNetworths);
 		}
+
+		if (_uiManager == null)
+			_uiManager = GameManager.Instance.uiManager;
 	}
 
 	public void OnCloseWPButtonClicked()
@@ -178,6 +212,29 @@ public class WinnerList : MonoBehaviour
 	public void OnCloseRUPButtonClicked()
 	{
 		_runnersUpPanel.SetActive(false);
+	}
+
+	public void OnShowWinnerListButtonClicked()
+	{
+		PopulateAndShowWinnersList();
+	}
+
+	public void OnResetWinnersListButtonClicked()
+	{
+		if (!PhotonNetwork.IsMasterClient) return;
+
+		//delete the existing WinnersList.txt file...
+		if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
+		{
+			Debug.Log(Application.persistentDataPath);
+			File.Delete(Application.persistentDataPath + "/WinnerList.txt");
+		}
+
+		AddWinnerListEntry("Old Yeller", IFG.Kay, 408470, 400000, 2, new string[] { "Wicket" }, new string[] { IFG.Ron }, new int[] { 177070 });
+		AddWinnerListEntry("Big Red", IFG.Kay, 356605, 350000, 3, new string[] { "Weeto Grail", "Detective Mittens The Crime Solving Cat" }, new string[] { IFG.Ron, IFG.Jerry }, new int[] { 340780, 293920 });
+		AddWinnerListEntry("Red", IFG.Mike, 365010, 350000, 2, new string[] { "Chewie" }, new string[] { IFG.Ron }, new int[] { 323070 });
+		AddWinnerListEntry("Buddy Boogar", IFG.Ron, 437780, 400000, 2, new string[] { "Big Red" }, new string[] { IFG.Kay }, new int[] { 398960 });
+		AddWinnerListEntry("Buddy And Ginger", IFG.Ron, 403390, 400000, 2, new string[] { "Boss" }, new string[] { IFG.Becky }, new int[] { 230820 });
 	}
 	#endregion
 
@@ -190,11 +247,11 @@ public class WinnerList : MonoBehaviour
 			//extract data
 			object[] recData = (object[])eventData.CustomData;
 			string jsonString = (string)recData[0];
-			File.WriteAllText(Application.dataPath + "/WinnerList.txt", jsonString);
+			File.WriteAllText(Application.persistentDataPath + "/WinnerList.txt", jsonString);
 
-			if (File.Exists(Application.dataPath + "/WinnerList.txt"))
+			if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
 			{
-				jsonString = File.ReadAllText(Application.dataPath + "/WinnerList.txt");
+				jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
 				_winners = JsonUtility.FromJson<Winners>(jsonString);
 			}
 			else

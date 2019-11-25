@@ -37,6 +37,10 @@ public class RunnerUpInitializer : MonoBehaviour
 		_networthRText.text = networth.ToString("C0");
 	}
 
+	#endregion
+
+	#region Private Methods
+
 	void Testing()
 	{
 		//runners up entries
@@ -51,10 +55,5 @@ public class RunnerUpInitializer : MonoBehaviour
 		//}
 
 	}
-	#endregion
-
-	#region Private Methods
-
-
 	#endregion
 }

@@ -342,7 +342,7 @@ public class PlayerManager : MonoBehaviourPun
 				//event options
 				RaiseEventOptions eventOptions = new RaiseEventOptions()
 				{
-					Receivers = ReceiverGroup.MasterClient,
+					Receivers = ReceiverGroup.All,
 					CachingOption = EventCaching.DoNotCache
 				};
 				//send options
@@ -352,18 +352,6 @@ public class PlayerManager : MonoBehaviourPun
 			}
 		}
 	}
-
-	//TESTING
-
-	//IEnumerator UpdateOtbProperty(int amount)
-	//{
-	//	Debug.Log("In UpdateOTBCount: " + amount);
-	//	ExitGames.Client.Photon.Hashtable otbProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Otb_Count, amount } };
-	//	PhotonNetwork.LocalPlayer.SetCustomProperties(otbProp);
-	//	UpdateMyUI();
-	//	yield return new WaitForSeconds(0.5f);
-	//	StartCoroutine(UpdateOtbProperty(amount));
-	//}
 	#endregion
 
 	#region Public Methods
@@ -689,6 +677,9 @@ public class PlayerManager : MonoBehaviourPun
 	[PunRPC]
 	void UpdateActivePlayerText(PhotonMessageInfo info)
 	{
+		if (_uiManager == null)
+			_uiManager = GameManager.Instance.uiManager;
+
 		_uiManager._activePlayerText.text = GameManager.Instance._cachedPlayerList
 			[GameManager.Instance._activePlayer - 1].NickName;
 		_uiManager._activePlayerText.color = _uiManager.SelectFontColorForFarmer((string)info.Sender.CustomProperties[IFG.Selected_Farmer]);
