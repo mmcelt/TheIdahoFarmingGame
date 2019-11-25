@@ -472,7 +472,6 @@ public class UIManager : MonoBehaviourPun
 		_loanAmount = 0;
 		_forcedLoanInput.text = "";
 		_forcedLoanInput.placeholder.GetComponent<Text>().text = "Enter the Loan Amount...";
-		//_modalPanel.SetActive(false);
 	}
 
 	public void UpdateActionsPanelFunds(int cash, int notes)
@@ -1472,7 +1471,6 @@ public class UIManager : MonoBehaviourPun
 				_gameOverMessageText.text = msg;
 				_gameOverMessageText.color = fontColor;
 				_gameOverMessageText.gameObject.SetActive(true);
-				//_modalPanel.SetActive(true);
 				break;
 		}
 		yield return new WaitForSeconds(duration);
@@ -1510,12 +1508,14 @@ public class UIManager : MonoBehaviourPun
 		_gameOverMessageText.color = fontColor;
 		_gameOverMessageText.gameObject.SetActive(true);
 		_modalPanel.SetActive(true);
-
+		_rollButton.interactable = false;
+		_endTurnButton.interactable = false;
 		yield return new WaitForSeconds(duration);
 
 		_gameOverMessageText.gameObject.SetActive(false);
 		_gameOverMessageText.text = "";
 		_gameOverMessageText.color = Color.black;
+		_modalPanel.SetActive(false);
 
 		//if (PhotonNetwork.IsMasterClient)
 		//{
