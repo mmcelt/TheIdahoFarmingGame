@@ -423,6 +423,7 @@ public class BoardManager : MonoBehaviour
 		while (_boardSpacePanel.activeSelf)
 			yield return null;
 
+		_modalPanel.SetActive(false);
 		PerformBoardSpaceActions(space);
 
 		//Debug.Log("SPACE ON CLOSING BOARDSPACE PANEL: " + space);

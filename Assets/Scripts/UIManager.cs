@@ -121,6 +121,7 @@ public class UIManager : MonoBehaviourPun
 	public GameObject _modalPanel;
 	public GameObject _completeModalPanel;
 	public GameObject _actionsPanelModalPanel;
+	public GameObject _optionsPanelModalPanel;
 
 	[Header("Winners List")]
 	public Button _optionsButton;
@@ -140,6 +141,8 @@ public class UIManager : MonoBehaviourPun
 	public int _minSalePrice;
 	public int _salePrice;
 	[HideInInspector] public OTBCard _selectedCard;
+	public bool _warningGiven;
+	public bool _okToProceed;
 
 	#endregion
 
@@ -162,6 +165,8 @@ public class UIManager : MonoBehaviourPun
 	bool _isSellMsg;
 	bool _isWarningMsg;
 	bool _cancelOtbSale;
+	bool _isSelling;
+
 	//deck info
 	int _otbShuffleCount;
 	int _oeShuffleCount;
@@ -304,12 +309,14 @@ public class UIManager : MonoBehaviourPun
 		if (_pManager._isMyTurn)
 		{
 			_isSellMsg = true;
+			_isSelling = true;
 			_otbMessageText.text = "";
 			StartCoroutine("SellOtbRoutine");
 		}
 		else
 		{
 			_isWarningMsg = true;
+			_isSelling = false;
 			_otbMessageText.text = "You can only sell an OTB card on your turn...";
 			_otbOkButton.gameObject.SetActive(true);
 		}
@@ -528,7 +535,37 @@ public class UIManager : MonoBehaviourPun
 		_optionsPanel.SetActive(true);
 	}
 
+	public void OnMakeMasterListButtonCLicked()
+	{
+		if (!_warningGiven)
+		{
+			_optionsPanelModalPanel.SetActive(true);
+			_warningGiven = true;
+			StartCoroutine(WarningPanelRoutine("MakeMasterList"));
+		}
+	}
+
+	public void OnResetWinnersListButtonClicked()
+	{
+		if (!_warningGiven)
+		{
+			_optionsPanelModalPanel.SetActive(true);
+			_warningGiven = true;
+			StartCoroutine(WarningPanelRoutine("ResetWinnersList"));
+		}
+	}
+
 	public void OnQuitButtonClicked()
+	{
+		if (!_warningGiven)
+		{
+			_optionsPanelModalPanel.SetActive(true);
+			_warningGiven = true;
+			StartCoroutine(WarningPanelRoutine("Quit"));
+		}
+	}
+
+	void QuitGame()
 	{
 #if UNITY_EDITOR
 		// Application.Quit() does not work in the editor so
@@ -536,6 +573,20 @@ public class UIManager : MonoBehaviourPun
 		UnityEditor.EditorApplication.isPlaying = false;
 #endif
 		Application.Quit();
+	}
+
+	public void OnYesButtonClicked()
+	{
+		_warningGiven = false;
+		_okToProceed = true;
+		_optionsPanelModalPanel.SetActive(false);
+	}
+
+	public void OnNoButtonClicked()
+	{
+		_warningGiven = false;
+		_okToProceed = false;
+		_optionsPanelModalPanel.SetActive(false);
 	}
 	#endregion
 
@@ -994,6 +1045,7 @@ public class UIManager : MonoBehaviourPun
 		_buyOptionButton.interactable = false;
 		_payInFullButton.interactable = false;
 		_stopBuying = false;
+		_otbOkButton.gameObject.SetActive(false);
 		StopCoroutine("BuyOptionRoutine");
 		ResetTempFunds();
 		PopulateDropdown(_otbDropdown.name);
@@ -1020,6 +1072,7 @@ public class UIManager : MonoBehaviourPun
 		_cancelOtbSale = false;
 		ResetOtbListPanel();
 		_actionsPanel.SetActive(false);
+		_isSelling = false;
 	}
 
 	IEnumerator SellOtbToPlayerRoutine()
@@ -1167,33 +1220,43 @@ public class UIManager : MonoBehaviourPun
 
 	bool CheckIfAbleToBuyOption()
 	{
-		if (_pManager._isMyTurn)
+		if (!_isSelling)
 		{
-			if (_pMove._currentSpace <= 14)
+			if (_pManager._isMyTurn)
 			{
-				if (_pManager._pCash >= _minDownPayment)
+				if (_pMove._currentSpace <= 14)
 				{
-					if (_pManager._pNotes <= 50000 - (_otbCost - _downPayment))
+					if (_pManager._pCash >= _minDownPayment)
 					{
-						_stopBuying = false;
-						return true;
+						if (_pManager._pNotes <= 50000 - (_otbCost - _downPayment))
+						{
+							_stopBuying = false;
+							return true;
+						}
+						else
+						{
+							if (_downPayment > _minDownPayment)
+							{
+								_isWarningMsg = true;
+								_otbMessageText.text = "You can't buy that because you have to much debt!";
+								_otbOkButton.gameObject.SetActive(true);
+								//return false;
+							}
+							return false;
+						}
 					}
 					else
 					{
-						if (_downPayment > _minDownPayment)
-						{
-							_isWarningMsg = true;
-							_otbMessageText.text = "You can't buy that because you have to much debt!";
-							_otbOkButton.gameObject.SetActive(true);
-							//return false;
-						}
+						_isWarningMsg = true;
+						_otbMessageText.text = "You can't buy that because you don't have enough cash on hand!";
+						_otbOkButton.gameObject.SetActive(true);
 						return false;
 					}
 				}
 				else
 				{
 					_isWarningMsg = true;
-					_otbMessageText.text = "You can't buy that because you don't have enough cash on hand!";
+					_otbMessageText.text = "You can't buy that because you're past Spring Planting!";
 					_otbOkButton.gameObject.SetActive(true);
 					return false;
 				}
@@ -1201,16 +1264,14 @@ public class UIManager : MonoBehaviourPun
 			else
 			{
 				_isWarningMsg = true;
-				_otbMessageText.text = "You can't buy that because you're past Spring Planting!";
+				_otbMessageText.text = "You can't buy that because it's not your turn!";
 				_otbOkButton.gameObject.SetActive(true);
 				return false;
 			}
+
 		}
 		else
 		{
-			_isWarningMsg = true;
-			_otbMessageText.text = "You can't buy that because it's not your turn!";
-			_otbOkButton.gameObject.SetActive(true);
 			return false;
 		}
 		//if (() && () && ( && (_pManager._isMyTurn)))
@@ -1464,6 +1525,38 @@ public class UIManager : MonoBehaviourPun
 		//}
 
 		WinnerList.Instance.PopulateAndShowWinnersList();
+	}
+
+	public IEnumerator WarningPanelRoutine(string button)
+	{
+		//_warningGiven = true;
+
+		yield return new WaitUntil(() => !_warningGiven);
+
+		switch (button)
+		{
+			case "Quit":
+				if (_okToProceed)
+				{
+					QuitGame();
+				}
+				break;
+
+			case "ResetWinnersList":
+				if (_okToProceed)
+				{
+					WinnerList.Instance.ResetWinnersList();
+				}
+				break;
+
+			case "MakeMasterList":
+				if (_okToProceed)
+				{
+					WinnerList.Instance.MakeTheMasterList();
+				}
+				break;
+		}
+		_okToProceed = false;
 	}
 	#endregion
 

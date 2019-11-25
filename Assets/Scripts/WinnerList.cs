@@ -219,22 +219,37 @@ public class WinnerList : MonoBehaviour
 		PopulateAndShowWinnersList();
 	}
 
-	public void OnResetWinnersListButtonClicked()
+	public void ResetWinnersList()
 	{
 		if (!PhotonNetwork.IsMasterClient) return;
 
-		//delete the existing WinnersList.txt file...
+		//copy the MasterList to the WinnerList...
+		if (File.Exists(Application.persistentDataPath + "/MasterList.txt"))
+		{
+			File.Copy(Application.persistentDataPath + "/MasterList.txt", Application.persistentDataPath + "/WinnerList.txt", true);
+		}
+		////delete the existing WinnersList.txt file...
+		//if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
+		//{
+		//	//Debug.Log(Application.persistentDataPath);
+		//	File.Delete(Application.persistentDataPath + "/WinnerList.txt");
+		//}
+
+		//AddWinnerListEntry("Old Yeller", IFG.Kay, 408470, 400000, 2, new string[] { "Wicket" }, new string[] { IFG.Ron }, new int[] { 177070 });
+		//AddWinnerListEntry("Big Red", IFG.Kay, 356605, 350000, 3, new string[] { "Weeto Grail", "Detective Mittens The Crime Solving Cat" }, new string[] { IFG.Ron, IFG.Jerry }, new int[] { 340780, 293920 });
+		//AddWinnerListEntry("Red", IFG.Mike, 365010, 350000, 2, new string[] { "Chewie" }, new string[] { IFG.Ron }, new int[] { 323070 });
+		//AddWinnerListEntry("Buddy Boogar", IFG.Ron, 437780, 400000, 2, new string[] { "Big Red" }, new string[] { IFG.Kay }, new int[] { 398960 });
+		//AddWinnerListEntry("Buddy And Ginger", IFG.Ron, 403390, 400000, 2, new string[] { "Boss" }, new string[] { IFG.Becky }, new int[] { 230820 });
+		//AddWinnerListEntry("Becky", IFG.Becky, 400270, 400000, 2, new string[] { "Little Chewie" }, new string[] { IFG.Ron }, new int[] { 298850 });
+		//AddWinnerListEntry("Din Dor", IFG.Ron, 405310, 400000, 2, new string[] { "Blackie" }, new string[] { IFG.Ric }, new int[] { 346380 });
+	}
+
+	public void MakeTheMasterList()
+	{
 		if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
 		{
-			Debug.Log(Application.persistentDataPath);
-			File.Delete(Application.persistentDataPath + "/WinnerList.txt");
+			File.Copy(Application.persistentDataPath + "/WinnerList.txt", Application.persistentDataPath + "/MasterList.txt", true);
 		}
-
-		AddWinnerListEntry("Old Yeller", IFG.Kay, 408470, 400000, 2, new string[] { "Wicket" }, new string[] { IFG.Ron }, new int[] { 177070 });
-		AddWinnerListEntry("Big Red", IFG.Kay, 356605, 350000, 3, new string[] { "Weeto Grail", "Detective Mittens The Crime Solving Cat" }, new string[] { IFG.Ron, IFG.Jerry }, new int[] { 340780, 293920 });
-		AddWinnerListEntry("Red", IFG.Mike, 365010, 350000, 2, new string[] { "Chewie" }, new string[] { IFG.Ron }, new int[] { 323070 });
-		AddWinnerListEntry("Buddy Boogar", IFG.Ron, 437780, 400000, 2, new string[] { "Big Red" }, new string[] { IFG.Kay }, new int[] { 398960 });
-		AddWinnerListEntry("Buddy And Ginger", IFG.Ron, 403390, 400000, 2, new string[] { "Boss" }, new string[] { IFG.Becky }, new int[] { 230820 });
 	}
 	#endregion
 
