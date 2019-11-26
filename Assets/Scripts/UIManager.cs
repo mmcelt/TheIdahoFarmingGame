@@ -53,6 +53,7 @@ public class UIManager : MonoBehaviourPun
 	[SerializeField] GameObject _optionsPanel;
 	[SerializeField] GameObject _resetWinnersListButton;
 	[SerializeField] GameObject _makeTheMasterListButton;
+	[SerializeField] Text _secondChanceWarningText;
 
 	[Header("Sell OTB to Player Panel")]
 	[SerializeField] GameObject _sellOtbToPlayerPanel;
@@ -1532,6 +1533,21 @@ public class UIManager : MonoBehaviourPun
 	public IEnumerator WarningPanelRoutine(string button)
 	{
 		//_warningGiven = true;
+		switch (button)
+		{
+			case "Quit":
+				_secondChanceWarningText.text = "QUIT BUTTON PRESSED\n";
+				break;
+
+			case "ResetWinnersList":
+				_secondChanceWarningText.text = "RESET WINNERS LIST BUTTON PRESSED\n";
+				break;
+
+			case "MakeMasterList":
+				_secondChanceWarningText.text = "MAKE MASTER LIST BUTTON PRESSED\n";
+				break;
+		}
+		_secondChanceWarningText.text += "Are you sure you want to do this?";
 
 		yield return new WaitUntil(() => !_warningGiven);
 
@@ -1558,6 +1574,7 @@ public class UIManager : MonoBehaviourPun
 				}
 				break;
 		}
+		_secondChanceWarningText.text = "";
 		_okToProceed = false;
 	}
 	#endregion

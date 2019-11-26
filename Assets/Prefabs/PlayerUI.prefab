@@ -23457,6 +23457,7 @@ MonoBehaviour:
   _optionsPanel: {fileID: 4292128366875650900}
   _resetWinnersListButton: {fileID: 3208183970855118040}
   _makeTheMasterListButton: {fileID: 6459292012664378988}
+  _secondChanceWarningText: {fileID: 7839668077455928205}
   _sellOtbToPlayerPanel: {fileID: 5509507476505833448}
   _sellOtbToPlayerMessageText: {fileID: 3573028404005461827}
   _cancelSaleButton: {fileID: 1331528060451478129}
@@ -28218,8 +28219,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 65, y: -231.7}
-  m_SizeDelta: {x: 400, y: 406.6}
+  m_AnchoredPosition: {x: 65, y: -192.49998}
+  m_SizeDelta: {x: 400, y: 485}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7870559247182856529
 CanvasRenderer:
@@ -28438,7 +28439,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -10}
-  m_SizeDelta: {x: 0, y: 100}
+  m_SizeDelta: {x: 0, y: 160.3}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3188338875820525790
 CanvasRenderer:
@@ -28479,7 +28480,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Are You Sure You Want To Do This?
+  m_Text: TODO
 --- !u!1 &6979504272368416086
 GameObject:
   m_ObjectHideFlags: 0
