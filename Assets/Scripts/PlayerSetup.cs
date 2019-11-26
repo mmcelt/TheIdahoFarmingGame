@@ -42,8 +42,9 @@ public class PlayerSetup : MonoBehaviourPun
 		}
 		else
 		{
-			//disable remote movement script
+			//disable remote movement & GameTimer scripts
 			GetComponent<PlayerMove>().enabled = false;
+			GetComponent<GameTimer>().enabled = false;
 		}
 	}
 

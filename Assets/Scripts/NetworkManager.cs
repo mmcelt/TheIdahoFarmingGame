@@ -203,7 +203,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 		if (timedInput.text != "")
 		{
 			createGameButton.gameObject.SetActive(true);
-			timedGameAmount = int.Parse(timedInput.text);
+			timedGameAmount = float.Parse(timedInput.text);
 		}
 		else
 			createGameButton.gameObject.SetActive(false);
@@ -273,7 +273,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 			ExitGames.Client.Photon.Hashtable timedProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Timed_Game, timedGameAmount } };
 			PhotonNetwork.CurrentRoom.SetCustomProperties(timedProp);
 
-			Debug.Log("SETTING TIME FOR GAME " + timedGameAmount);
+			//Debug.Log("SETTING TIME FOR GAME " + timedGameAmount);
 		}
 	}
 
@@ -478,9 +478,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 			gameAmountString = gameAmount.ToString("c0");
 		}
 		else
+		{
 			gameAmountString = timedGameAmount.ToString();
+			gameAmount = (int)(float)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Timed_Game];
+			gameAmountString = gameAmount + " Min";
+		}
 
-			gameInfoText.text = "Game Name: " + PhotonNetwork.CurrentRoom.Name + "  " + "Players/MaxPlayers: " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "   Game Type: " + gameTypeString + " : " + gameAmountString;
+		gameInfoText.text = "Game Name: " + PhotonNetwork.CurrentRoom.Name + "  " + "Players/MaxPlayers: " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "   Game Type: " + gameTypeString + " : " + gameAmountString;
 	}
 
 	IEnumerator TryJoiningAgain()

@@ -62,6 +62,12 @@ public class BoardManager : MonoBehaviour
 
 	public void ShowSpace(int space)
 	{
+
+		if (space >= 0 && space <= 18)
+			_headerText.GetComponent<Outline>().enabled = false;
+		else
+			_headerText.GetComponent<Outline>().enabled = true;
+
 		switch (space)
 		{
 			case 0:

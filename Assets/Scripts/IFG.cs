@@ -80,6 +80,7 @@ public enum RaiseEventCodes
 	Out_Of_Otbs_Event_Code = 24,
 	Sell_Otb_To_Player_Event_Code = 25,
 	Update_WinnersList_Event_Code = 26,
-	Client_End_Of_Networth_Game_Message_Event_Code = 27
+	Client_End_Of_Networth_Game_Message_Event_Code = 27,
+	End_Timed_Game_Event_Code = 28
 };
 

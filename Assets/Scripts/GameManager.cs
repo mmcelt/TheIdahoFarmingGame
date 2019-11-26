@@ -161,7 +161,7 @@ public class GameManager : MonoBehaviourPun
 		else
 		{
 			_gameMode = "Timed Game";
-			_timedGameLength = (float)gameType;
+			_timedGameLength = (float)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Timed_Game];
 			//Debug.Log("Game Mode: " + _gameMode + " " + _timedGameLength);
 		}
 		//send event to UIManagers to update fields

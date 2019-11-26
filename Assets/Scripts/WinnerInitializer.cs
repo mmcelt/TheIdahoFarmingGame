@@ -43,7 +43,12 @@ public class WinnerInitializer : MonoBehaviour
 		_nopText.text = nop.ToString();
 		_nop = nop;
 		_winningNetworthText.text = networth.ToString("C0");
-		_gameConditionText.text = gameEnd.ToString("C0");
+
+		if (gameEnd > 500)
+			_gameConditionText.text = gameEnd.ToString("C0");
+		else
+			_gameConditionText.text = gameEnd + " Min";
+
 		_ruPlayers = ruPlayers;
 		_ruFarmers = ruFarmers;
 		_ruNetworths = ruNetworths;
