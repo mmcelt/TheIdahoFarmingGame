@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -71,6 +72,7 @@ public class SubmitWithButton : MonoBehaviour
 				break;
 		}
 		_uiManager._actionsPanel.SetActive(false);
+		_uiManager._actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
 	}
 
 	private bool SelectCorrectValidation(string target)

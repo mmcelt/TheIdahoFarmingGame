@@ -258,7 +258,18 @@ public class UIManager : MonoBehaviourPun
 		_gameTyeText.text = GameManager.Instance._gameMode;
 
 		//StartCoroutine("UpdateUIRoutine");
+
 	}
+
+	void Update()
+	{
+		if (Input.GetMouseButtonDown(0))
+		{
+			Debug.Log("MOUSE: " + Input.mousePosition);
+			Debug.Log("STVP " + Camera.main.ScreenToViewportPoint(Input.mousePosition));
+		}
+	}
+
 	#endregion
 
 	#region UI Callback Methods
@@ -266,14 +277,18 @@ public class UIManager : MonoBehaviourPun
 	//left panel methods
 	public void OnRollButtonClicked()
 	{
-		_actionsPanel.SetActive(false);
+		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+		ResetOtbListPanel();
+		//_actionsPanel.SetActive(false);
 		_diceRoll.OnRollButton();
 		_rollButton.interactable = false;
 	}
 
 	public void OnEndTurnButtonClicked()
 	{
-		_actionsPanel.SetActive(false);
+		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+		ResetOtbListPanel();
+		//_actionsPanel.SetActive(false);
 		_pManager.EndTurn();
 	}
 
@@ -288,8 +303,9 @@ public class UIManager : MonoBehaviourPun
 			InitializeTheActionsPanel();
 		}
 
-		if (_actionsPanel.activeSelf)
+		else if (_actionsPanel.activeSelf)
 		{
+			_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
 			ResetOtbListPanel();
 		}
 	}
@@ -298,7 +314,9 @@ public class UIManager : MonoBehaviourPun
 	public void OnCloseButtonClicked()
 	{
 		ResetOtbListPanel();
-		_actionsPanel.SetActive(false);
+		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+		ResetOtbListPanel();
+		//_actionsPanel.SetActive(false);
 	}
 
 	public void OnBuyOptionButtonClicked()
@@ -307,7 +325,9 @@ public class UIManager : MonoBehaviourPun
 		{
 			_buyOptionButton.interactable = false;
 			UseOtb(_selectedCard);
-			_actionsPanel.SetActive(false);
+			_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+			ResetOtbListPanel();
+			//_actionsPanel.SetActive(false);
 		}
 		else
 		{
@@ -545,6 +565,12 @@ public class UIManager : MonoBehaviourPun
 	public void OnOptionsButtonClicked()
 	{
 		_optionsPanel.SetActive(true);
+		_optionsPanel.GetComponent<DOTweenAnimation>().DOPlayForward();
+	}
+
+	public void OnOptionsPanelCloseButtonClicked()
+	{
+		_optionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
 	}
 
 	public void OnMakeMasterListButtonCLicked()
@@ -1083,7 +1109,8 @@ public class UIManager : MonoBehaviourPun
 		}
 		_cancelOtbSale = false;
 		ResetOtbListPanel();
-		_actionsPanel.SetActive(false);
+		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+		//_actionsPanel.SetActive(false);
 		_isSelling = false;
 	}
 
@@ -1103,7 +1130,8 @@ public class UIManager : MonoBehaviourPun
 		_minSalePrice = 0;
 		_sellTheOtbToPlayerButton.interactable = false;
 		ResetOtbListPanel();
-		_actionsPanel.SetActive(false);
+		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+		//_actionsPanel.SetActive(false);
 	}
 
 	int SelectSpriteForFarmer(string farmer)
@@ -1744,7 +1772,9 @@ public class UIManager : MonoBehaviourPun
 			Color fontColor = SelectFontColorForFarmer(farmerName);
 			_rollButton.interactable = false;
 			_endTurnButton.interactable = false;
-			_actionsPanel.SetActive(false);
+			_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+			ResetOtbListPanel();
+			//_actionsPanel.SetActive(false);
 
 			if (nop > 1)
 			{
@@ -1799,7 +1829,9 @@ public class UIManager : MonoBehaviourPun
 			Color fontColor = SelectFontColorForFarmer(farmerName);
 			_rollButton.interactable = false;
 			_endTurnButton.interactable = false;
-			_actionsPanel.SetActive(false);
+			_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+			ResetOtbListPanel();
+			//_actionsPanel.SetActive(false);
 
 			if (nop > 1)
 			{
