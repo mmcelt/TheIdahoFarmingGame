@@ -648,6 +648,10 @@ public class PlayerManager : MonoBehaviourPun
 
 		_uiManager._ffCardText.text = cardToShow;
 		_uiManager._ffPanel.SetActive(true);
+
+		//play the show animation
+		_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayForward();   //scale up
+		_uiManager._ffPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);	//move out
 	}
 
 	void OnChangingActivePlayer(EventData eventData)
@@ -758,7 +762,7 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._otbPanel.SetActive(true);
 		//play open animations...
 		_uiManager._otbPanel.GetComponent<DOTweenAnimation>().DOPlayForward();  //scale up
-		_uiManager._otbPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);
+		_uiManager._otbPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);	//move to center
 
 		yield return new WaitWhile(() => !_isOkToCloseOtbPanel);
 
@@ -805,8 +809,14 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		photonView.RPC("ShowFfCard", RpcTarget.All, new object[] { cardToShow.description });
 
-		while (_uiManager._ffPanel.activeSelf)
+		while (!_isOkToCloseFfPanel)
 			yield return null;
+
+		_isOkToCloseFfPanel = false;
+
+		//play close animation
+		_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();		//scale down
+		_uiManager._ffPanel.transform.DOLocalMove(new Vector3(638, -352), 0.5f);	//move to side
 
 		//perform action
 		//Debug.Log("FF Action...");

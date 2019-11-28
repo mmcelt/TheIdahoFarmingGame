@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
+using DG.Tweening;
 
 public class HarvestManager : MonoBehaviour
 {
@@ -688,13 +689,26 @@ public class HarvestManager : MonoBehaviour
 		_uiManager._oeCardText.text = drawnCard.description;
 		_uiManager._oePanel.SetActive(true);
 
+		//play the open animation
+		_uiManager._oePanel.GetComponent<DOTweenAnimation>().DOPlayForward();   //scale up
+		_uiManager._oePanel.transform.DOLocalMove(new Vector3(0, -33), 0.3f);	//move to center
+
 		//assign the operating expense
 		_operatingExpenses = GetOperatingExpenses(drawnCard.cardNumber);
 
 		_netCheck = (_harvestCheck - _operatingExpenses);
 
-		while (_uiManager._oePanel.activeSelf)
+		while (!_isOkToCloseOePanel)
 			yield return null;
+
+		_isOkToCloseOePanel = false;
+
+		//play the close animation
+		_uiManager._oePanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();   //scale down
+		_uiManager._oePanel.transform.DOLocalMove(new Vector3(638, -219), 0.3f);   //move to side
+
+		//yield return new WaitForSeconds(0.3f);
+
 		if (!_pManager._pWagesGarnished)
 			_messageText.text = "Your Harvest results are: You received $" + _harvestCheck + " for your commodity and your Operating Expenses were $" + _operatingExpenses + " for a net Harvest of $" + _netCheck;
 		else

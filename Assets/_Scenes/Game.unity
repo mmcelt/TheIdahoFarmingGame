@@ -851,6 +851,7 @@ MonoBehaviour:
   _add50PerWheatAcre: 0
   _cut50PerWheatAcre: 0
   _rollButtonPressed: 0
+  _isOkToCloseOePanel: 0
   _dieRoll: 0
   _waitingForOeCard: 0
 --- !u!4 &258946704
@@ -2176,6 +2177,7 @@ MonoBehaviour:
   _hManager: {fileID: 258946703}
   _fireworksPrefab: {fileID: 8316397311946834085, guid: 22b93f7dcdfcc394cba93a9d9e67dcac,
     type: 3}
+  _isOkToCloseBoardSpacePanel: 0
 --- !u!114 &681520324
 MonoBehaviour:
   m_ObjectHideFlags: 0
