@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
-using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class BoardManager : MonoBehaviour
 {
@@ -12,6 +12,8 @@ public class BoardManager : MonoBehaviour
 
 	[SerializeField] HarvestManager _hManager;
 	[SerializeField] GameObject _fireworksPrefab;
+
+	public bool _isOkToCloseBoardSpacePanel;
 
 	#endregion
 
@@ -418,6 +420,9 @@ public class BoardManager : MonoBehaviour
 		_boardSpacePanel.SetActive(true);
 		_modalPanel.SetActive(true);
 
+		//play open animation...
+		_boardSpacePanel.GetComponent<DOTweenAnimation>().DOPlayForward();
+
 		StartCoroutine(WaitForPlayer(space));
 	}
 	#endregion
@@ -426,10 +431,15 @@ public class BoardManager : MonoBehaviour
 
 	IEnumerator WaitForPlayer(int space)
 	{
-		while (_boardSpacePanel.activeSelf)
+		while (!_isOkToCloseBoardSpacePanel)
 			yield return null;
 
-		_modalPanel.SetActive(false);
+		_isOkToCloseBoardSpacePanel = false;
+
+		//play closing animation
+		_boardSpacePanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+
+		//_modalPanel.SetActive(false);
 		PerformBoardSpaceActions(space);
 
 		//Debug.Log("SPACE ON CLOSING BOARDSPACE PANEL: " + space);

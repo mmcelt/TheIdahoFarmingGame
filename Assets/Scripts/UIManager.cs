@@ -74,16 +74,19 @@ public class UIManager : MonoBehaviourPun
 	[Header("Otb Card Panel")]
 	public GameObject _otbPanel;
 	public Text _otbCardText, _otbTotalCostText;
+	//public Button _otbPanelOkButton;
 
 	[Header("Ff Card Panel")]
 	public GameObject _ffPanel;
 	public Text _ffCardText;
 	public Image _ffCardBackground;
+	//public Button _ffPanelOkButton;
 
 	[Header("Oe Card Panel")]
 	public GameObject _oePanel;
 	public Text _oeCardText;
 	public Image _oeCardBackground;
+	//public Button _oePanelOkButton;
 
 	[Header("Teton Dam Panel")]
 	public GameObject _tetonDamPanel;
@@ -158,6 +161,8 @@ public class UIManager : MonoBehaviourPun
 	PlayerMove _pMove;
 	DeckManager _dManager;
 	RemotePlayerUpdater _rpUpdater;
+	HarvestManager _hManager;
+	BoardManager _bManager;
 
 	//OTB Stuff
 	List<string> _otbCards = new List<string>();       //for the myOTB Dropdown
@@ -625,6 +630,32 @@ public class UIManager : MonoBehaviourPun
 		_warningGiven = false;
 		_okToProceed = false;
 		_optionsPanelModalPanel.SetActive(false);
+	}
+
+	public void OnOtbPanelOkButtonClicked()
+	{
+		_pManager._isOkToCloseOtbPanel = true;
+	}
+
+	public void OnFfPanelOkButtonClicked()
+	{
+		_pManager._isOkToCloseFfPanel = true;
+	}
+
+	public void OnOePanelOkButtonClicked()
+	{
+		if (_hManager == null)
+			_hManager = GameManager.Instance.hManager;
+
+		_hManager._isOkToCloseOePanel = true;
+	}
+
+	public void OnBoardSpacePanelOkButtonClicked()
+	{
+		if (_bManager == null)
+			_bManager = GameManager.Instance.bManager;
+
+		_bManager._isOkToCloseBoardSpacePanel = true;
 	}
 	#endregion
 

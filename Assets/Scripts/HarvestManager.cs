@@ -31,8 +31,9 @@ public class HarvestManager : MonoBehaviour
 	public bool _doubleHarvest;
 	public bool _add50PerWheatAcre;
 	public bool _cut50PerWheatAcre;
-
+	
 	public bool _rollButtonPressed;
+	public bool _isOkToCloseOePanel;
 
 	public int _dieRoll;
 	

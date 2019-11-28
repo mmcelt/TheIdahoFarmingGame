@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerManager : MonoBehaviourPun
 {
@@ -56,6 +57,8 @@ public class PlayerManager : MonoBehaviourPun
 	public bool _pWagesGarnished;
 	public bool _pNoWages;
 	public bool _isMyTurn;
+	public bool _isOkToCloseOtbPanel;
+	public bool _isOkToCloseFfPanel;
 
 	public List<OTBCard> _myOtbs = new List<OTBCard>();
 	public int _myOtbCount;
@@ -751,9 +754,24 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		_uiManager._otbCardText.text = card.description;
 		_uiManager._otbTotalCostText.text = "Total Cost: " + card.totalCost;
-		_uiManager._otbPanel.SetActive(true);
 
-		yield return new WaitWhile(() => _uiManager._otbPanel.activeSelf);
+		_uiManager._otbPanel.SetActive(true);
+		//play open animations...
+		_uiManager._otbPanel.GetComponent<DOTweenAnimation>().DOPlayForward();  //scale up
+		_uiManager._otbPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);
+
+		yield return new WaitWhile(() => !_isOkToCloseOtbPanel);
+
+		_isOkToCloseOtbPanel = false;
+
+		//play the closing animations...
+		_uiManager._otbPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();   //scale down
+		_uiManager._otbPanel.transform.DOLocalMove(new Vector3(-784, -386), 0.5f);
+		//panel set inactive in OnRewind() on the animator.
+		//move panel back to original position
+		yield return new WaitForSeconds(0.5f);
+		_uiManager._otbPanel.transform.localPosition = new Vector3(638, -88);
+		_uiManager._otbPanel.transform.localScale = Vector3.one;
 
 		//add the card to myOtbs
 		_myOtbs.Add(card);
