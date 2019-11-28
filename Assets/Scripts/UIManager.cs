@@ -7,6 +7,7 @@ using Photon.Realtime;
 using TMPro;
 using ExitGames.Client.Photon;
 using System.IO;
+using DG.Tweening;
 
 public class UIManager : MonoBehaviourPun
 {
@@ -279,16 +280,18 @@ public class UIManager : MonoBehaviourPun
 	public void OnActionsButtonClicked()
 	{
 		//toggle Actions Panel
-		bool actionsPanelActive = _actionsPanel.activeSelf;
-
-		_actionsPanel.SetActive(!actionsPanelActive);
+		//bool actionsPanelActive = _actionsPanel.activeSelf;
+		if (!_actionsPanel.activeSelf)
+		{
+			_actionsPanel.SetActive(true);
+			_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayForward();
+			InitializeTheActionsPanel();
+		}
 
 		if (_actionsPanel.activeSelf)
 		{
-			InitializeTheActionsPanel();
-		}
-		else
 			ResetOtbListPanel();
+		}
 	}
 
 	//actions panel methods
