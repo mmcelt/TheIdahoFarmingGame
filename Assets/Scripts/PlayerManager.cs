@@ -630,29 +630,6 @@ public class PlayerManager : MonoBehaviourPun
 		}
 	}
 
-	[PunRPC]
-	void ShowFfCard(string cardToShow, PhotonMessageInfo info)
-	{
-		if (info.Sender.ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
-		{
-			object sendingFarmer;
-
-			if (info.Sender.CustomProperties.TryGetValue(IFG.Selected_Farmer, out sendingFarmer))
-			{
-				string farmer = (string)sendingFarmer;
-				_uiManager._ffCardBackground.color = _uiManager.SelectFontColorForFarmer(farmer);
-			}
-		}
-		else
-			_uiManager._ffCardBackground.color = Color.white;
-
-		_uiManager._ffCardText.text = cardToShow;
-		_uiManager._ffPanel.SetActive(true);
-
-		//play the show animation
-		_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayForward();   //scale up
-		_uiManager._ffPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);	//move out
-	}
 
 	void OnChangingActivePlayer(EventData eventData)
 	{
@@ -807,17 +784,17 @@ public class PlayerManager : MonoBehaviourPun
 
 	IEnumerator ShowFfCardRoutine(FFCard cardToShow)
 	{
+		Debug.Log("IN SHOW FF ROUTINE");
 		photonView.RPC("ShowFfCard", RpcTarget.All, new object[] { cardToShow.description });
 
-		while (!_isOkToCloseFfPanel)
+		while (_uiManager._ffPanel.activeSelf)
 			yield return null;
 
-		_isOkToCloseFfPanel = false;
+		//_isOkToCloseFfPanel = false;
 
-		//play close animation
-		_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();		//scale down
-		_uiManager._ffPanel.transform.DOLocalMove(new Vector3(638, -352), 0.5f);	//move to side
-
+		//_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+		//_uiManager._ffPanel.transform.DOLocalMove(new Vector3(638, -352), 0.5f);
+		Debug.Log("DOING ACTION...");
 		//perform action
 		//Debug.Log("FF Action...");
 		if (photonView.IsMine)
@@ -838,6 +815,30 @@ public class PlayerManager : MonoBehaviourPun
 			//fire the event...
 			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Replace_Ff_Event_Code, sendData, eventOptions, sendOptions);
 		}
+	}
+
+	[PunRPC]
+	void ShowFfCard(string cardToShow, PhotonMessageInfo info)
+	{
+		Debug.Log("IN SHOW FF CARD RPC");
+		if (info.Sender.ActorNumber != PhotonNetwork.LocalPlayer.ActorNumber)
+		{
+			object sendingFarmer;
+
+			if (info.Sender.CustomProperties.TryGetValue(IFG.Selected_Farmer, out sendingFarmer))
+			{
+				string farmer = (string)sendingFarmer;
+				_uiManager._ffCardBackground.color = _uiManager.SelectFontColorForFarmer(farmer);
+			}
+		}
+		else
+			_uiManager._ffCardBackground.color = Color.white;
+
+		_uiManager._ffCardText.text = cardToShow;
+		_uiManager._ffPanel.SetActive(true);
+		//_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayForward();
+		//_uiManager._ffPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);
+
 	}
 
 	void OnCustomHireHarvester(EventData eventData)

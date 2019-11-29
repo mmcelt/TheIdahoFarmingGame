@@ -110,6 +110,8 @@ public class DeckManager : MonoBehaviourPun
 
 	public void PerformFfActions(int card)
 	{
+		Debug.Log("IN DECKMANAGER PA: " + card);
+
 		if (_pManager == null)
 			_pManager = GameManager.Instance.myFarmer.GetComponent<PlayerManager>();
 		if (_pMove == null)
@@ -829,7 +831,7 @@ public class DeckManager : MonoBehaviourPun
 	{
 		//cardNum = 14;              //TESTING
 		//desc = "GARNISHED!";       //TESTING
-		//cardNum = 13;					//TESTING
+		//cardNum = 13;              //TESTING
 		//desc = "CUSTOM HARVESTER";	//TESTING
 		//cardNum = 10;              //TESTING	
 		//desc = "TETON DAM!";       //TESTING

@@ -128,7 +128,9 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnOkButton3Clicked()
 	{
-		_uiManager._harvestPanel.SetActive(false);
+		//play hide animation...
+		_uiManager._harvestPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();	//scale down
+		//_uiManager._harvestPanel.SetActive(false);
 		_ok3Button.gameObject.SetActive(false);
 		_messageText.text = IFG.HarvestBaseMessage;
 	}
@@ -167,6 +169,9 @@ public class HarvestManager : MonoBehaviour
 
 		//show the Harvest UI
 		_uiManager._harvestPanel.SetActive(true);
+		//play the show animation
+		_uiManager._harvestPanel.GetComponent<DOTweenAnimation>().DOPlayForward();	//scale up
+
 		_uiManager._harvestRollButton.interactable = true;
 
 		//WAIT roll the die

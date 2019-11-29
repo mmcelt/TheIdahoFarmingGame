@@ -201,6 +201,8 @@ MonoBehaviour:
   _pWagesGarnished: 0
   _pNoWages: 0
   _isMyTurn: 0
+  _isOkToCloseOtbPanel: 0
+  _isOkToCloseFfPanel: 0
   _myOtbCount: 0
 --- !u!114 &5134175974575207240
 MonoBehaviour:

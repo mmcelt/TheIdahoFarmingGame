@@ -266,14 +266,14 @@ public class UIManager : MonoBehaviourPun
 
 	}
 
-	void Update()
-	{
-		if (Input.GetMouseButtonDown(0))
-		{
-			Debug.Log("MOUSE: " + Input.mousePosition);
-			Debug.Log("STVP " + Camera.main.ScreenToViewportPoint(Input.mousePosition));
-		}
-	}
+	//void Update()
+	//{
+	//	if (Input.GetMouseButtonDown(0))
+	//	{
+	//		Debug.Log("MOUSE: " + Input.mousePosition);
+	//		Debug.Log("STVP " + Camera.main.ScreenToViewportPoint(Input.mousePosition));
+	//	}
+	//}
 
 	#endregion
 
@@ -657,6 +657,7 @@ public class UIManager : MonoBehaviourPun
 
 		_bManager._isOkToCloseBoardSpacePanel = true;
 	}
+
 	#endregion
 
 	#region Public Methods
