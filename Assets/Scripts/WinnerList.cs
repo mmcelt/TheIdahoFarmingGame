@@ -228,6 +228,7 @@ public class WinnerList : MonoBehaviour
 		{
 			File.Copy(Application.persistentDataPath + "/MasterList.txt", Application.persistentDataPath + "/WinnerList.txt", true);
 		}
+		PopulateAndShowWinnersList();
 		////delete the existing WinnersList.txt file...
 		//if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
 		//{

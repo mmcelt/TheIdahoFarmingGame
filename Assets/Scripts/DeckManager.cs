@@ -829,14 +829,14 @@ public class DeckManager : MonoBehaviourPun
 
 	void CreateAnFFCard(int cardNum, string desc)
 	{
-		//cardNum = 14;              //TESTING
-		//desc = "GARNISHED!";       //TESTING
-		//cardNum = 13;              //TESTING
-		//desc = "CUSTOM HARVESTER";	//TESTING
-		//cardNum = 10;              //TESTING	
-		//desc = "TETON DAM!";       //TESTING
-		//cardNum = 15;					//TESTING
-		//desc = "UNCLE CHEESTER";		//TESTING
+		cardNum = 14;              //TESTING
+		desc = "GARNISHED!";       //TESTING
+											//cardNum = 13;					//TESTING
+											//desc = "CUSTOM HARVESTER";	//TESTING
+											//cardNum = 10;					//TESTING
+											//desc = "TETON DAM!";			//TESTING
+											//cardNum = 15;					//TESTING
+											//desc = "UNCLE CHEESTER";		//TESTING
 
 		//declare an FFCard object
 		FFCard newFFCard = new FFCard();

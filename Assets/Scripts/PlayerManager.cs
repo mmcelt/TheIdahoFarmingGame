@@ -787,13 +787,10 @@ public class PlayerManager : MonoBehaviourPun
 		Debug.Log("IN SHOW FF ROUTINE");
 		photonView.RPC("ShowFfCard", RpcTarget.All, new object[] { cardToShow.description });
 
-		while (_uiManager._ffPanel.activeSelf)
-			yield return null;
+		yield return new WaitWhile(()=>!_isOkToCloseFfPanel);
 
-		//_isOkToCloseFfPanel = false;
+		_isOkToCloseFfPanel = false;
 
-		//_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
-		//_uiManager._ffPanel.transform.DOLocalMove(new Vector3(638, -352), 0.5f);
 		Debug.Log("DOING ACTION...");
 		//perform action
 		//Debug.Log("FF Action...");
@@ -835,10 +832,22 @@ public class PlayerManager : MonoBehaviourPun
 			_uiManager._ffCardBackground.color = Color.white;
 
 		_uiManager._ffCardText.text = cardToShow;
-		_uiManager._ffPanel.SetActive(true);
-		//_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayForward();
-		//_uiManager._ffPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);
 
+		StartCoroutine(FfCardAnimationRoutine());
+	}
+
+	IEnumerator FfCardAnimationRoutine()
+	{
+		Debug.Log("IN FF ANIM COROUTINE");
+
+		_uiManager._ffPanel.SetActive(true);
+		_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayForward();
+		_uiManager._ffPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);
+		yield return new WaitWhile(() => !_isOkToCloseFfPanel);
+		_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+		_uiManager._ffPanel.transform.DOLocalMove(new Vector3(638, -352), 0.5f);
+		yield return new WaitForSeconds(0.5f);
+		_isOkToCloseFfPanel = false;
 	}
 
 	void OnCustomHireHarvester(EventData eventData)
