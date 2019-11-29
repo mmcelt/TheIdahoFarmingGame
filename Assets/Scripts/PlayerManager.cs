@@ -889,12 +889,12 @@ public class PlayerManager : MonoBehaviourPun
 
 	IEnumerator GetForcedLoanRoutine()
 	{
-		_uiManager._modalPanel.SetActive(true);
+		_uiManager._forcedLoanModalPanel.SetActive(true);
 		_uiManager._forcedLoanPanel.SetActive(true);
 		_uiManager._forcedLoanInput.Select();
 		_uiManager.UpdateForcedLoanFunds(_pCash, _pNotes);
 		yield return new WaitUntil(() => _pCash >= 0);
-		_uiManager._modalPanel.SetActive(false);
+		_uiManager._forcedLoanModalPanel.SetActive(false);
 		_uiManager._forcedLoanPanel.SetActive(false);
 		_uiManager._loanAmount = 0;
 		_uiManager._forcedLoanInput.text = "";

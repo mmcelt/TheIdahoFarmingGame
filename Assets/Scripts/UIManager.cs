@@ -126,9 +126,9 @@ public class UIManager : MonoBehaviourPun
 	[Header("Modal Panels")]
 	public GameObject _modalPanel;
 	public GameObject _completeModalPanel;
-	public GameObject _actionsPanelModalPanel;
-	public GameObject _optionsPanelModalPanel;
+	public GameObject _optionsWarningPanelModalPanel;
 	public GameObject _eogModalPanel;
+	public GameObject _forcedLoanModalPanel;
 
 	[Header("Winners List")]
 	public Button _optionsButton;
@@ -535,7 +535,7 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnCancelOtbSaleToPlayerButtonClicked()
 	{
-		_actionsPanelModalPanel.SetActive(false);
+		_completeModalPanel.SetActive(false);
 		_sellOtbToPlayerPanel.SetActive(false);
 	}
 
@@ -563,7 +563,7 @@ public class UIManager : MonoBehaviourPun
 		_pManager._myOtbCount = _pManager._myOtbs.Count;
 		_pManager.UpdateMyUI();
 
-		_actionsPanelModalPanel.SetActive(false);
+		_completeModalPanel.SetActive(false);
 		_sellOtbToPlayerPanel.SetActive(false);
 	}
 
@@ -582,7 +582,7 @@ public class UIManager : MonoBehaviourPun
 	{
 		if (!_warningGiven)
 		{
-			_optionsPanelModalPanel.SetActive(true);
+			_optionsWarningPanelModalPanel.SetActive(true);
 			_warningGiven = true;
 			StartCoroutine(WarningPanelRoutine("MakeMasterList"));
 		}
@@ -592,7 +592,7 @@ public class UIManager : MonoBehaviourPun
 	{
 		if (!_warningGiven)
 		{
-			_optionsPanelModalPanel.SetActive(true);
+			_optionsWarningPanelModalPanel.SetActive(true);
 			_warningGiven = true;
 			StartCoroutine(WarningPanelRoutine("ResetWinnersList"));
 		}
@@ -602,7 +602,7 @@ public class UIManager : MonoBehaviourPun
 	{
 		if (!_warningGiven)
 		{
-			_optionsPanelModalPanel.SetActive(true);
+			_optionsWarningPanelModalPanel.SetActive(true);
 			_warningGiven = true;
 			StartCoroutine(WarningPanelRoutine("Quit"));
 		}
@@ -622,14 +622,14 @@ public class UIManager : MonoBehaviourPun
 	{
 		_warningGiven = false;
 		_okToProceed = true;
-		_optionsPanelModalPanel.SetActive(false);
+		_optionsWarningPanelModalPanel.SetActive(false);
 	}
 
 	public void OnNoButtonClicked()
 	{
 		_warningGiven = false;
 		_okToProceed = false;
-		_optionsPanelModalPanel.SetActive(false);
+		_optionsWarningPanelModalPanel.SetActive(false);
 	}
 
 	public void OnOtbPanelOkButtonClicked()
@@ -1148,7 +1148,7 @@ public class UIManager : MonoBehaviourPun
 
 	IEnumerator SellOtbToPlayerRoutine()
 	{
-		_actionsPanelModalPanel.SetActive(true);
+		_completeModalPanel.SetActive(true);
 		_sellOtbToPlayerPanel.SetActive(true);
 		_sellOtbToPlayerMessageText.text = "You are selling " + _selectedCard.summary;
 		_sellOtbToPlayerMessageText.text += "\n\nMinimum Sale price is: " + GetSalePrice().ToString("c0");
@@ -1588,7 +1588,7 @@ public class UIManager : MonoBehaviourPun
 		_gameOverMessageText.gameObject.SetActive(false);
 		_gameOverMessageText.text = "";
 		_gameOverMessageText.color = Color.black;
-		_modalPanel.SetActive(false);
+		_eogModalPanel.SetActive(false);
 
 		WinnerList.Instance.PopulateAndShowWinnersList();
 	}
