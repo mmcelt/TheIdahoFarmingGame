@@ -860,6 +860,8 @@ public class PlayerManager : MonoBehaviourPun
 				_uiManager._ffPanel.SetActive(false);
 
 			_uiManager._customHarvesterPanel.SetActive(true);
+			//play animation
+			_uiManager._customHarvesterPanel.GetComponent<DOTweenAnimation>().DOPlay();
 		}
 	}
 
@@ -869,6 +871,7 @@ public class PlayerManager : MonoBehaviourPun
 		//play bad sound
 		AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 		//_customHireOkButton.onClick.RemoveAllListeners();
+		_uiManager._customHarvesterPanel.GetComponent<DOTweenAnimation>().DORewind();
 	}
 
 	int CalculateNetworth()
@@ -891,6 +894,10 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		_uiManager._forcedLoanModalPanel.SetActive(true);
 		_uiManager._forcedLoanPanel.SetActive(true);
+		_uiManager._forcedLoanPanel.GetComponent<DOTweenAnimation>().DOPlay();
+		yield return new WaitForSeconds(1f);
+		_uiManager._forcedLoanPanel.GetComponent<DOTweenAnimation>().DORewind();
+		
 		_uiManager._forcedLoanInput.Select();
 		_uiManager.UpdateForcedLoanFunds(_pCash, _pNotes);
 		yield return new WaitUntil(() => _pCash >= 0);

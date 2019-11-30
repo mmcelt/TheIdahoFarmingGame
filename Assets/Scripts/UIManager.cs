@@ -36,6 +36,7 @@ public class UIManager : MonoBehaviourPun
 	[SerializeField] Text[] _remotePlayerNameTexts;
 	public Text[] _remotePlayerNetworthTexts;
 	public Text _activePlayerText;
+	[SerializeField] Image _otbImage, _oeImage, _ffImage;
 	[SerializeField] Text _otbShuffleText, _oeShuffleText, _ffShuffleText;
 	[SerializeField] Text _otbLeftText, _oeLeftText, _ffLeftText;
 	[SerializeField] Text _otbTotalText, _oeTotalText, _ffTotalText;
@@ -108,7 +109,7 @@ public class UIManager : MonoBehaviourPun
 
 	[Header("Garnished Harvest Panel")]
 	public GameObject _gHarvestPanel;
-	public Button _ok1GarnishedButton, _ok2GarnishedButton;
+	public Button _ok1GarnishedButton, _ok2GarnishedButton, _ok3GarnishedButton;
 	public Text _gHarvestMessageText;
 
 	[Header("Forced Loan Panel")]
@@ -386,7 +387,6 @@ public class UIManager : MonoBehaviourPun
 		_otbMessageText.text = "";
 		_otbOkButton.gameObject.SetActive(false);
 		_cancelButton.gameObject.SetActive(false);
-
 	}
 
 	public void OnOtbCancelButtonClicked()
@@ -510,6 +510,7 @@ public class UIManager : MonoBehaviourPun
 		_loanAmount = 0;
 		_forcedLoanInput.text = "";
 		_forcedLoanInput.placeholder.GetComponent<Text>().text = "Enter the Loan Amount...";
+		_forcedLoanModalPanel.SetActive(false);
 	}
 
 	public void UpdateActionsPanelFunds(int cash, int notes)
@@ -566,13 +567,13 @@ public class UIManager : MonoBehaviourPun
 		_completeModalPanel.SetActive(false);
 		_sellOtbToPlayerPanel.SetActive(false);
 	}
-
+	//Right Panel
 	public void OnOptionsButtonClicked()
 	{
 		_optionsPanel.SetActive(true);
 		_optionsPanel.GetComponent<DOTweenAnimation>().DOPlayForward();
 	}
-
+	//Options Panel
 	public void OnOptionsPanelCloseButtonClicked()
 	{
 		_optionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
@@ -657,7 +658,6 @@ public class UIManager : MonoBehaviourPun
 
 		_bManager._isOkToCloseBoardSpacePanel = true;
 	}
-
 	#endregion
 
 	#region Public Methods
@@ -1565,6 +1565,10 @@ public class UIManager : MonoBehaviourPun
 			_shuffleMessageText.gameObject.SetActive(false);
 			_shuffleMessageText.text = "";
 			_shuffleMessageText.color = Color.black;
+			yield return new WaitForSeconds(0.1f);
+			_otbImage.GetComponent<DOTweenAnimation>().DORewind();
+			_oeImage.GetComponent<DOTweenAnimation>().DORewind();
+			_ffImage.GetComponent<DOTweenAnimation>().DORewind();
 		}
 		//if (typeOfMessage=="Game Over")
 		//{
@@ -1689,32 +1693,35 @@ public class UIManager : MonoBehaviourPun
 			string deck = (string)recData[0];
 			int counter = (int)recData[1];
 
-			Color deckColor = Color.white;
-
-			switch (deck)
+			if (counter > 1)
 			{
-				case "OTB":
-					_otbShuffleCount = counter;
-					deckColor = new Color(0.7843f, 0.9372f, 1f);
-					break;
+				Color deckColor = Color.white;
 
-				case "OE":
-					_oeShuffleCount = counter;
-					deckColor = new Color(1f, 0.9725f, 0.5803f);
-					break;
+				switch (deck)
+				{
+					case "OTB":
+						_otbShuffleCount = counter;
+						deckColor = new Color(0.7843f, 0.9372f, 1f);
+						_otbImage.GetComponent<DOTweenAnimation>().DOPlay();
+						break;
 
-				case "FF":
-					_ffShuffleCount = counter;
-					deckColor = new Color(0.9568f, 0.6352f, 0.7333f);
-					break;
+					case "OE":
+						_oeShuffleCount = counter;
+						deckColor = new Color(1f, 0.9725f, 0.5803f);
+						_oeImage.GetComponent<DOTweenAnimation>().DOPlay();
+						break;
 
-				default:
-					Debug.Log("No such deck " + deck);
-					break;
-			}
-			UpdateUI();
-			if (counter > 0)
-			{
+					case "FF":
+						_ffShuffleCount = counter;
+						deckColor = new Color(0.9568f, 0.6352f, 0.7333f);
+						_ffImage.GetComponent<DOTweenAnimation>().DOPlay();
+						break;
+
+					default:
+						Debug.Log("No such deck " + deck);
+						break;
+				}
+				UpdateUI();
 				string message = "Shuffled the " + deck + " Deck...";
 				StartCoroutine(ShowMessageRoutine("Shuffle", message, deckColor));
 			}
@@ -1897,6 +1904,14 @@ public class UIManager : MonoBehaviourPun
 
 			StartCoroutine(ShowGameOverMessageRoutine(message, fontColor, 5.0f, winnerName, farmerName, networth, (int)gameEnd, nop, ruNames, ruFarmers, ruNetworths));
 		}
+	}
+	#endregion
+
+	#region TESTING METHODS
+
+	public void DisplayDebugMessageFromTween()
+	{
+		Debug.Log("Rewind Complete");
 	}
 	#endregion
 }

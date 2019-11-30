@@ -35,6 +35,7 @@ public class HarvestManager : MonoBehaviour
 	
 	public bool _rollButtonPressed;
 	public bool _isOkToCloseOePanel;
+	public bool _isOkToCloseGarnishedPanel;
 
 	public int _dieRoll;
 	
@@ -59,9 +60,8 @@ public class HarvestManager : MonoBehaviour
 
 	//Garnished Stuff
 	Text _gMessageText;
-	Button _ok1GButton, _ok2GButton;
+	Button _ok1GButton, _ok2GButton, _ok3GButton;
 	bool _ok1GButtonPressed;
-	bool _ok2GButtonPressed;
 
 	PlayerManager _pManager;
 	UIManager _uiManager;
@@ -114,7 +114,7 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnOkButton1GarnishedClicked()
 	{
-		Debug.Log("OK1G BUTTON CLICKED");
+		//Debug.Log("OK1G BUTTON CLICKED");
 
 		_gMessageText.text = "Getting your Operating Expenses...";
 		_ok1GButtonPressed = true;
@@ -124,6 +124,21 @@ public class HarvestManager : MonoBehaviour
 	{
 		_okButton2Pressed = true;
 		_messageText.text = "Your Harvest Check is: " + _harvestCheck;
+	}
+
+	public void OnOkButton2GarnishedClicked()
+	{
+		_isOkToCloseGarnishedPanel = true;
+		//play the hide animation
+		_uiManager._gHarvestPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards(); //scale down
+		//_ok2GButtonPressed = true;
+	}
+
+	public void OnOkButton3GarnishedClicked()
+	{
+		//play the hide animation
+		_uiManager._gHarvestPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards(); //scale down
+		//_ok3GButton.gameObject.SetActive(false);
 	}
 
 	public void OnOkButton3Clicked()
@@ -161,6 +176,9 @@ public class HarvestManager : MonoBehaviour
 			_ok1GButton = _uiManager._ok1GarnishedButton;
 			_ok1GButton.onClick.AddListener(OnOkButton1GarnishedClicked);
 			_ok2GButton = _uiManager._ok2GarnishedButton;
+			_ok2GButton.onClick.AddListener(OnOkButton2GarnishedClicked);
+			//_ok3GButton = _uiManager._ok2GarnishedButton;
+			//_ok3GButton.onClick.AddListener(OnOkButton3GarnishedClicked);
 		}
 		if (_myDiceRoll == null)
 			_myDiceRoll = GameManager.Instance.myDiceRoll;
@@ -240,6 +258,7 @@ public class HarvestManager : MonoBehaviour
 		yield return new WaitWhile(() => _uiManager._harvestPanel.activeSelf);
 
 		_pManager.UpdateMyCash(_netCheck);
+
 		if (_netCheck < 0)
 			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 
@@ -263,6 +282,9 @@ public class HarvestManager : MonoBehaviour
 			_ok1GButton = _uiManager._ok1GarnishedButton;
 			_ok1GButton.onClick.AddListener(OnOkButton1GarnishedClicked);
 			_ok2GButton = _uiManager._ok2GarnishedButton;
+			_ok2GButton.onClick.AddListener(OnOkButton2GarnishedClicked);
+			//_ok3GButton = _uiManager._ok2GarnishedButton;
+			//_ok3GButton.onClick.AddListener(OnOkButton3GarnishedClicked);
 			//Normal Harvest Stuff
 			_messageText = _uiManager._harvestMessageText;
 			_rollButton = _uiManager._harvestRollButton;
@@ -279,6 +301,9 @@ public class HarvestManager : MonoBehaviour
 
 		_ok1GButtonPressed = false;
 		_uiManager._gHarvestPanel.SetActive(true);
+		//play the show animation
+		_uiManager._gHarvestPanel.GetComponent<DOTweenAnimation>().DOPlayForward(); //scale up
+
 		_ok1GButton.gameObject.SetActive(true);
 		_gMessageText.text = "Wages Garnished - No Harvest Check!";
 		//_ok1GButton.gameObject.SetActive(true);
@@ -295,6 +320,7 @@ public class HarvestManager : MonoBehaviour
 		yield return new WaitWhile(() => _uiManager._gHarvestPanel.activeSelf);
 
 		_pManager.UpdateMyCash(_netCheck);
+
 		if (_netCheck < 0)
 			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 

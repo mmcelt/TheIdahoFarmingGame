@@ -70,8 +70,12 @@ public class SubmitWithButton : MonoBehaviour
 			case "Forced Loan Input":
 				_uiManager.OnGetFocedLoanButtonClicked();
 				break;
+
+			case "Selling Price Input":
+				_uiManager.OnDoOtbSaleToPlayerButtonClicked();
+				break;
 		}
-		_uiManager._actionsPanel.SetActive(false);
+		//_uiManager._actionsPanel.SetActive(false);
 		_uiManager._actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
 	}
 
@@ -96,6 +100,13 @@ public class SubmitWithButton : MonoBehaviour
 
 			case "Downpayment Input":
 				if (!_uiManager._buyOptionButton.interactable)
+				{
+					return true;
+				}
+				break;
+
+			case "Selling Price Input":
+				if (!_uiManager._sellTheOtbToPlayerButton.interactable)
 				{
 					return true;
 				}
