@@ -98,6 +98,9 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnHarvestRollButtonClicked()
 	{
+		//play click
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_myDiceRoll.isOtherRoll = true;
 		_myDiceRoll.isHarvestRoll = true;
 		_myDiceRoll.OnRollButton();
@@ -106,6 +109,9 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnOkButton1Clicked()
 	{
+		//play click
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_myDiceRoll.isOtherRoll = false;
 		_okButton1Pressed = true;
 		_messageText.text = "Performing Harvest Calculations...";
@@ -114,7 +120,8 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnOkButton1GarnishedClicked()
 	{
-		//Debug.Log("OK1G BUTTON CLICKED");
+		//play click
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
 
 		_gMessageText.text = "Getting your Operating Expenses...";
 		_ok1GButtonPressed = true;
@@ -122,12 +129,18 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnOkButton2Clicked()
 	{
+		//play click
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_okButton2Pressed = true;
 		_messageText.text = "Your Harvest Check is: " + _harvestCheck;
 	}
 
 	public void OnOkButton2GarnishedClicked()
 	{
+		//play click
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_isOkToCloseGarnishedPanel = true;
 		//play the hide animation
 		_uiManager._gHarvestPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards(); //scale down
@@ -136,6 +149,9 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnOkButton3GarnishedClicked()
 	{
+		//play click
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		//play the hide animation
 		_uiManager._gHarvestPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards(); //scale down
 		//_ok3GButton.gameObject.SetActive(false);
@@ -143,6 +159,9 @@ public class HarvestManager : MonoBehaviour
 
 	public void OnOkButton3Clicked()
 	{
+		//play click
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		//play hide animation...
 		_uiManager._harvestPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();	//scale down
 		//_uiManager._harvestPanel.SetActive(false);

@@ -2179,8 +2179,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hManager: {fileID: 258946703}
-  _fireworksPrefab: {fileID: 8316397311946834085, guid: 22b93f7dcdfcc394cba93a9d9e67dcac,
-    type: 3}
+  _fireworksPrefabs:
+  - {fileID: 8316397311946834085, guid: 22b93f7dcdfcc394cba93a9d9e67dcac, type: 3}
+  - {fileID: 8316397311946834085, guid: 6a4b80862e8b18341b64d550972052b9, type: 3}
+  - {fileID: 8316397311946834085, guid: b0825bbdf6305344db19df1e1a33313c, type: 3}
+  - {fileID: 8316397311946834085, guid: 36a19c8884e5e1948a5d3c375dc68272, type: 3}
   _isOkToCloseBoardSpacePanel: 0
 --- !u!114 &681520324
 MonoBehaviour:
@@ -4338,15 +4341,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 25325986de634be40b10bded74c697bc, type: 3}
+    m_Font: {fileID: 12800000, guid: 8a2b9e2a607dd2143b58c44bc32410b4, type: 3}
     m_FontSize: 14
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40

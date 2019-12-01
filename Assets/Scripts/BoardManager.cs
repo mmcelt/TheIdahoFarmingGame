@@ -11,7 +11,7 @@ public class BoardManager : MonoBehaviour
 	#region Public / Serialized Fields
 
 	[SerializeField] HarvestManager _hManager;
-	[SerializeField] GameObject _fireworksPrefab;
+	[SerializeField] GameObject[] _fireworksPrefabs;
 
 	public bool _isOkToCloseBoardSpacePanel;
 
@@ -1085,10 +1085,12 @@ public class BoardManager : MonoBehaviour
 
 	 public IEnumerator PlayFireworksRoutine()
 	{
+		int randomPlay = Random.Range(0, _fireworksPrefabs.Length);
+
 		_activeSprites = new List<SpriteRenderer>();
 		CyclePlayersAndStickers(false);
 		_gameboardRenderer.enabled = false;
-		GameObject fireworks = Instantiate(_fireworksPrefab);
+		GameObject fireworks = Instantiate(_fireworksPrefabs[randomPlay]);
 		yield return new WaitForSeconds(5f);
 		CyclePlayersAndStickers(true);
 		_gameboardRenderer.enabled = true;
