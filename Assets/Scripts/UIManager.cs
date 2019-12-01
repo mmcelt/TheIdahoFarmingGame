@@ -980,54 +980,9 @@ public class UIManager : MonoBehaviourPun
 						_otherPlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
 						_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
 					}
-
-					//object cash;
-					//if (player.CustomProperties.TryGetValue(IFG.Player_Cash, out cash))
-					//{
-					//	int playersCash = 0;
-					//	playersCash = (int)cash;
-					//	_otherPlayerCashTexts[index].text = playersCash.ToString("c0");
-					//	if (playersCash <= 0)
-					//		_otherPlayerCashTexts[index].color = Color.red;
-					//	else
-					//		_otherPlayerCashTexts[index].color = Color.black;
-					//}
-
-					//object notes;
-					//if (player.CustomProperties.TryGetValue(IFG.Player_Notes, out notes))
-					//{
-					//	int playersNotes = 0;
-					//	playersNotes = (int)notes;
-					//	_otherPlayerNotesTexts[index].text = playersNotes.ToString("c0");
-					//	if (playersNotes >= 50000)
-					//		_otherPlayerNotesTexts[index].color = Color.red;
-					//	else
-					//		_otherPlayerNotesTexts[index].color = Color.black;
-					//}
-
-					//object otbs;
-					//if (player.CustomProperties.TryGetValue(IFG.Player_Otb_Count, out otbs))
-					//{
-					//	int playersOtbs = 0;
-					//	playersOtbs = (int)otbs;
-					//	Debug.Log("In UpdateRemoteOTB: " + playersOtbs);
-					//	_otherPlayerOtbTexts[index].text = playersOtbs.ToString();
-					//}
-
-					//object networth;
-					//if (player.CustomProperties.TryGetValue(IFG.Player_Networth, out networth))
-					//{
-					//	int playerNetworth = 0;
-					//	playerNetworth = (int)networth;
-					//	_remotePlayerNameTexts[index].text = player.NickName;
-					//	_remotePlayerNameTexts[index].color = SelectFontColorForFarmer((string)farmer);
-					//	_remotePlayerNetworthTexts[index].text = playerNetworth.ToString("c0");
-					//}
 					index++;
-					//Debug.Log("Index: " + index);
 				}
 			}
-			Debug.Log("IN Update Remote Player Info");
 
 			yield return new WaitForSeconds(1.0f);
 		}
@@ -1693,35 +1648,38 @@ public class UIManager : MonoBehaviourPun
 			string deck = (string)recData[0];
 			int counter = (int)recData[1];
 
-			if (counter > 1)
+			Color deckColor = Color.white;
+
+			switch (deck)
 			{
-				Color deckColor = Color.white;
+				case "OTB":
+					_otbShuffleCount = counter;
+					deckColor = new Color(0.7843f, 0.9372f, 1f);
+					if (counter>0)
+						_otbImage.GetComponent<DOTweenAnimation>().DOPlayForward();
+					break;
 
-				switch (deck)
-				{
-					case "OTB":
-						_otbShuffleCount = counter;
-						deckColor = new Color(0.7843f, 0.9372f, 1f);
-						_otbImage.GetComponent<DOTweenAnimation>().DOPlay();
-						break;
+				case "OE":
+					_oeShuffleCount = counter;
+					deckColor = new Color(1f, 0.9725f, 0.5803f);
+					if (counter>0)
+						_oeImage.GetComponent<DOTweenAnimation>().DOPlayForward();
+					break;
 
-					case "OE":
-						_oeShuffleCount = counter;
-						deckColor = new Color(1f, 0.9725f, 0.5803f);
-						_oeImage.GetComponent<DOTweenAnimation>().DOPlay();
-						break;
+				case "FF":
+					_ffShuffleCount = counter;
+					deckColor = new Color(0.9568f, 0.6352f, 0.7333f);
+					if (counter>0)
+						_ffImage.GetComponent<DOTweenAnimation>().DOPlayForward();
+					break;
 
-					case "FF":
-						_ffShuffleCount = counter;
-						deckColor = new Color(0.9568f, 0.6352f, 0.7333f);
-						_ffImage.GetComponent<DOTweenAnimation>().DOPlay();
-						break;
-
-					default:
-						Debug.Log("No such deck " + deck);
-						break;
-				}
-				UpdateUI();
+				default:
+					Debug.Log("No such deck " + deck);
+					break;
+			}
+			UpdateUI();
+			if (counter > 0)
+			{
 				string message = "Shuffled the " + deck + " Deck...";
 				StartCoroutine(ShowMessageRoutine("Shuffle", message, deckColor));
 			}
