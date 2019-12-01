@@ -5,6 +5,8 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
 	#region Public / Serialized Fields
+
+	[Header("Main Sounds")]
 	public AudioClip _incomeTax;
 	public AudioClip _yourTurn;
 	public AudioClip _neenerNeener;
@@ -23,6 +25,10 @@ public class AudioManager : MonoBehaviour
 	public AudioClip _hurtBack;
 	public AudioClip _farmingLikeAnIdiot;
 	public AudioClip _shuffle;
+
+	[Header("UI Sounds")]
+	public AudioClip _buttonClick;
+	public AudioClip _lifeAlteringButtonClick;
 
 	[HideInInspector] public AudioSource _aSource;
 

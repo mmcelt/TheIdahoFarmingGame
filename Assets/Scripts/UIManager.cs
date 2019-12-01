@@ -283,8 +283,14 @@ public class UIManager : MonoBehaviourPun
 	//left panel methods
 	public void OnRollButtonClicked()
 	{
-		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
-		ResetOtbListPanel();
+		if (_actionsPanel.activeSelf)
+		{
+			_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+			ResetOtbListPanel();
+		}
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		//_actionsPanel.SetActive(false);
 		_diceRoll.OnRollButton();
 		_rollButton.interactable = false;
@@ -292,14 +298,24 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnEndTurnButtonClicked()
 	{
-		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
-		ResetOtbListPanel();
+		if (_actionsPanel.activeSelf)
+		{
+			_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+			ResetOtbListPanel();
+		}
+
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		//_actionsPanel.SetActive(false);
 		_pManager.EndTurn();
 	}
 
 	public void OnActionsButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		//toggle Actions Panel
 		//bool actionsPanelActive = _actionsPanel.activeSelf;
 		if (!_actionsPanel.activeSelf)
@@ -319,6 +335,9 @@ public class UIManager : MonoBehaviourPun
 	//actions panel methods
 	public void OnCloseButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		ResetOtbListPanel();
 		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
 		ResetOtbListPanel();
@@ -327,6 +346,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnBuyOptionButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		if (!_transactionBlocked)
 		{
 			_buyOptionButton.interactable = false;
@@ -344,6 +366,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnSellOtbToBankButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		if (_pManager._isMyTurn)
 		{
 			_isSellMsg = true;
@@ -363,6 +388,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnSellOtbToPlayerButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		if (_pManager._isMyTurn)
 		{
 			StartCoroutine("SellOtbToPlayerRoutine");
@@ -377,6 +405,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnOtbOkButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_isWarningMsg = false;
 		_isSellMsg = false;
 
@@ -391,6 +422,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnOtbCancelButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_cancelOtbSale = true;
 		_otbOkButton.gameObject.SetActive(false);
 		_cancelButton.gameObject.SetActive(false);
@@ -400,6 +434,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnRepayLoanButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_pManager.UpdateMyCash(-_repayLoanAmount);
 		_pManager.UpdateMyNotes(-_repayLoanAmount);
 		_repayLoanAmount = 0;
@@ -411,6 +448,8 @@ public class UIManager : MonoBehaviourPun
 	public void OnGetLoanButtonClicked()
 	{
 		//Debug.Log("LoanAmt: " + _loanAmount);
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
 
 		_pManager.UpdateMyCash(_loanAmount);
 		_pManager.UpdateMyNotes(_loanAmount + (int)(_loanAmount * 0.2f));
@@ -500,11 +539,17 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnPayInFullButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_downPaymentInput.text = _otbCost.ToString();
 	}
 
 	public void OnGetFocedLoanButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_pManager.UpdateMyCash(_loanAmount);
 		_pManager.UpdateMyNotes(_loanAmount + (int)(_loanAmount * 0.2f));
 		_loanAmount = 0;
@@ -536,12 +581,18 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnCancelOtbSaleToPlayerButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_completeModalPanel.SetActive(false);
 		_sellOtbToPlayerPanel.SetActive(false);
 	}
 
 	public void OnDoOtbSaleToPlayerButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_sellTheOtbToPlayerButton.interactable = false;
 		Debug.Log("Sell the OTB to the Player...");
 		//get the money for the sale
@@ -570,17 +621,26 @@ public class UIManager : MonoBehaviourPun
 	//Right Panel
 	public void OnOptionsButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_optionsPanel.SetActive(true);
 		_optionsPanel.GetComponent<DOTweenAnimation>().DOPlayForward();
 	}
 	//Options Panel
 	public void OnOptionsPanelCloseButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_optionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
 	}
 
 	public void OnMakeMasterListButtonCLicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._lifeAlteringButtonClick);
+
 		if (!_warningGiven)
 		{
 			_optionsWarningPanelModalPanel.SetActive(true);
@@ -591,6 +651,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnResetWinnersListButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._lifeAlteringButtonClick);
+
 		if (!_warningGiven)
 		{
 			_optionsWarningPanelModalPanel.SetActive(true);
@@ -601,6 +664,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnQuitButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._lifeAlteringButtonClick);
+
 		if (!_warningGiven)
 		{
 			_optionsWarningPanelModalPanel.SetActive(true);
@@ -621,6 +687,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnYesButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._lifeAlteringButtonClick);
+
 		_warningGiven = false;
 		_okToProceed = true;
 		_optionsWarningPanelModalPanel.SetActive(false);
@@ -628,6 +697,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnNoButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_warningGiven = false;
 		_okToProceed = false;
 		_optionsWarningPanelModalPanel.SetActive(false);
@@ -635,16 +707,25 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnOtbPanelOkButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_pManager._isOkToCloseOtbPanel = true;
 	}
 
 	public void OnFfPanelOkButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		_pManager._isOkToCloseFfPanel = true;
 	}
 
 	public void OnOePanelOkButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		if (_hManager == null)
 			_hManager = GameManager.Instance.hManager;
 
@@ -653,6 +734,9 @@ public class UIManager : MonoBehaviourPun
 
 	public void OnBoardSpacePanelOkButtonClicked()
 	{
+		//play click sound
+		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
+
 		if (_bManager == null)
 			_bManager = GameManager.Instance.bManager;
 
@@ -931,8 +1015,7 @@ public class UIManager : MonoBehaviourPun
 
 	#region Private Methods
 
-	//TESTING
-	public IEnumerator UpdateUIRoutine()
+	IEnumerator UpdateUIRoutine()
 	{
 		for (int i = 0; i < 10; i++)
 		{
@@ -940,9 +1023,7 @@ public class UIManager : MonoBehaviourPun
 			UpdateUI();
 			yield return new WaitForSeconds(0.5f);
 		}
-		//StartCoroutine(UpdateUIRoutine());
 	}
-	//END TESTING
 
 	void InitialPlayerInfoUpdate()
 	{
