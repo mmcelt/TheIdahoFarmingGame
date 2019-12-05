@@ -47,7 +47,6 @@ public class GameTimer : MonoBehaviourPun
 			_time = _startTime;
 			_canCountDown = true;
 		}
-		//_testTime = 3550;
 
 		if (PhotonNetwork.IsMasterClient && _gameMode == "Networth Game")
 			StartCoroutine("Timer");

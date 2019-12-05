@@ -24,7 +24,8 @@ public class IFG
 	public const string Oxford_Range_Owned = "oxford";          //bool
 	public const string Targhee_Range_Owned = "targhee";        //bool
 	public const string LostRiver_Range_Owned = "lostRiver";    //bool
-	public const string Lemhi_Range_Owned = "lemhi";				//bool
+	public const string Lemhi_Range_Owned = "lemhi";            //bool
+	public const string Wages_Garnished = "garnished";				//bool
 
 	//Players
 	public const string Becky = "Blackfoot Becky";

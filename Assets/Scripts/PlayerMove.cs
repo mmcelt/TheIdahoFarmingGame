@@ -586,7 +586,7 @@ public class PlayerMove : MonoBehaviourPun
 		_pManager._pHayDoubled = false;
 		_pManager._pHayDoubledCounter = 0;
 		_pManager._pCornDoubled = false;
-		_pManager._pWagesGarnished = false;
+		_pManager.UpdateMyGarnishedStatus(false);
 		_pManager._pWheatCutInHalf = false;
 		_pManager._pCherriesCutInHalf = false;
 

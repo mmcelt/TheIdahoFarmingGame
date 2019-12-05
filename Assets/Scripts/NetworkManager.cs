@@ -193,6 +193,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 		{
 			createGameButton.gameObject.SetActive(true);
 			networthGameAmount = int.Parse(networthInput.text);
+			if (networthGameAmount < 41000)
+				networthGameAmount = 41000;
 		}
 		else
 			createGameButton.gameObject.SetActive(false);

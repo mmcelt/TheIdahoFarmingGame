@@ -31,6 +31,7 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 	{
 		_pManager = GetComponent<PlayerManager>();
 		_uiManager = GameManager.Instance.uiManager;
+
 		if (photonView.IsMine && GameManager.Instance._numberOfPlayers > 1)
 			StartCoroutine(UpdateRemotePlayerData());
 	}
@@ -76,13 +77,13 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 			if (_uiManager._otherPlayerNameTexts[i].text == player)
 			{
 				_uiManager._otherPlayerCashTexts[i].text = myCash.ToString("c0");
-				if (myCash <= 0)
+				if (myCash <= 0 || (bool)info.Sender.CustomProperties[IFG.Wages_Garnished])
 					_uiManager._otherPlayerCashTexts[i].color = Color.red;
 				else
 					_uiManager._otherPlayerCashTexts[i].color = Color.black;
 
 				_uiManager._otherPlayerNotesTexts[i].text = myNotes.ToString("c0");
-				if (myNotes >= 50000)
+				if (myNotes >= 50000 || (bool)info.Sender.CustomProperties[IFG.Wages_Garnished])
 					_uiManager._otherPlayerNotesTexts[i].color = Color.red;
 				else
 					_uiManager._otherPlayerNotesTexts[i].color = Color.black;
@@ -95,6 +96,8 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 					_uiManager._remotePlayerNetworthTexts[i].color = Color.yellow;
 				else if (myNetworth > GameManager.Instance._networthGameAmount * 0.875f)
 					_uiManager._remotePlayerNetworthTexts[i].color = Color.red;
+				else
+					_uiManager._remotePlayerNetworthTexts[i].color = Color.black;
 
 				_uiManager._remotePlayerNetworthTexts[i].text = myNetworth.ToString("c0");
 			}

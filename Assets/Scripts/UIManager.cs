@@ -1033,7 +1033,7 @@ public class UIManager : MonoBehaviourPun
 		_farmerNameText.color = SelectFontColorForFarmer(GameManager.Instance.myFarmerName);
 
 		if (PhotonNetwork.PlayerList.Length > 1)
-			Invoke("StartRemotePlayerUpdating", 0.5f);
+			Invoke("StartRemotePlayerUpdating", 0.25f);
 
 		_currentYearText.text = _pMove._currentYear.ToString();
 	}
@@ -1049,6 +1049,8 @@ public class UIManager : MonoBehaviourPun
 		//update the remote players info...
 		for (int i = 0; i < 9; i++)
 		{
+			Debug.Log("IN URPI ROUTINE");
+
 			int index = 0;
 			foreach (Player player in PhotonNetwork.PlayerList)
 			{

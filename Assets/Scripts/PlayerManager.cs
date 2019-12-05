@@ -334,7 +334,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.LocalPlayer.SetCustomProperties(networthProp);
 		UpdateMyUI();
 
-		if (GameManager.Instance._gameMode == "Networth Game")
+		if (GameManager.Instance._gameMode == "Networth Game" && GameManager.Instance._networthGameAmount >= 41000)
 		{
 			//CHECK FOR END OF THE GAME...
 			if (_pNetworth >= GameManager.Instance._networthGameAmount)
@@ -354,6 +354,20 @@ public class PlayerManager : MonoBehaviourPun
 				PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.End_Networth_Game_Event_Code, sndData, eventOptions, sendOptions);
 			}
 		}
+	}
+
+	public void UpdateMyGarnishedStatus(bool status)
+	{
+		if (!photonView.IsMine) return;
+
+		_pWagesGarnished = status;
+		if (_pWagesGarnished)
+			_uiManager._wagesGarnishedWarning.SetActive(true);
+		else
+			_uiManager._wagesGarnishedWarning.SetActive(false);
+
+		ExitGames.Client.Photon.Hashtable garnishedProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Wages_Garnished, _pWagesGarnished } };
+		PhotonNetwork.LocalPlayer.SetCustomProperties(garnishedProp);
 	}
 	#endregion
 

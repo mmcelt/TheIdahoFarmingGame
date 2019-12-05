@@ -187,8 +187,8 @@ public class DeckManager : MonoBehaviourPun
 				break;
 
 			case 14: //IRS
-				_pManager._pWagesGarnished = true;
-				_uiManager._wagesGarnishedWarning.SetActive(true);
+				_pManager.UpdateMyGarnishedStatus(true);
+				//_uiManager._wagesGarnishedWarning.SetActive(true);
 				//TODO: play hideous sound
 				AudioManager.Instance._aSource.Stop();
 				AudioManager.Instance.PlaySound(AudioManager.Instance._garnished);
