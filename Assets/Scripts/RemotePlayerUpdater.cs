@@ -88,6 +88,14 @@ public class RemotePlayerUpdater : MonoBehaviourPun
 					_uiManager._otherPlayerNotesTexts[i].color = Color.black;
 
 				_uiManager._otherPlayerOtbTexts[i].text = myOtbs.ToString();
+
+				if (myNetworth >= GameManager.Instance._networthGameAmount * 0.5f && myNetworth <= GameManager.Instance._networthGameAmount * 0.75f)
+					_uiManager._remotePlayerNetworthTexts[i].color = Color.green;
+				else if (myNetworth > GameManager.Instance._networthGameAmount * 0.75f && myNetworth <= GameManager.Instance._networthGameAmount * 0.875f)
+					_uiManager._remotePlayerNetworthTexts[i].color = Color.yellow;
+				else if (myNetworth > GameManager.Instance._networthGameAmount * 0.875f)
+					_uiManager._remotePlayerNetworthTexts[i].color = Color.red;
+
 				_uiManager._remotePlayerNetworthTexts[i].text = myNetworth.ToString("c0");
 			}
 		}

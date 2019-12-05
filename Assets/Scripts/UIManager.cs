@@ -340,7 +340,6 @@ public class UIManager : MonoBehaviourPun
 
 		ResetOtbListPanel();
 		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
-		ResetOtbListPanel();
 		//_actionsPanel.SetActive(false);
 	}
 
@@ -353,8 +352,7 @@ public class UIManager : MonoBehaviourPun
 		{
 			_buyOptionButton.interactable = false;
 			UseOtb(_selectedCard);
-			_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
-			ResetOtbListPanel();
+			OnCloseButtonClicked();
 			//_actionsPanel.SetActive(false);
 		}
 		else
@@ -443,6 +441,7 @@ public class UIManager : MonoBehaviourPun
 		ResetTempFunds();
 		_repayLoanInput.text = "";
 		_repayLoanInput.placeholder.GetComponent<Text>().text = "Enter your Loan Repayment...";
+		OnCloseButtonClicked();
 	}
 
 	public void OnGetLoanButtonClicked()
@@ -457,6 +456,7 @@ public class UIManager : MonoBehaviourPun
 		_getLoanInput.text = "";
 		_getLoanInput.placeholder.GetComponent<Text>().text = "Enter your Loan Amount...";
 		ResetTempFunds();
+		OnCloseButtonClicked();
 	}
 
 	public void OnOtbDropdownValueChanged(int index)
@@ -617,6 +617,7 @@ public class UIManager : MonoBehaviourPun
 
 		_completeModalPanel.SetActive(false);
 		_sellOtbToPlayerPanel.SetActive(false);
+		OnCloseButtonClicked();
 	}
 	//Right Panel
 	public void OnOptionsButtonClicked()
