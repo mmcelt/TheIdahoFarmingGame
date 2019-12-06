@@ -957,17 +957,22 @@ public class UIManager : MonoBehaviourPun
 			_playerNotesText.color = Color.black;
 
 		_networthText.text = _pManager._pNetworth.ToString("c0");
-		if(_pManager._pNetworth >= GameManager.Instance._networthGameAmount * 0.5f && _pManager._pNetworth <= GameManager.Instance._networthGameAmount * 0.75f)
+		if (_pManager._pNetworth >= GameManager.Instance._networthGameAmount * 0.25f && _pManager._pNetworth < GameManager.Instance._networthGameAmount * 0.5f)
 		{
 			_networthText.font = _outlinedFont;
 			_networthText.color = Color.green;
 		}
-		else if (_pManager._pNetworth > GameManager.Instance._networthGameAmount * 0.75f && _pManager._pNetworth <= GameManager.Instance._networthGameAmount * 0.875f)
+		else if(_pManager._pNetworth >= GameManager.Instance._networthGameAmount * 0.5f && _pManager._pNetworth < GameManager.Instance._networthGameAmount * 0.75f)
 		{
 			_networthText.font = _outlinedFont;
 			_networthText.color = Color.yellow;
 		}
-		else if (_pManager._pNetworth > GameManager.Instance._networthGameAmount * 0.875f)
+		else if (_pManager._pNetworth >= GameManager.Instance._networthGameAmount * 0.75f && _pManager._pNetworth < GameManager.Instance._networthGameAmount * 0.875f)
+		{
+			_networthText.font = _outlinedFont;
+			_networthText.color = IFG.Orange;
+		}
+		else if (_pManager._pNetworth >= GameManager.Instance._networthGameAmount * 0.875f)
 		{
 			_networthText.font = _outlinedFont;
 			_networthText.color = Color.red;

@@ -47,6 +47,7 @@ public class IFG
 	public static Color Brown = new Color(0.6627f,0.4117f,0f);
 	public static Color SpudBlue = new Color(0f, 0.6392157f, 0.8392158f);
 	public static Color GreyedOut = new Color(0.5943396f, 0.5943396f, 0.5943396f);
+	public static Color Orange = new Color(1, 0.647f, 0);
 
 	public static bool SpudBonusGiven;
 	public static bool CompleteFarmerBonusGiven;
