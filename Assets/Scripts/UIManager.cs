@@ -35,11 +35,14 @@ public class UIManager : MonoBehaviourPun
 	[SerializeField] Text _gameTyeText, _gameEndText;
 	[SerializeField] Text[] _remotePlayerNameTexts;
 	public Text[] _remotePlayerNetworthTexts;
+	public Outline[] _remotePlayerNetworthOutlines;
 	public Text _activePlayerText;
 	[SerializeField] Image _otbImage, _oeImage, _ffImage;
 	[SerializeField] Text _otbShuffleText, _oeShuffleText, _ffShuffleText;
 	[SerializeField] Text _otbLeftText, _oeLeftText, _ffLeftText;
 	[SerializeField] Text _otbTotalText, _oeTotalText, _ffTotalText;
+	[SerializeField] TMP_FontAsset _normalFont;
+	[SerializeField] TMP_FontAsset _outlinedFont;
 
 	[Header("Actions Panel")]
 	public GameObject _actionsPanel;
@@ -65,6 +68,14 @@ public class UIManager : MonoBehaviourPun
 	[SerializeField] Sprite[] _farmerSprites;
 	[SerializeField] Sprite _headerSprite;
 	[SerializeField] InputField _salePriceInput;
+
+	[Header("Sell Property to Bank Panel")]
+	[SerializeField] GameObject _sellPropertyToBankPanel;
+	[SerializeField] Text _sellPropertyToBankMessageText;
+	[SerializeField] Button _sellPropertyToBankCancelButton, _sellPropertyToBankSellButton;
+	[SerializeField] Dropdown _propertySelectionDropdown;
+	[SerializeField] Sprite[] _propertySprites;
+	[SerializeField] Sprite _headerPropertySprite;
 
 	[Header("Board Space Panel")]
 	public GameObject _boardSpacePanel;
@@ -164,13 +175,18 @@ public class UIManager : MonoBehaviourPun
 	RemotePlayerUpdater _rpUpdater;
 	HarvestManager _hManager;
 	BoardManager _bManager;
+	StickerManager _sManager;
 
 	//OTB Stuff
 	List<string> _otbCards = new List<string>();       //for the myOTB Dropdown
-	public List<Dropdown.OptionData> _otherPlayers = new List<Dropdown.OptionData>();   //for the playerSelection Dropdown
+	//for the playerSelection Dropdown
+	List<Dropdown.OptionData> _otherPlayers = new List<Dropdown.OptionData>();   
+	//for the propertySelection Dropdown
+	List<Dropdown.OptionData> _propertiesToSell = new List<Dropdown.OptionData>();
 
 	int _selectedIndex;
 	int _selectedPlayer;
+	string _selectedProperty;
 
 	bool _isSellMsg;
 	bool _isWarningMsg;
@@ -743,6 +759,177 @@ public class UIManager : MonoBehaviourPun
 
 		_bManager._isOkToCloseBoardSpacePanel = true;
 	}
+
+	public void OnSellPropertyToTheBankButtonClicked()
+	{
+		PopulateDropdown(_propertySelectionDropdown.name);
+		_sellPropertyToBankPanel.SetActive(true);
+	}
+
+	public void OnSellPropertyToBankCancelButtonClicked()
+	{
+		_selectedIndex = 0;
+		_selectedPlayer = 0;
+		_selectedProperty = "";
+		_sellPropertyToBankPanel.SetActive(false);
+	}
+
+	public void OnSellThePropertyToBankButtonClicked()
+	{
+		if (_sManager == null)
+			_sManager = GameManager.Instance.sManager;
+
+		switch (_selectedProperty)
+		{
+			case "5 Acres of Fruit":
+				_pManager.UpdateMyFruit(-5);
+				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Fruit", _pManager._pFruit, false);
+				break;
+
+			case "10 Acres of Grain":
+				_pManager.UpdateMyGrain(-10);
+				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Grain", _pManager._pGrain, _pManager._pCornDoubled);
+				break;
+
+			case "1 Harvester":
+				_pManager.UpdateMyHarvester(false);
+				_sManager.PlaceEquipmentSticker(GameManager.Instance.myFarmerName, "Harvester", false);
+				break;
+
+			case "10 Acres of Hay":
+				_pManager.UpdateMyHay(-10);
+				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Hay", _pManager._pHay, _pManager._pHayDoubled);
+				break;
+
+			case "10 Farm Cows":
+				_pManager.UpdateMyFCows(-10);
+				if (_pManager._pFarmCows == 10)
+					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased);
+				else
+					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased, true);
+
+				break;
+
+			case "10 Acres of Spuds":
+				_pManager.UpdateMySpuds(-10);
+				_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "spuds", _pManager._pSpuds, _pManager._pSpudsDoubled);
+				break;
+
+			case "1 Tractor":
+				_pManager.UpdateMyTractor(false);
+				_sManager.PlaceEquipmentSticker(GameManager.Instance.myFarmerName, "Tractor", false);
+				break;
+
+			case "Oxford Range":
+				_pManager.UpdateOxfordRange(false);
+				_pManager.UpdateMyRCows(-20);
+				_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Oxford", _pManager._pCowsIncreased, true);
+				break;
+
+			case "Targhee Range":
+				_pManager.UpdateTargheeRange(false);
+				_pManager.UpdateMyRCows(-30);
+				_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Targhee", _pManager._pCowsIncreased, true);
+				break;
+
+			case "Lost River Range":
+				_pManager.UpdateLostRiverRange(false);
+				_pManager.UpdateMyRCows(-40);
+				_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Lost River", _pManager._pCowsIncreased, true);
+				break;
+
+			case "Lemhi Range":
+				_pManager.UpdateLemhiRange(false);
+				_pManager.UpdateMyRCows(-50);
+				_sManager.PlaceRangeSticker(GameManager.Instance.myFarmerName, "Lemhi", _pManager._pCowsIncreased, true);
+				break;
+		}
+
+		_pManager.UpdateMyCash(_sellingPrice);
+		_selectedProperty = "";
+		_sellingPrice = 0;
+		_selectedIndex = 0;
+		_sellPropertyToBankPanel.SetActive(false);
+		_actionsPanel.SetActive(false);
+	}
+
+	public void OnSelectPropertyToSellDropdownValueChanged(int index)
+	{
+		_selectedIndex = index;
+
+		if (_selectedIndex > 0)
+		{
+			_selectedProperty = _propertiesToSell[_selectedIndex].text;
+			Debug.Log("SELECTED PROPERTY: " + _selectedProperty);
+
+			switch (_selectedProperty)
+			{
+				case "5 Acres of Fruit":
+					_sellingPrice = 12500;
+					_sellPropertyToBankMessageText.text = "You are going to sell 5 Acres of Fruit for: " + _sellingPrice;
+					break;
+
+				case "10 Acres of Grain":
+					_sellingPrice = 10000;
+					_sellPropertyToBankMessageText.text = "You are going to sell 10 Acres of Grain for: " + _sellingPrice;
+					break;
+
+				case "1 Harvester":
+					_sellingPrice = 5000;
+					_sellPropertyToBankMessageText.text = "You are going to sell 1 Harvester for: " + _sellingPrice;
+					break;
+
+				case "10 Acres of Hay":
+					_sellingPrice = 10000;
+					_sellPropertyToBankMessageText.text = "You are going to sell 10 Acres of Hay for: " + _sellingPrice;
+					break;
+
+				case "10 Farm Cows":
+					_sellingPrice = 2500;
+					_sellPropertyToBankMessageText.text = "You are going to sell 10 Farm Cows for: " + _sellingPrice;
+					break;
+
+				case "10 Acres of Spuds":
+					_sellingPrice = 10000;
+					_sellPropertyToBankMessageText.text = "You are going to sell 10 Acres of Spuds for: " + _sellingPrice;
+					break;
+
+				case "1 Tractor":
+					_sellingPrice = 5000;
+					_sellPropertyToBankMessageText.text = "You are going to sell 1 Tractor for: " + _sellingPrice;
+					break;
+
+				case "Oxford Range":
+					_sellingPrice = 5000;
+					_sellPropertyToBankMessageText.text = "You are going to sell Oxford Range for: " + _sellingPrice;
+					break;
+
+				case "Targhee Range":
+					_sellingPrice = 7500;
+					_sellPropertyToBankMessageText.text = "You are going to sell Targhee Range for: " + _sellingPrice;
+					break;
+
+				case "Lost River Range":
+					_sellingPrice = 10000;
+					_sellPropertyToBankMessageText.text = "You are going to sell Lost River Range for: " + _sellingPrice;
+					break;
+
+
+				case "Lemhi Range":
+					_sellingPrice = 12500;
+					_sellPropertyToBankMessageText.text = "You are going to sell Lemhi Range for: " + _sellingPrice;
+					break;
+			}
+			_sellPropertyToBankSellButton.interactable = true;
+		}
+		else
+		{
+			_selectedProperty = "";
+			_selectedIndex = 0;
+			_sellingPrice = 0;
+			_sellPropertyToBankMessageText.text = "";
+		}
+	}
 	#endregion
 
 	#region Public Methods
@@ -770,6 +957,26 @@ public class UIManager : MonoBehaviourPun
 			_playerNotesText.color = Color.black;
 
 		_networthText.text = _pManager._pNetworth.ToString("c0");
+		if(_pManager._pNetworth >= GameManager.Instance._networthGameAmount * 0.5f && _pManager._pNetworth <= GameManager.Instance._networthGameAmount * 0.75f)
+		{
+			_networthText.font = _outlinedFont;
+			_networthText.color = Color.green;
+		}
+		else if (_pManager._pNetworth > GameManager.Instance._networthGameAmount * 0.75f && _pManager._pNetworth <= GameManager.Instance._networthGameAmount * 0.875f)
+		{
+			_networthText.font = _outlinedFont;
+			_networthText.color = Color.yellow;
+		}
+		else if (_pManager._pNetworth > GameManager.Instance._networthGameAmount * 0.875f)
+		{
+			_networthText.font = _outlinedFont;
+			_networthText.color = Color.red;
+		}
+		else
+		{
+			_networthText.font = _normalFont;
+			_networthText.color = Color.black;
+		}
 		_currentYearText.text = _pMove._currentYear.ToString();
 
 		if (_pManager._pHarvester)
@@ -1012,6 +1219,13 @@ public class UIManager : MonoBehaviourPun
 		}
 		return 0;
 	}
+
+	public void ResetTempFunds()
+	{
+		_tempCash = _pManager._pCash;
+		_tempNotes = _pManager._pNotes;
+		UpdateActionsPanelFunds(_tempCash, _tempNotes);
+	}
 	#endregion
 
 	#region Private Methods
@@ -1083,13 +1297,6 @@ public class UIManager : MonoBehaviourPun
 		_repayLoanInput.Select();
 	}
 
-	public void ResetTempFunds()
-	{
-		_tempCash = _pManager._pCash;
-		_tempNotes = _pManager._pNotes;
-		UpdateActionsPanelFunds(_tempCash, _tempNotes);
-	}
-
 	void PopulateDropdown(string target)
 	{
 		string headerEntry = "";
@@ -1139,6 +1346,78 @@ public class UIManager : MonoBehaviourPun
 			_playerSelectionDropdown.value = 0;
 			_playerSelectionDropdown.Select();
 			_playerSelectionDropdown.RefreshShownValue();
+			_selectedIndex = 0;
+		}
+		if (target == _propertySelectionDropdown.name)
+		{
+			_propertiesToSell.Clear();
+			_propertySelectionDropdown.ClearOptions();
+
+			headerEntry = "   Select the Property to Sell";
+			Sprite headerSprite = _headerPropertySprite;
+			var headerOption = new Dropdown.OptionData(headerEntry, headerSprite);
+			_propertiesToSell.Add(headerOption);
+
+			if (_pManager._pFruit > 0)
+			{
+				var fruitOption = new Dropdown.OptionData("5 Acres of Fruit", _propertySprites[0]);
+				_propertiesToSell.Add(fruitOption);
+			}
+			if (_pManager._pGrain > 0)
+			{
+				var grainOption = new Dropdown.OptionData("10 Acres of Grain", _propertySprites[1]);
+				_propertiesToSell.Add(grainOption);
+			}
+			if (_pManager._pHarvester)
+			{
+				var harvesterOption = new Dropdown.OptionData("1 Harvester", _propertySprites[2]);
+				_propertiesToSell.Add(harvesterOption);
+			}
+			if (_pManager._pHay > 0)
+			{
+				var hayOption = new Dropdown.OptionData("10 Acres of Hay", _propertySprites[3]);
+				_propertiesToSell.Add(hayOption);
+			}
+			if (_pManager._pFarmCows > 0)
+			{
+				var fCowOption = new Dropdown.OptionData("10 Farm Cows", _propertySprites[4]);
+				_propertiesToSell.Add(fCowOption);
+			}
+			if (_pManager._pSpuds > 0)
+			{
+				var spudOption = new Dropdown.OptionData("10 Acres of Spuds", _propertySprites[5]);
+				_propertiesToSell.Add(spudOption);
+			}
+			if (_pManager._pTractor)
+			{
+				var tractorOption = new Dropdown.OptionData("1 Tractor", _propertySprites[6]);
+				_propertiesToSell.Add(tractorOption);
+			}
+			if (_pManager._oxfordOwned)
+			{
+				var oxfordOption = new Dropdown.OptionData("Oxford Range", _propertySprites[7]);
+				_propertiesToSell.Add(oxfordOption);
+			}
+			if (_pManager._targheeOwned)
+			{
+				var targheeOption = new Dropdown.OptionData("Targhee Range", _propertySprites[7]);
+				_propertiesToSell.Add(targheeOption);
+			}
+			if (_pManager._lostRiverOwned)
+			{
+				var lostRiverOption = new Dropdown.OptionData("Lost River Range", _propertySprites[7]);
+				_propertiesToSell.Add(lostRiverOption);
+			}
+			if (_pManager._lemhiOwned)
+			{
+				var lemhiOption = new Dropdown.OptionData("Lemhi Range", _propertySprites[7]);
+				_propertiesToSell.Add(lemhiOption);
+			}
+
+			_propertySelectionDropdown.AddOptions(_propertiesToSell);
+			_propertySelectionDropdown.value = 0;
+			_propertySelectionDropdown.Select();
+			_propertySelectionDropdown.RefreshShownValue();
 			_selectedIndex = 0;
 		}
 	}
@@ -1555,7 +1834,7 @@ public class UIManager : MonoBehaviourPun
 		ResetOtbListPanel();
 	}
 
-	public IEnumerator ShowMessageRoutine(string typeOfMessage, string msg, Color fontColor, float duration = 3f)
+	IEnumerator ShowMessageRoutine(string typeOfMessage, string msg, Color fontColor, float duration = 3f)
 	{
 		switch (typeOfMessage)
 		{
@@ -1636,7 +1915,7 @@ public class UIManager : MonoBehaviourPun
 		WinnerList.Instance.PopulateAndShowWinnersList();
 	}
 
-	public IEnumerator WarningPanelRoutine(string button)
+	IEnumerator WarningPanelRoutine(string button)
 	{
 		//_warningGiven = true;
 		switch (button)

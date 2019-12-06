@@ -48,10 +48,10 @@ public class PlayerManager : MonoBehaviourPun
 	public bool _pHarvester;
 
 	[Header("Ranges")]
-	bool _oxfordOwned;
-	bool _targheeOwned;
-	bool _lostRiverOwned;
-	bool _lemhiOwned;
+	public bool _oxfordOwned;
+	public bool _targheeOwned;
+	public bool _lostRiverOwned;
+	public bool _lemhiOwned;
 
 	[Header("Misc Stuff")]
 	public bool _pWagesGarnished;
@@ -137,6 +137,7 @@ public class PlayerManager : MonoBehaviourPun
 		UpdateTargheeRange(false);
 		UpdateLostRiverRange(false);
 		UpdateLemhiRange(false);
+		UpdateMyGarnishedStatus(false);
 		_myOtbCount = _myOtbs.Count;
 		//UpdateMyOtbCount(_myOtbCount);
 		_rpUpdater.UpdateMyDataToOthers();
@@ -368,6 +369,8 @@ public class PlayerManager : MonoBehaviourPun
 
 		ExitGames.Client.Photon.Hashtable garnishedProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Wages_Garnished, _pWagesGarnished } };
 		PhotonNetwork.LocalPlayer.SetCustomProperties(garnishedProp);
+
+		UpdateMyUI();
 	}
 	#endregion
 

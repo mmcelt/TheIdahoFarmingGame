@@ -52,7 +52,7 @@ public class StickerManager : MonoBehaviour
 
 	#region Public Methods
 
-	public void PlaceRangeSticker(string farmer,string range,bool doubled)
+	public void PlaceRangeSticker(string farmer,string range,bool doubled, bool remove = false)
 	{
 		switch (farmer)
 		{
@@ -89,11 +89,15 @@ public class StickerManager : MonoBehaviour
 
 		//remove any existing sticker
 		RemoveOldSticker("RangeSticker", _spawnPoint);
-		//spawn the sticker...
-		if (!doubled)
-			PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.identity);
-		else
-			PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.Euler(0,0,-90));
+
+		//spawn the sticker if not being removed due to sale...
+		if (!remove)
+		{
+			if (!doubled)
+				PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.identity);
+			else
+				PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.Euler(0, 0, -90));
+		}
 	}
 
 	public void PlaceFarmSticker(string farmer,string sticker,int amount,bool doubled,bool fCowsKilled=false)
@@ -141,20 +145,23 @@ public class StickerManager : MonoBehaviour
 		}
 		//remove existing sticker
 		RemoveOldSticker(sticker + "Sticker", _spawnPoint);
-		//spawn the new sticker
-		Debug.Log("SPAWNING: " + _stickerPrefab.name);
 
-		if (!doubled && !_fCowsKilled)
+		if (amount > 0)
 		{
-			Debug.Log("INSIDE SPAWN 1ST IF: "+_stickerPrefab.name+" "+_spawnPoint);
-			PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.identity);
-		}
-		else if (doubled && !_fCowsKilled)
-		{
-			Debug.Log("INSIDE SPAWN 2ND IF");
-			PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.Euler(0, 0, -90));
-		}
+			//spawn the new sticker
+			Debug.Log("SPAWNING: " + _stickerPrefab.name);
 
+			if (!doubled && !_fCowsKilled)
+			{
+				Debug.Log("INSIDE SPAWN 1ST IF: " + _stickerPrefab.name + " " + _spawnPoint);
+				PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.identity);
+			}
+			else if (doubled && !_fCowsKilled)
+			{
+				Debug.Log("INSIDE SPAWN 2ND IF");
+				PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.Euler(0, 0, -90));
+			}
+		}
 		if (fCowsKilled)
 			_fCowsKilled = false;
 	}
@@ -247,22 +254,26 @@ public class StickerManager : MonoBehaviour
 				break;
 
 			case "Fruit":
-				_stickerPrefab = _fruitStickerPrefabs[amount - 1];
+				if (amount>0)
+					_stickerPrefab = _fruitStickerPrefabs[amount - 1];
 				_spawnPoint = _beckyFarmStickerSpawnPoints[1].position;
 				break;
 
 			case "Spuds":
-				_stickerPrefab = _spudStickerPrefabs[amount - 1];
+				if(amount>0)
+					_stickerPrefab = _spudStickerPrefabs[amount - 1];
 				_spawnPoint = _beckyFarmStickerSpawnPoints[2].position;
 				break;
 
 			case "Grain":
-				_stickerPrefab = _grainStickerPrefabs[amount - 1];
+				if(amount>0)
+					_stickerPrefab = _grainStickerPrefabs[amount - 1];
 				_spawnPoint = _beckyFarmStickerSpawnPoints[3].position;
 				break;
 
 			case "Hay":
-				_stickerPrefab = _hayStickerPrefabs[amount - 1];
+				if(amount>0)
+					_stickerPrefab = _hayStickerPrefabs[amount - 1];
 				_spawnPoint = _beckyFarmStickerSpawnPoints[4].position;
 				break;
 		}
@@ -297,34 +308,38 @@ public class StickerManager : MonoBehaviour
 				break;
 
 			case "Fruit":
-				_stickerPrefab = _fruitStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _fruitStickerPrefabs[amount - 1];
 				_spawnPoint = _jerryFarmStickerSpawnPoints[1].position;
 				break;
 
 			case "Spuds":
-				_stickerPrefab = _spudStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _spudStickerPrefabs[amount - 1];
 				_spawnPoint = _jerryFarmStickerSpawnPoints[2].position;
 				break;
 
 			case "Grain":
-				_stickerPrefab = _grainStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _grainStickerPrefabs[amount - 1];
 				_spawnPoint = _jerryFarmStickerSpawnPoints[3].position;
 				break;
 
 			case "Hay":
-				_stickerPrefab = _hayStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _hayStickerPrefabs[amount - 1];
 				_spawnPoint = _jerryFarmStickerSpawnPoints[4].position;
 				break;
 
-			case "Tractor":
-				_stickerPrefab = _tractorStickerPrefab;
-				_spawnPoint = _jerryFarmStickerSpawnPoints[5].position;
-				break;
+			//case "Tractor":
+			//	_stickerPrefab = _tractorStickerPrefab;
+			//	_spawnPoint = _jerryFarmStickerSpawnPoints[5].position;
+			//	break;
 
-			case "Harvester":
-				_stickerPrefab = _harvesterStickerPrefab;
-				_spawnPoint = _jerryFarmStickerSpawnPoints[6].position;
-				break;
+			//case "Harvester":
+			//	_stickerPrefab = _harvesterStickerPrefab;
+			//	_spawnPoint = _jerryFarmStickerSpawnPoints[6].position;
+			//	break;
 		}
 	}
 
@@ -357,34 +372,38 @@ public class StickerManager : MonoBehaviour
 				break;
 
 			case "Fruit":
-				_stickerPrefab = _fruitStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _fruitStickerPrefabs[amount - 1];
 				_spawnPoint = _kayFarmStickerSpawnPoints[1].position;
 				break;
 
 			case "Spuds":
-				_stickerPrefab = _spudStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _spudStickerPrefabs[amount - 1];
 				_spawnPoint = _kayFarmStickerSpawnPoints[2].position;
 				break;
 
 			case "Grain":
-				_stickerPrefab = _grainStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _grainStickerPrefabs[amount - 1];
 				_spawnPoint = _kayFarmStickerSpawnPoints[3].position;
 				break;
 
 			case "Hay":
-				_stickerPrefab = _hayStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _hayStickerPrefabs[amount - 1];
 				_spawnPoint = _kayFarmStickerSpawnPoints[4].position;
 				break;
 
-			case "Tractor":
-				_stickerPrefab = _tractorStickerPrefab;
-				_spawnPoint = _kayFarmStickerSpawnPoints[5].position;
-				break;
+			//case "Tractor":
+			//	_stickerPrefab = _tractorStickerPrefab;
+			//	_spawnPoint = _kayFarmStickerSpawnPoints[5].position;
+			//	break;
 
-			case "Harvester":
-				_stickerPrefab = _harvesterStickerPrefab;
-				_spawnPoint = _kayFarmStickerSpawnPoints[6].position;
-				break;
+			//case "Harvester":
+			//	_stickerPrefab = _harvesterStickerPrefab;
+			//	_spawnPoint = _kayFarmStickerSpawnPoints[6].position;
+			//	break;
 		}
 	}
 
@@ -417,34 +436,38 @@ public class StickerManager : MonoBehaviour
 				break;
 
 			case "Fruit":
-				_stickerPrefab = _fruitStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _fruitStickerPrefabs[amount - 1];
 				_spawnPoint = _mikeFarmStickerSpawnPoints[1].position;
 				break;
 
 			case "Spuds":
-				_stickerPrefab = _spudStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _spudStickerPrefabs[amount - 1];
 				_spawnPoint = _mikeFarmStickerSpawnPoints[2].position;
 				break;
 
 			case "Grain":
-				_stickerPrefab = _grainStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _grainStickerPrefabs[amount - 1];
 				_spawnPoint = _mikeFarmStickerSpawnPoints[3].position;
 				break;
 
 			case "Hay":
-				_stickerPrefab = _hayStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _hayStickerPrefabs[amount - 1];
 				_spawnPoint = _mikeFarmStickerSpawnPoints[4].position;
 				break;
 
-			case "Tractor":
-				_stickerPrefab = _tractorStickerPrefab;
-				_spawnPoint = _mikeFarmStickerSpawnPoints[5].position;
-				break;
+			//case "Tractor":
+			//	_stickerPrefab = _tractorStickerPrefab;
+			//	_spawnPoint = _mikeFarmStickerSpawnPoints[5].position;
+			//	break;
 
-			case "Harvester":
-				_stickerPrefab = _harvesterStickerPrefab;
-				_spawnPoint = _mikeFarmStickerSpawnPoints[6].position;
-				break;
+			//case "Harvester":
+			//	_stickerPrefab = _harvesterStickerPrefab;
+			//	_spawnPoint = _mikeFarmStickerSpawnPoints[6].position;
+			//	break;
 		}
 	}
 
@@ -477,34 +500,38 @@ public class StickerManager : MonoBehaviour
 				break;
 
 			case "Fruit":
-				_stickerPrefab = _fruitStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _fruitStickerPrefabs[amount - 1];
 				_spawnPoint = _ricFarmStickerSpawnPoints[1].position;
 				break;
 
 			case "Spuds":
-				_stickerPrefab = _spudStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _spudStickerPrefabs[amount - 1];
 				_spawnPoint = _ricFarmStickerSpawnPoints[2].position;
 				break;
 
 			case "Grain":
-				_stickerPrefab = _grainStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _grainStickerPrefabs[amount - 1];
 				_spawnPoint = _ricFarmStickerSpawnPoints[3].position;
 				break;
 
 			case "Hay":
-				_stickerPrefab = _hayStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _hayStickerPrefabs[amount - 1];
 				_spawnPoint = _ricFarmStickerSpawnPoints[4].position;
 				break;
 
-			case "Tractor":
-				_stickerPrefab = _tractorStickerPrefab;
-				_spawnPoint = _ricFarmStickerSpawnPoints[5].position;
-				break;
+			//case "Tractor":
+			//	_stickerPrefab = _tractorStickerPrefab;
+			//	_spawnPoint = _ricFarmStickerSpawnPoints[5].position;
+			//	break;
 
-			case "Harvester":
-				_stickerPrefab = _harvesterStickerPrefab;
-				_spawnPoint = _ricFarmStickerSpawnPoints[6].position;
-				break;
+			//case "Harvester":
+			//	_stickerPrefab = _harvesterStickerPrefab;
+			//	_spawnPoint = _ricFarmStickerSpawnPoints[6].position;
+			//	break;
 		}
 	}
 
@@ -539,34 +566,38 @@ public class StickerManager : MonoBehaviour
 				break;
 
 			case "Fruit":
-				_stickerPrefab = _fruitStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _fruitStickerPrefabs[amount - 1];
 				_spawnPoint = _ronFarmStickerSpawnPoints[1].position;
 				break;
 
 			case "Spuds":
-				_stickerPrefab = _spudStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _spudStickerPrefabs[amount - 1];
 				_spawnPoint = _ronFarmStickerSpawnPoints[2].position;
 				break;
 
 			case "Grain":
-				_stickerPrefab = _grainStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _grainStickerPrefabs[amount - 1];
 				_spawnPoint = _ronFarmStickerSpawnPoints[3].position;
 				break;
 
 			case "Hay":
-				_stickerPrefab = _hayStickerPrefabs[amount - 1];
+				if (amount > 0)
+					_stickerPrefab = _hayStickerPrefabs[amount - 1];
 				_spawnPoint = _ronFarmStickerSpawnPoints[4].position;
 				break;
 
-			case "Tractor":
-				_stickerPrefab = _tractorStickerPrefab;
-				_spawnPoint = _ronFarmStickerSpawnPoints[5].position;
-				break;
+			//case "Tractor":
+			//	_stickerPrefab = _tractorStickerPrefab;
+			//	_spawnPoint = _ronFarmStickerSpawnPoints[5].position;
+			//	break;
 
-			case "Harvester":
-				_stickerPrefab = _harvesterStickerPrefab;
-				_spawnPoint = _ronFarmStickerSpawnPoints[6].position;
-				break;
+			//case "Harvester":
+			//	_stickerPrefab = _harvesterStickerPrefab;
+			//	_spawnPoint = _ronFarmStickerSpawnPoints[6].position;
+			//	break;
 		}
 	}
 

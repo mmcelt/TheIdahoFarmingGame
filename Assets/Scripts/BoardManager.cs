@@ -1091,7 +1091,7 @@ public class BoardManager : MonoBehaviour
 		CyclePlayersAndStickers(false);
 		_gameboardRenderer.enabled = false;
 		GameObject fireworks = Instantiate(_fireworksPrefabs[randomPlay]);
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(5.5f);
 		CyclePlayersAndStickers(true);
 		_gameboardRenderer.enabled = true;
 		Destroy(fireworks);
