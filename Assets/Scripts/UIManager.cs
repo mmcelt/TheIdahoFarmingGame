@@ -531,16 +531,16 @@ public class UIManager : MonoBehaviourPun
 	{
 		_selectedIndex = index;
 
-		for (int i = 1; i < _otherPlayers.Count; i++)
-		{
+		//for (int i = 0; i < _otherPlayers.Count; i++)
+		//{
 			for (int p = 0; p < GameManager.Instance._cachedPlayerList.Count; p++)
 			{
-				if (GameManager.Instance._cachedPlayerList[p].NickName == _otherPlayers[i].text)
+				if (GameManager.Instance._cachedPlayerList[p].NickName == _otherPlayers[index].text)
 				{
 					_selectedPlayer = GameManager.Instance._cachedPlayerList[p].ActorNumber;
 				}
 			}
-		}
+		//}
 
 		Debug.Log("In Select Buying Player: " + _selectedPlayer);
 		if (index > 0)
