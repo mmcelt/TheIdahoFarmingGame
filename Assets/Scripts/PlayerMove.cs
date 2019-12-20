@@ -116,11 +116,11 @@ public class PlayerMove : MonoBehaviourPun
 		_die = die;
 		//_die = 20;	//TESTING
 
-//#if UNITY_EDITOR	//TODO: UNCOMMENT THIS WHEN TESTING COMPLETE
+#if UNITY_EDITOR	//TODO: UNCOMMENT THIS WHEN TESTING COMPLETE
 
 		LoadedDie();  
 
-//#endif
+#endif
 
 		_moveSpeed = _normalMoveSpeed;
 
