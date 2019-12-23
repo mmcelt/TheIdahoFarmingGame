@@ -78,6 +78,7 @@ public class UIManager : MonoBehaviourPun
 	[SerializeField] Sprite _headerPropertySprite;
 
 	[Header("Board Space Panel")]
+	public GameObject _boardSpaceModalPanel;
 	public GameObject _boardSpacePanel;
 	public Text _headerText;
 	public TextMeshProUGUI _spaceText;

@@ -52,7 +52,7 @@ public class BoardManager : MonoBehaviour
 		_sManager = GetComponent<StickerManager>();
 
 		_boardSpacePanel = _uiManager._boardSpacePanel;
-		_modalPanel = _uiManager._modalPanel;
+		_modalPanel = _uiManager._boardSpaceModalPanel;
 		_headerText = _uiManager._headerText;
 		_spaceText = _uiManager._spaceText;
 		_okButton = _uiManager._okButton;   //TODO: make an OnClick() in code
@@ -474,7 +474,7 @@ public class BoardManager : MonoBehaviour
 
 		_boardSpacePanel.transform.localPosition = _startPosition;
 		_boardSpacePanel.SetActive(true);
-		//_modalPanel.SetActive(true);
+		_modalPanel.SetActive(true);
 
 		//play open animation...
 		_boardSpacePanel.GetComponent<DOTweenAnimation>().DOPlayForward();
@@ -496,7 +496,7 @@ public class BoardManager : MonoBehaviour
 		//play closing animation
 		_boardSpacePanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
 		_boardSpacePanel.transform.DOLocalMove(_startPosition, 0.4f);
-		//_modalPanel.SetActive(false);
+		_modalPanel.SetActive(false);
 		PerformBoardSpaceActions(space);
 
 		//Debug.Log("SPACE ON CLOSING BOARDSPACE PANEL: " + space);
