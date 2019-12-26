@@ -754,6 +754,7 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._otbTotalCostText.text = "Total Cost: " + card.totalCost;
 
 		_uiManager._otbPanel.SetActive(true);
+		_uiManager._boardSpaceModalPanel.SetActive(true);
 		//play open animations...
 		_uiManager._otbPanel.GetComponent<DOTweenAnimation>().DOPlayForward();  //scale up
 		_uiManager._otbPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);	//move to center
@@ -761,7 +762,7 @@ public class PlayerManager : MonoBehaviourPun
 		yield return new WaitWhile(() => !_isOkToCloseOtbPanel);
 
 		_isOkToCloseOtbPanel = false;
-
+		_uiManager._boardSpaceModalPanel.SetActive(false);
 		//play the closing animations...
 		_uiManager._otbPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();   //scale down
 		_uiManager._otbPanel.transform.DOLocalMove(new Vector3(-784, -386), 0.5f);
@@ -858,9 +859,11 @@ public class PlayerManager : MonoBehaviourPun
 		Debug.Log("IN FF ANIM COROUTINE");
 
 		_uiManager._ffPanel.SetActive(true);
+		_uiManager._boardSpaceModalPanel.SetActive(true);
 		_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayForward();
 		_uiManager._ffPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);
 		yield return new WaitWhile(() => !_isOkToCloseFfPanel);
+		_uiManager._boardSpaceModalPanel.SetActive(false);
 		_uiManager._ffPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
 		_uiManager._ffPanel.transform.DOLocalMove(new Vector3(638, -352), 0.5f);
 		yield return new WaitForSeconds(0.5f);
