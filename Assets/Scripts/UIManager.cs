@@ -1913,6 +1913,7 @@ public class UIManager : MonoBehaviourPun
 		_endTurnButton.interactable = false;
 		yield return new WaitForSeconds(duration);
 
+
 		_gameOverMessageText.gameObject.SetActive(false);
 		_gameOverMessageText.text = "";
 		_gameOverMessageText.color = Color.black;
@@ -2120,6 +2121,8 @@ public class UIManager : MonoBehaviourPun
 	//sent to everyone...
 	void OnEndOfNetworthGameEventReceived(EventData eventData)
 	{
+		GameManager.Instance._gameOver = true;
+
 		if (eventData.Code == (byte)RaiseEventCodes.End_Networth_Game_Event_Code)
 		{
 			int gameEnd = (int)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Networth_Game];
@@ -2178,6 +2181,8 @@ public class UIManager : MonoBehaviourPun
 	//sent to all
 	void OnEndOfTimedGameEventReceived(EventData eventData)
 	{
+		GameManager.Instance._gameOver = true;
+
 		if (eventData.Code == (byte)RaiseEventCodes.End_Timed_Game_Event_Code)
 		{
 			float gameEnd = (float)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Timed_Game];

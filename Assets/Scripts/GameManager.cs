@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviourPun
 
 	public List<Player> _cachedPlayerList;
 
+	public bool _gameOver;
+
 	#endregion
 
 	#region Private Fields / References

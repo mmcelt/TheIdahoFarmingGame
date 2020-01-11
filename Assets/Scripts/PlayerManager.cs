@@ -450,7 +450,10 @@ public class PlayerManager : MonoBehaviourPun
 			int senderID = (int)recData[0];
 
 			if (_uiManager._ffPanel.activeSelf)
+			{
 				_uiManager._ffPanel.SetActive(false);
+				_uiManager._boardSpaceModalPanel.SetActive(false);
+			}
 
 			_uiManager._tetonDamPanel.SetActive(true);
 			_uiManager._completeModalPanel.SetActive(true);
@@ -476,73 +479,74 @@ public class PlayerManager : MonoBehaviourPun
 		//Debug.Log("TETON DAM ROLL BUTTON CLICKED LC: " + loopCounter);
 
 		//if (loopCounter == 0)
-			StartCoroutine(AsFateWillHaveIt());
+		StartCoroutine(AsFateWillHaveIt());
 	}
 
 	IEnumerator AsFateWillHaveIt()
 	{
-
+		_uiManager._tetonRollButton.gameObject.SetActive(false);
 		//if(loopCounter == 0)
 		//{
-			//Debug.Log("LOOP COUNTER IN AFWHI: " + loopCounter);
+		//Debug.Log("LOOP COUNTER IN AFWHI: " + loopCounter);
 
-			//_uiManager._tetonHeaderText.text = "";
-			_uiManager._tetonMessageText.text = "";
+		//_uiManager._tetonHeaderText.text = "";
+		_uiManager._tetonMessageText.text = "";
 
-			_diceRoll.OnRollButton();
+		_diceRoll.OnRollButton();
 
-			yield return new WaitUntil(() => _diceRoll.tetonDamRollComplete);
+		yield return new WaitUntil(() => _diceRoll.tetonDamRollComplete);
 
-			int roll = _diceRoll.Pip;
+		int roll = _diceRoll.Pip;
 
-			//Debug.Log("DICE ROLL: " + roll);
+		//Debug.Log("DICE ROLL: " + roll);
 
-			//roll = 4;   //TESTING
-			yield return new WaitForSeconds(0.5f);
+		//roll = 4;   //TESTING
+		yield return new WaitForSeconds(0.5f);
 
-			int penalty = 0;
+		int penalty = 0;
+		_uiManager._tetonOkButton.gameObject.SetActive(true);
 
-			_uiManager._tetonOkButton.gameObject.SetActive(true);
+		if (roll % 2 == 0)
+		{
+			penalty = -(100 * (_pFruit + _pGrain + _pHay + _pSpuds));
+			//even Hit
+			//_uiManager._tetonDamImage.enabled = true;
+			_uiManager._tetonMessageText.text = "You Were Hit!! " + roll;
+			//Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
+			//play bad sound
+			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
+		}
+		else
+		{
+			//odd escaped
+			//_uiManager._tetonDamImage.enabled = true;
+			_uiManager._tetonMessageText.text = "You Escaped!! " + roll;
+			//play good sound
+			AudioManager.Instance.PlaySound(AudioManager.Instance._good);
+		}
 
-			if (roll % 2 == 0)
-			{
-				penalty = -(100 * (_pFruit + _pGrain + _pHay + _pSpuds));
-				//even Hit
-				//_uiManager._tetonDamImage.enabled = true;
-				_uiManager._tetonMessageText.text = "You Were Hit!! " + roll;
-				//Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
-				//play bad sound
-				AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
-			}
-			else
-			{
-				//odd escaped
-				//_uiManager._tetonDamImage.enabled = true;
-				_uiManager._tetonMessageText.text = "You Escaped!! " + roll;
-				//play good sound
-				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
-			}
+		yield return new WaitWhile(() => _uiManager._tetonDamPanel.activeSelf);
 
-			yield return new WaitWhile(() => _uiManager._tetonDamPanel.activeSelf);
-			//while (_uiManager._tetonDamPanel.activeSelf)
-			//	yield return null;
+		_uiManager._completeModalPanel.SetActive(false);
+		//while (_uiManager._tetonDamPanel.activeSelf)
+		//	yield return null;
 
-			//Debug.Log("PENALTY B4 IF: " + penalty);
+		//Debug.Log("PENALTY B4 IF: " + penalty);
 
-			//loopCounter++;
+		//loopCounter++;
 
-			if (penalty < 0)
-			{
-				UpdateMyCash(penalty);
-				//Debug.Log("PENALTY: " + penalty);
-				penalty = 0;
-			}
+		if (penalty < 0)
+		{
+			UpdateMyCash(penalty);
+			//Debug.Log("PENALTY: " + penalty);
+			penalty = 0;
+		}
 		//}
 	}
 
 	public void OnTetonOkButtonClicked()
 	{
-		if (_diceRoll==null)
+		if (_diceRoll == null)
 			_diceRoll = GameManager.Instance.myDiceRoll;
 
 		_uiManager._tetonDamPanel.SetActive(false);
@@ -757,7 +761,7 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._boardSpaceModalPanel.SetActive(true);
 		//play open animations...
 		_uiManager._otbPanel.GetComponent<DOTweenAnimation>().DOPlayForward();  //scale up
-		_uiManager._otbPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);	//move to center
+		_uiManager._otbPanel.transform.DOLocalMove(new Vector3(0, -33), 0.5f);  //move to center
 
 		yield return new WaitWhile(() => !_isOkToCloseOtbPanel);
 
@@ -805,7 +809,7 @@ public class PlayerManager : MonoBehaviourPun
 		Debug.Log("IN SHOW FF ROUTINE");
 		photonView.RPC("ShowFfCard", RpcTarget.All, new object[] { cardToShow.description });
 
-		yield return new WaitWhile(()=>!_isOkToCloseFfPanel);
+		yield return new WaitWhile(() => !_isOkToCloseFfPanel);
 
 		_isOkToCloseFfPanel = false;
 
@@ -917,7 +921,7 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._forcedLoanPanel.GetComponent<DOTweenAnimation>().DOPlay();
 		yield return new WaitForSeconds(1f);
 		_uiManager._forcedLoanPanel.GetComponent<DOTweenAnimation>().DORewind();
-		
+
 		_uiManager._forcedLoanInput.Select();
 		_uiManager.UpdateForcedLoanFunds(_pCash, _pNotes);
 		yield return new WaitUntil(() => _pCash >= 0);

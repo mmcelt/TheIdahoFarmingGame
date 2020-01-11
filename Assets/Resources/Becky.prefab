@@ -198,6 +198,10 @@ MonoBehaviour:
   _corn: 0
   _pTractor: 0
   _pHarvester: 0
+  _oxfordOwned: 0
+  _targheeOwned: 0
+  _lostRiverOwned: 0
+  _lemhiOwned: 0
   _pWagesGarnished: 0
   _pNoWages: 0
   _isMyTurn: 0

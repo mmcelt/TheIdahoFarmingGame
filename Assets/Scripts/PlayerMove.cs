@@ -119,7 +119,6 @@ public class PlayerMove : MonoBehaviourPun
 #if UNITY_EDITOR	//TODO: UNCOMMENT THIS WHEN TESTING COMPLETE
 
 		LoadedDie();  
-
 #endif
 
 		_moveSpeed = _normalMoveSpeed;
@@ -130,6 +129,8 @@ public class PlayerMove : MonoBehaviourPun
 
 	public void DirectedForwardMove(int space)
 	{
+		if (GameManager.Instance._gameOver) return;
+
 		_uiManager._endTurnButton.interactable = false;
 		_moveSpeed = _directedMoveSpeed;
 		//Debug.Log("Directed Move: " + (space - _currentSpace));
