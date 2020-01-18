@@ -2121,10 +2121,10 @@ public class UIManager : MonoBehaviourPun
 	//sent to everyone...
 	void OnEndOfNetworthGameEventReceived(EventData eventData)
 	{
-		GameManager.Instance._gameOver = true;
-
 		if (eventData.Code == (byte)RaiseEventCodes.End_Networth_Game_Event_Code)
 		{
+			GameManager.Instance._gameOver = true;
+
 			int gameEnd = (int)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Networth_Game];
 			int nop = GameManager.Instance._numberOfPlayers;
 			string[] ruNames = new string[nop];
@@ -2181,10 +2181,10 @@ public class UIManager : MonoBehaviourPun
 	//sent to all
 	void OnEndOfTimedGameEventReceived(EventData eventData)
 	{
-		GameManager.Instance._gameOver = true;
-
 		if (eventData.Code == (byte)RaiseEventCodes.End_Timed_Game_Event_Code)
 		{
+			GameManager.Instance._gameOver = true;
+
 			float gameEnd = (float)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Timed_Game];
 			int nop = GameManager.Instance._numberOfPlayers;
 			string[] ruNames = new string[nop];

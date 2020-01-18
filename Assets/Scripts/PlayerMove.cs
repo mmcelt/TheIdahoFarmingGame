@@ -105,6 +105,8 @@ public class PlayerMove : MonoBehaviourPun
 		_pManager = GetComponent<PlayerManager>();
 		_sManager = GameManager.Instance.sManager;
 		_currentYear = 1;
+
+		GameManager.Instance._gameOver = false;
 	}
 	#endregion
 
