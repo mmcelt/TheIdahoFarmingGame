@@ -120,6 +120,8 @@ public class PlayerManager : MonoBehaviourPun
 
 		_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
 		_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
+		_customHireOkButton = _uiManager._customHarvesterOkButton;
+		_customHireOkButton.onClick.AddListener(OnCustomHarvesterOkButtonClicked);
 
 		UpdateMyCash(5000);
 		UpdateMyNotes(5000);
@@ -878,8 +880,6 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		if (eventData.Code == (byte)RaiseEventCodes.Custom_Hire_Harvester_Code)
 		{
-			_customHireOkButton = _uiManager._customHarvesterOkButton;
-			_customHireOkButton.onClick.AddListener(OnCustomHarvesterOkButtonClicked);
 			if (_uiManager._ffPanel.activeSelf)
 				_uiManager._ffPanel.SetActive(false);
 
