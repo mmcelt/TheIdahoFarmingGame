@@ -32,9 +32,9 @@ namespace Doozy.Editor.Internal
 
 
         public int VersionMajor = 3;
-        public int VersionMinor;
+        public int VersionMinor = 1;
         public int VersionStatus = 2;
-        public int VersionRevision;
+        public int VersionRevision = 1;
 
         public string VersionReleaseStatus
         {

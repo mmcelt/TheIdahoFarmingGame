@@ -322,13 +322,13 @@ namespace Doozy.Engine.UI
 
         /// <summary> Internal variable used to keep a reference to the LayoutController that controls the RectTransform of this view (only if a LayoutGroup is used) </summary>
         private LayoutController m_layoutController;
-        
+
         /// <summary> Internal variable used to keep track if this view has a LayoutController referenced (optimization needed to reduce the number of null checks) </summary>
         private bool m_hasLayoutController;
-        
+
         /// <summary> Internal variable used to keep track if this view is directly under a LayoutGroup </summary>
         private bool m_controlledByLayoutGroup;
-        
+
         #endregion
 
         #region Unity Methods
@@ -348,6 +348,9 @@ namespace Doozy.Engine.UI
 
         public override void Awake()
         {
+            if(UseCustomStartAnchoredPosition)
+                MoveToCustomStartPosition();
+            
             base.Awake();
 
             LoadPresets();
@@ -370,7 +373,7 @@ namespace Doozy.Engine.UI
             if (!m_controlledByLayoutGroup)
             {
                 m_controlledByLayoutGroup = GetComponentInParent<LayoutGroup>() != null;
-                if(!m_controlledByLayoutGroup)
+                if (!m_controlledByLayoutGroup)
                 {
                     m_hasLayoutController = false;
                     m_layoutController = null;
@@ -390,16 +393,16 @@ namespace Doozy.Engine.UI
 
             if (UseCustomStartAnchoredPosition && m_controlledByLayoutGroup)
                 UseCustomStartAnchoredPosition = false;
-            
+
             StartPosition = UseCustomStartAnchoredPosition ? CustomStartAnchoredPosition : RectTransform.anchoredPosition3D;
         }
-        
+
         public override void OnEnable()
         {
             base.OnEnable();
             m_childUIButtons = GetComponentsInChildren<UIButton>();
             m_childUIViews = GetComponentsInChildren<UIView>();
-            if (HasChildUIViews && DisableGameObjectWhenHidden) DisableGameObjectWhenHidden = false;
+//            if (HasChildUIViews && DisableGameObjectWhenHidden) DisableGameObjectWhenHidden = false;
             if (Settings.UseOrientationDetector && OrientationDetector != null)
                 OrientationDetector.OnOrientationEvent.AddListener(OnOrientationChange); //if using OrientationDetector subscribe to the onOrientationChange UnityEvent every time this UIView is enabled
         }
@@ -416,7 +419,7 @@ namespace Doozy.Engine.UI
             UIAnimator.StopAnimations(RectTransform, AnimationType.Show);
             UIAnimator.StopAnimations(RectTransform, AnimationType.Loop);
 
-//            ResetToStartValues();
+            ResetToStartValues();
 
             if (Settings.UseOrientationDetector && OrientationDetector != null)
                 OrientationDetector.OnOrientationEvent.RemoveListener(OnOrientationChange); //if using OrientationDetector unsubscribe from the OnOrientationChange UnityEvent every time this UIView is disabled
@@ -466,7 +469,7 @@ namespace Doozy.Engine.UI
         public void InstantHide()
         {
             CheckForLayoutController();
-            
+
             StopLoopAnimation();
 
             StopShow();
@@ -494,7 +497,7 @@ namespace Doozy.Engine.UI
         public void InstantShow()
         {
             CheckForLayoutController();
-            
+
             StopLoopAnimation();
             StopHide();
             StopShow();
@@ -764,7 +767,7 @@ namespace Doozy.Engine.UI
             GraphicRaycaster.enabled = true; //enable the graphic raycaster
 
             CheckForLayoutController();
-            
+
             //MOVE
             Vector3 moveFrom = UIAnimator.GetAnimationMoveFrom(RectTransform, ShowBehavior.Animation, CurrentStartPosition);
             Vector3 moveTo = UIAnimator.GetAnimationMoveTo(RectTransform, ShowBehavior.Animation, CurrentStartPosition);
@@ -817,12 +820,12 @@ namespace Doozy.Engine.UI
                     }
 
                     if (m_hasLayoutController) m_layoutController.Rebuild(true);
-                    
+
                     VisibilityProgress = elapsedTime / totalDuration;
                     yield return null;
                 }
             }
-            
+
             if (m_hasLayoutController) m_layoutController.Rebuild(true);
 
             ShowBehavior.OnFinished.Invoke(gameObject, !instantAction, !instantAction);
@@ -851,7 +854,7 @@ namespace Doozy.Engine.UI
             if (LoopBehavior.Animation.Enabled) UIAnimator.StopAnimations(RectTransform, LoopBehavior.Animation.AnimationType);
 
             CheckForLayoutController();
-            
+
             //MOVE
             if (m_controlledByLayoutGroup) UpdateStartPosition();
             Vector3 moveFrom = UIAnimator.GetAnimationMoveFrom(RectTransform, HideBehavior.Animation, CurrentStartPosition);
@@ -885,7 +888,7 @@ namespace Doozy.Engine.UI
                 if (instantAction) HideBehavior.OnStart.Invoke(gameObject, false, false);
                 NotifySystemOfTriggeredBehavior(UIViewBehaviorType.Hide); //send the global events
             }
-            
+
             float startTime = Time.realtimeSinceStartup;
             if (!instantAction) //wait for the animation to finish
             {
@@ -906,7 +909,7 @@ namespace Doozy.Engine.UI
                     }
 
                     if (m_hasLayoutController) m_layoutController.Rebuild(true);
-                    
+
                     VisibilityProgress = 1 - elapsedTime / totalDuration; //operation is reversed in hide than in show
                     yield return null;
                 }
@@ -915,7 +918,7 @@ namespace Doozy.Engine.UI
             }
 
             if (m_hasLayoutController) m_layoutController.Rebuild(true);
-            
+
             if (m_initialized)
             {
                 HideBehavior.OnFinished.Invoke(gameObject, !instantAction, !instantAction);

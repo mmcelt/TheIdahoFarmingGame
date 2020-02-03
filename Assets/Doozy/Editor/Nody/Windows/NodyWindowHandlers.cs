@@ -105,6 +105,19 @@ namespace Doozy.Editor.Nody.Windows
                 default: throw new ArgumentOutOfRangeException();
             }
 
+            switch (graphEvent.commandType)
+            {
+                case GraphEvent.CommandType.NONE: break;
+                case GraphEvent.CommandType.CONSTRUCT_GRAPH:
+                    ConstructGraphGUI();
+                    break;
+                case GraphEvent.CommandType.RECALCULATE_ALL_POINTS:
+                    RecalculateAllPointRects();
+                    break;
+                case GraphEvent.CommandType.DISCONNECT_SOCKET:
+                    DisconnectSocket(graphEvent.sourceSocket, true);
+                    break;
+            }
 
             Repaint();
         }

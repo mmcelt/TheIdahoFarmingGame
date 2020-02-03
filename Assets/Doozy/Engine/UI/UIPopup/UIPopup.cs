@@ -361,6 +361,9 @@ namespace Doozy.Engine.UI
         /// <summary> If TRUE, after this UIPopup has been shown, the referenced SelectedButton GameObject will get automatically selected by EventSystem.current </summary>
         public bool AutoSelectButtonAfterShow;
 
+        /// <summary> If TRUE, after this UIPopup has been hidden, the previously selected GameObject will get automatically selected by EventSystem.current </summary>
+        public bool AutoSelectPreviouslySelectedButtonAfterHide = true;
+
         /// <summary> If TRUE, the 'Back' button event will be blocked by this UIDrawer is visible (default: TRUE) </summary>
         public bool BlockBackButton = true;
 
@@ -610,19 +613,19 @@ namespace Doozy.Engine.UI
         {
             StopShow();
             StopHide();
-            
+
             Container.ResetToStartValues();
             if (Overlay.Enabled) Overlay.ResetToStartValues();
             ResetToStartValues();
-            
+
             Container.Disable(); //disable the gameobject, canvas and graphic raycaster - if their disable options are set to true
             Overlay.Disable();   //disable the gameobject, canvas and graphic raycaster - if their disable options are set to true
-            
+
             Visibility = VisibilityState.NotVisible; //update the visibility state
             if (VisiblePopups.Contains(this)) VisiblePopups.Remove(this);
-            
+
             RemoveHiddenFromVisiblePopups();
-            
+
             if (!m_initialized) m_initialized = true;
         }
 
@@ -980,6 +983,7 @@ namespace Doozy.Engine.UI
 
         private IEnumerator ExecuteHideDeselectButtonEnumerator()
         {
+            if (!AutoSelectPreviouslySelectedButtonAfterHide) yield break;
             yield return null; //skip a frame
             if (m_previousSelectedButton == null) yield break;
             UnityEventSystem.SetSelectedGameObject(m_previousSelectedButton); //select the previously selected button (before the popup was shown)

@@ -117,7 +117,7 @@ namespace Doozy.Engine.Soundy
         public static SoundyController GetControllerFromPool()
         {
             RemoveNullControllersFromThePool();
-            if (Pool.Count <= 0) return SoundyController.GetController(); //the pool does not have any controllers in it -> create and return a new controller
+            if (Pool.Count <= 0) PutControllerInPool(SoundyController.GetController()); //the pool does not have any controllers in it -> create and return a new controller
             SoundyController controller = Pool[0];                        //assign the first found controller
             Pool.Remove(controller);                                      //remove the assigned controller from the pool
             controller.gameObject.SetActive(true);
@@ -142,11 +142,8 @@ namespace Doozy.Engine.Soundy
             if (controller == null) return;
             if (!Pool.Contains(controller)) Pool.Add(controller);
             controller.gameObject.SetActive(false);
-#if UNITY_EDITOR
-            controller.transform.parent = Instance.transform;
-#endif
-
-            if (Instance.DebugComponent) DDebug.Log("Put '" + controller.name + "' Controller back in the Pool - " + Pool.Count + " Controllers Available", Instance);
+            controller.transform.SetParent(Instance.transform);
+            if (Instance.DebugComponent) DDebug.Log("Put '" + controller.name + "' Controller in the Pool - " + Pool.Count + " Controllers Available", Instance);
         }
 
         #endregion

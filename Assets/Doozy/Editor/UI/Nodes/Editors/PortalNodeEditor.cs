@@ -3,8 +3,11 @@
 // A Copy of the EULA APPENDIX 1 is available at http://unity3d.com/company/legal/as_terms
 
 using Doozy.Editor.Internal;
+using Doozy.Editor.Nody;
 using Doozy.Editor.Nody.Editors;
 using Doozy.Engine.Extensions;
+using Doozy.Engine.Nody.Connections;
+using Doozy.Engine.Nody.Models;
 using Doozy.Engine.UI;
 using Doozy.Engine.UI.Base;
 using Doozy.Engine.UI.Nodes;
@@ -40,7 +43,8 @@ namespace Doozy.Editor.UI.Nodes
             m_buttonName,
             m_uiDrawerTriggerAction,
             m_drawerName,
-            m_customDrawerName;
+            m_customDrawerName,
+            m_switchBackMode;
 
         protected override void LoadSerializedProperty()
         {
@@ -58,6 +62,7 @@ namespace Doozy.Editor.UI.Nodes
             m_uiDrawerTriggerAction = GetProperty(PropertyName.UIDrawerTriggerAction);
             m_drawerName = GetProperty(PropertyName.DrawerName);
             m_customDrawerName = GetProperty(PropertyName.CustomDrawerName);
+            m_switchBackMode = GetProperty(PropertyName.SwitchBackMode);
         }
 
         protected override void OnEnable()
@@ -67,6 +72,8 @@ namespace Doozy.Editor.UI.Nodes
             m_infoMessageUnnamedNodeName = new InfoMessage(InfoMessage.MessageType.Error, UILabels.UnnamedNodeTitle, UILabels.UnnamedNodeMessage);
             m_infoMessageDuplicateNodeName = new InfoMessage(InfoMessage.MessageType.Error, UILabels.DuplicateNodeTitle, UILabels.DuplicateNodeMessage);
             m_infoMessageNotListeningForAnyGameEvent = new InfoMessage(InfoMessage.MessageType.Error, UILabels.NotListeningForAnyGameEventTitle, UILabels.NotListeningForAnyGameEventMessage);
+
+            UpdateSwitchBackModeState(TargetNode.SwitchBackMode);
         }
 
         public override void OnInspectorGUI()
@@ -80,6 +87,8 @@ namespace Doozy.Editor.UI.Nodes
             m_infoMessageUnnamedNodeName.Draw(TargetNode.ErrorNodeNameIsEmpty, InspectorWidth);
             m_infoMessageDuplicateNodeName.Draw(TargetNode.ErrorDuplicateNameFoundInGraph, InspectorWidth);
             GUILayout.Space(DGUI.Properties.Space(8));
+            DrawSwitchBackMode();
+            GUILayout.Space(DGUI.Properties.Space(8));
             DrawOutputSockets(BaseNode);
             GUILayout.Space(DGUI.Properties.Space(16));
             EditorGUI.BeginChangeCheck();
@@ -90,6 +99,38 @@ namespace Doozy.Editor.UI.Nodes
             serializedObject.ApplyModifiedProperties();
             if (NodeUpdated) UpdateNodeName(GetNodeName());
             SendGraphEventNodeUpdated();
+        }
+
+        private void DrawSwitchBackMode()
+        {
+            EditorGUI.BeginChangeCheck();
+            DGUI.Toggle.Switch.Draw(m_switchBackMode, UILabels.SwitchBackMode, ComponentColorName, true, false);
+            if (!EditorGUI.EndChangeCheck()) return;
+            UpdateSwitchBackModeState(m_switchBackMode.boolValue);
+        }
+
+        private void UpdateSwitchBackModeState(bool value)
+        {
+            if (value)
+            {
+                if (TargetNode.InputSockets == null || 
+                    TargetNode.InputSockets.Count == 0)
+                    TargetNode.AddInputSocket(ConnectionMode.Multiple, typeof(PassthroughConnection), false, false);
+            }
+            else
+            {
+                if (TargetNode.InputSockets != null && 
+                    TargetNode.InputSockets.Count > 0)
+                {
+                    if (TargetNode.FirstInputSocket != null &&
+                        TargetNode.FirstInputSocket.IsConnected)
+                        GraphEvent.DisconnectSocket(TargetNode.FirstInputSocket);
+
+                    TargetNode.InputSockets.Clear();
+                }
+
+                NodeUpdated = true;
+            }
         }
 
         private string GetNodeName()
@@ -177,6 +218,7 @@ namespace Doozy.Editor.UI.Nodes
                             backgroundColorName = DGUI.Colors.DisabledBackgroundColorName;
                             textColorName = DGUI.Colors.DisabledTextColorName;
                         }
+
                         break;
                     case PortalNode.ListenerType.UIButton:
                         DGUI.Property.Draw(m_uiButtonTriggerAction, UILabels.TriggerAction, backgroundColorName, textColorName);
@@ -187,6 +229,7 @@ namespace Doozy.Editor.UI.Nodes
                             backgroundColorName = DGUI.Colors.DisabledBackgroundColorName;
                             textColorName = DGUI.Colors.DisabledTextColorName;
                         }
+
                         break;
                     case PortalNode.ListenerType.UIDrawer:
                         DGUI.Property.Draw(m_uiDrawerTriggerAction, UILabels.TriggerAction, backgroundColorName, textColorName);
@@ -197,6 +240,7 @@ namespace Doozy.Editor.UI.Nodes
                             backgroundColorName = DGUI.Colors.DisabledBackgroundColorName;
                             textColorName = DGUI.Colors.DisabledTextColorName;
                         }
+
                         break;
                 }
             }

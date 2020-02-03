@@ -80,7 +80,9 @@ namespace Doozy.Editor.Nody.NodeGUI
         {
             var types = new List<Type>();
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (Assembly assembly in assemblies) types.AddRange(assembly.GetTypes().Where(t => !t.IsAbstract && baseType.IsAssignableFrom(t)).ToArray());
+            foreach (Assembly assembly in assemblies)
+                if (assembly != null)
+                    types.AddRange(assembly.GetTypes().Where(t => baseType != null && (!t.IsAbstract && baseType.IsAssignableFrom(t))).ToArray());
             return types.ToArray();
         }
 

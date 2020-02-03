@@ -8,9 +8,9 @@ using Doozy.Engine.Settings;
 using Doozy.Engine.Utils;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
 #if UNITY_EDITOR
 using UnityEditor;
+
 #endif
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -108,20 +108,28 @@ namespace Doozy.Engine.Touchy
         private Vector2 m_currentSwipe;
         private bool m_swipeEnded;
         private TouchInfo m_currentTouchInfo;
-        private List<Touch> m_touches;
+        private List<Touch> m_touches = new List<Touch>();
         private Touch m_touch;
         private PointerEventData m_pointerEventData;
-        private List<RaycastResult> m_raycastResults;
+        private List<RaycastResult> m_raycastResults = new List<RaycastResult>();
 
         #endregion
 
         #region Unity Methods
 
+#if UNITY_2019_3_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void RunOnStart()
+        {
+            ApplicationIsQuitting = false;
+        }
+#endif
+        
         private void Awake()
         {
             if (s_instance != null && s_instance != this)
             {
-                DDebug.Log( "There cannot be two '" + GetType().Name + "' active at the same time. Destroying this one!");
+                DDebug.Log("There cannot be two '" + GetType().Name + "' active at the same time. Destroying this one!");
                 Destroy(gameObject);
                 return;
             }
@@ -142,17 +150,17 @@ namespace Doozy.Engine.Touchy
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            if (DebugComponent) DDebug.Log( gameObject.name + ": " + "OnBeginDrag", this);
+            if (DebugComponent) DDebug.Log(gameObject.name + ": " + "OnBeginDrag", this);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            if (DebugComponent) DDebug.Log( gameObject.name + ": " + "OnDrag", this);
+            if (DebugComponent) DDebug.Log(gameObject.name + ": " + "OnDrag", this);
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            if (DebugComponent) DDebug.Log( gameObject.name + ": " + "OnEndDrag", this);
+            if (DebugComponent) DDebug.Log(gameObject.name + ": " + "OnEndDrag", this);
         }
 
         #endregion
@@ -169,8 +177,8 @@ namespace Doozy.Engine.Touchy
 
         private void Initialize()
         {
-            m_touches = new List<Touch>();
-            m_raycastResults = new List<RaycastResult>();
+            if (m_touches == null) m_touches = new List<Touch>();
+            if (m_raycastResults == null) m_raycastResults = new List<RaycastResult>();
 
             OnSwipeAction += HandleSwipe;
             OnLongTapAction += HandleLongTap;
@@ -263,17 +271,17 @@ namespace Doozy.Engine.Touchy
 
         private void HandleSwipe(TouchInfo touchInfo)
         {
-            if (DebugComponent) DDebug.Log( string.Format("HandleSwipe: {0}", touchInfo), this);
+            if (DebugComponent) DDebug.Log(string.Format("HandleSwipe: {0}", touchInfo), this);
         }
 
         private void HandleTap(TouchInfo touchInfo)
         {
-            if (DebugComponent) DDebug.Log( string.Format("HandleTap: {0}", touchInfo), this);
+            if (DebugComponent) DDebug.Log(string.Format("HandleTap: {0}", touchInfo), this);
         }
 
         private void HandleLongTap(TouchInfo touchInfo)
         {
-            if (DebugComponent) DDebug.Log( string.Format("HandleLongPress: {0}", touchInfo), this);
+            if (DebugComponent) DDebug.Log(string.Format("HandleLongPress: {0}", touchInfo), this);
         }
 
         #endregion

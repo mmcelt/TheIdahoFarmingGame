@@ -94,6 +94,7 @@ namespace Doozy.Engine.Utils
         public string AutoRebuild = "Auto Rebuild";
         public string AutoResetSequence = "Auto Reset Sequence";
         public string AutoSelectButtonAfterShow = "Auto selected button after Show";
+        public string AutoSelectPreviouslySelectedButtonAfterHide= "Auto select previously selected button after Hide";
         public string AutoSort = "Auto Sort";
         public string AutoStartLoopAnimation = "Auto Start Loop Animation";
         public string BackButton = "Back Button";
@@ -560,6 +561,7 @@ namespace Doozy.Engine.Utils
         public string Seconds = "Seconds";
         public string SecondsDelay = "Seconds Delay";
         public string Select = "Select";
+        public string Selectable = "Selectable";
         public string SelectButton = "Select Button";
         public string SelectedLoopAnimation = "Selected Loop Animation";
         public string SelectedTheme = "Selected Theme";
@@ -628,6 +630,7 @@ namespace Doozy.Engine.Utils
         public string SwipeLength = "Swipe Length";
         public string SwipeLengthDescription = "Minimum travel distance, for a sliding a finger or a stylus pen across a touch-sensitive screen, to be considered a swipe";
         public string SwitchBackNodeName = "Switch Back";
+        public string SwitchBackMode = "Switch Back Mode";
         public string Target = "Target";
         public string TargetAnimator = "Target Animator";
         public string TargetAnimatorDoesNotHaveAnAnimatorController = "Target Animator does not have an Animator Controller";
@@ -725,6 +728,8 @@ namespace Doozy.Engine.Utils
 
         public string SelectListenerToActivateMessage = "Select at least one listener";
 
+        public string HasChildViews = "This UIView has child views. For the child views to show and hide as expected, it is recommended that the GameObject of this view NOT get disabled when the view is hidden";
+        
         public string HowToUsePlaymakerEventDispatcherMessage = "This dispatcher auto targets the first FSM on this GameObject." +
                                                                 "\n" +
                                                                 "You can override that and reference the FSM you want to target." +

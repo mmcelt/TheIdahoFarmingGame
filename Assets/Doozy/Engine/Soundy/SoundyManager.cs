@@ -106,6 +106,16 @@ namespace Doozy.Engine.Soundy
 
         #region Unity Methods
 
+#if UNITY_2019_3_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void RunOnStart()
+        {
+            ApplicationIsQuitting = false;
+            s_initialized = false;
+            s_pooler = null;
+        }
+#endif
+        
         private void Awake() { s_initialized = true; }
 
         #endregion

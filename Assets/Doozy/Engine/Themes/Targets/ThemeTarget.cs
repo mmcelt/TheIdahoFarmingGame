@@ -43,7 +43,7 @@ namespace Doozy.Engine.Themes
 
         #region Unity Methods
 
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             if (ThemeId == Guid.Empty) return;
             if (PropertyId == Guid.Empty) return;

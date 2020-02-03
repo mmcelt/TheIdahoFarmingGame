@@ -26,7 +26,7 @@ MonoBehaviour:
   m_version: 1
   m_description: 
   m_id: 0fa633eb-f3f4-40ac-80cd-3811dc10839b
-  m_lastModified: 132164231710570323
+  m_lastModified: 132177235326784961
 --- !u!114 &114046612501343850
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -226,6 +226,17 @@ MonoBehaviour:
   m_notes: 
   ErrorNotListeningForAnyGameEvent: 0
   m_gameEvent: GoTo Rate
+  ListenFor: 0
+  AnyValue: 0
+  UIViewTriggerAction: 1
+  ViewCategory: General
+  ViewName: Unnamed
+  UIButtonTriggerAction: 0
+  ButtonCategory: General
+  ButtonName: Unnamed
+  UIDrawerTriggerAction: 0
+  DrawerName: Unnamed
+  CustomDrawerName: 0
 --- !u!114 &114181609256747244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -556,6 +567,17 @@ MonoBehaviour:
   m_notes: 
   ErrorNotListeningForAnyGameEvent: 0
   m_gameEvent: GoTo Settings
+  ListenFor: 0
+  AnyValue: 0
+  UIViewTriggerAction: 1
+  ViewCategory: General
+  ViewName: Unnamed
+  UIButtonTriggerAction: 0
+  ButtonCategory: General
+  ButtonName: Unnamed
+  UIDrawerTriggerAction: 0
+  DrawerName: Unnamed
+  CustomDrawerName: 0
 --- !u!114 &114585174386706184
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -745,6 +767,17 @@ MonoBehaviour:
   m_notes: 
   ErrorNotListeningForAnyGameEvent: 0
   m_gameEvent: GoTo Menu
+  ListenFor: 0
+  AnyValue: 0
+  UIViewTriggerAction: 1
+  ViewCategory: General
+  ViewName: Unnamed
+  UIButtonTriggerAction: 0
+  ButtonCategory: General
+  ButtonName: Unnamed
+  UIDrawerTriggerAction: 0
+  DrawerName: Unnamed
+  CustomDrawerName: 0
 --- !u!114 &114934597295472718
 MonoBehaviour:
   m_ObjectHideFlags: 1

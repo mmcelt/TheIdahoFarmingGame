@@ -134,6 +134,16 @@ namespace Doozy.Engine.Themes
         /// <param name="saveAssets"> Write all unsaved asset changes to disk? </param>
         public bool CreateTheme(string themeName, bool showDialog = false, bool saveAssets = false)
         {
+            return CreateTheme(DoozyPath.GetDataPath(DoozyPath.ComponentName.Themes), themeName, showDialog, saveAssets);
+        }
+
+        /// <summary> Creates a new ThemeData asset, at the given relative path, with the given theme name and adds a reference to it to the database </summary>
+        /// <param name="relativePath"> Path where to create the theme asset </param>
+        /// <param name="themeName"> The name of the new theme </param>
+        /// <param name="showDialog"> Should a display dialog be shown before executing the action </param>
+        /// <param name="saveAssets"> Write all unsaved asset changes to disk? </param>
+        public bool CreateTheme(string relativePath, string themeName, bool showDialog = false, bool saveAssets = false)
+        {
             themeName = themeName.Trim();
 
             if (string.IsNullOrEmpty(themeName))
@@ -153,7 +163,7 @@ namespace Doozy.Engine.Themes
             }
 
 #if UNITY_EDITOR
-            ThemeData themeData = AssetUtils.CreateAsset<ThemeData>(DoozyPath.GetDataPath(DoozyPath.ComponentName.Themes), GetThemeDataFilename(themeName.Replace(" ", string.Empty)));
+            ThemeData themeData = AssetUtils.CreateAsset<ThemeData>(relativePath, GetThemeDataFilename(themeName.Replace(" ", string.Empty)));
 
 #else
             ThemeData themeData = ScriptableObject.CreateInstance<ThemeData>();

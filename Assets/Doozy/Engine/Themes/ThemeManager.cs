@@ -70,6 +70,16 @@ namespace Doozy.Engine.Themes
 
         #region Unity Methods
 
+#if UNITY_2019_3_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void RunOnStart()
+        {
+            ApplicationIsQuitting = false;
+            s_initialized = false;
+            ThemeTargets.Clear();
+        }
+#endif
+        
         private void Awake()
         {
             if (s_instance != null && s_instance != this)

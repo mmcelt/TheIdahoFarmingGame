@@ -100,23 +100,30 @@ namespace Doozy.Editor.Windows
 
 
             //draw the currently selected view
-            DrawView(DrawViewGeneral, GetAnimBool(View.General), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewViews, GetAnimBool(View.Views), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewButtons, GetAnimBool(View.Buttons), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewCanvases, GetAnimBool(View.Canvases), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewDrawers, GetAnimBool(View.Drawers), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewPopups, GetAnimBool(View.Popups), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewNody, GetAnimBool(View.Nody), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewSoundy, GetAnimBool(View.Soundy), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewTouchy, GetAnimBool(View.Touchy), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewAnimations, GetAnimBool(View.Animations), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewTemplates, GetAnimBool(View.Templates), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+            if (CurrentView != View.Themes)
+                m_viewScrollPosition = GUILayout.BeginScrollView(m_viewScrollPosition);
+            {
+                DrawView(DrawViewGeneral, GetAnimBool(View.General), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewViews, GetAnimBool(View.Views), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewButtons, GetAnimBool(View.Buttons), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewCanvases, GetAnimBool(View.Canvases), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewDrawers, GetAnimBool(View.Drawers), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewPopups, GetAnimBool(View.Popups), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewNody, GetAnimBool(View.Nody), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewSoundy, GetAnimBool(View.Soundy), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewTouchy, GetAnimBool(View.Touchy), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewAnimations, GetAnimBool(View.Animations), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewTemplates, GetAnimBool(View.Templates), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewSettings, GetAnimBool(View.Settings), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewDebug, GetAnimBool(View.Debug), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewKeys, GetAnimBool(View.Keys), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewHelp, GetAnimBool(View.Help), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+                DrawView(DrawViewAbout, GetAnimBool(View.About), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
+            }
+            if (CurrentView != View.Themes)
+                GUILayout.EndScrollView();
+
             DrawView(DrawViewThemes, GetAnimBool(View.Themes), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewSettings, GetAnimBool(View.Settings), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewDebug, GetAnimBool(View.Debug), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewKeys, GetAnimBool(View.Keys), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewHelp, GetAnimBool(View.Help), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
-            DrawView(DrawViewAbout, GetAnimBool(View.About), ViewContentLeftHorizontalPadding, ViewContentRightHorizontalPadding);
 
             ListenForButtons();
         }
@@ -202,7 +209,7 @@ namespace Doozy.Editor.Windows
             m_viewLeftMenuScrollPosition = Vector2.zero;
 
             CurrentView = view;
-            
+
             EditMode.value = false;
             NewDatabase.value = false;
         }

@@ -114,6 +114,14 @@ namespace Doozy.Engine.Orientation
 
         #region Unity Methods
 
+#if UNITY_2019_3_OR_NEWER
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void RunOnStart()
+        {
+            ApplicationIsQuitting = false;
+        }
+#endif
+        
         private void Reset() { Canvas.renderMode = RenderMode.ScreenSpaceOverlay; }
 
         private void OnValidate() { Canvas.renderMode = RenderMode.ScreenSpaceOverlay; }

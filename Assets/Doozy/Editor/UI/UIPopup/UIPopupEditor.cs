@@ -58,6 +58,7 @@ namespace Doozy.Editor.UI
             m_autoHideAfterShow,
             m_autoHideAfterShowDelay,
             m_autoSelectButtonAfterShow,
+            m_autoSelectPreviouslySelectedButtonAfterHide,
             m_blockBackButton,
             m_buttons,
             m_canvasName,
@@ -129,6 +130,7 @@ namespace Doozy.Editor.UI
             m_autoHideAfterShow = GetProperty(PropertyName.AutoHideAfterShow);
             m_autoHideAfterShowDelay = GetProperty(PropertyName.AutoHideAfterShowDelay);
             m_autoSelectButtonAfterShow = GetProperty(PropertyName.AutoSelectButtonAfterShow);
+            m_autoSelectPreviouslySelectedButtonAfterHide = GetProperty(PropertyName.AutoSelectPreviouslySelectedButtonAfterHide);
             m_blockBackButton = GetProperty(PropertyName.BlockBackButton);
             m_canvasName = GetProperty(PropertyName.CanvasName);
             m_container = GetProperty(PropertyName.Container);
@@ -224,6 +226,8 @@ namespace Doozy.Editor.UI
             DrawDestroyAfterHide();
             GUILayout.Space(DGUI.Properties.Space(4));
             DrawAutoSelectButton();
+            GUILayout.Space(DGUI.Properties.Space(4));
+            DrawAutoSelectPreviouslySelectedButtonAfterHide();
             GUILayout.Space(DGUI.Properties.Space(4));
             DrawOverlay();
             GUILayout.Space(DGUI.Properties.Space());
@@ -1031,6 +1035,11 @@ namespace Doozy.Editor.UI
                            });
         }
 
+        private void DrawAutoSelectPreviouslySelectedButtonAfterHide()
+        {
+            DGUI.Toggle.Switch.Draw(m_autoSelectPreviouslySelectedButtonAfterHide, UILabels.AutoSelectPreviouslySelectedButtonAfterHide, ComponentColorName, true, true);
+        }
+        
         private void DrawWhenHidden()
         {
             SerializedProperty disableGameObject = GetProperty(PropertyName.DisableGameObject, m_container);

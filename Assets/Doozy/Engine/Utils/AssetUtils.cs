@@ -4,11 +4,11 @@
 
 using System;
 using System.IO;
-using Doozy.Engine.Settings;
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
 
+#if UNITY_EDITOR
+using System.Collections.Generic;
+using UnityEditor;
 #endif
 
 namespace Doozy.Engine.Utils
@@ -97,6 +97,20 @@ namespace Doozy.Engine.Utils
             return asset;
         }
 
+        public static List<T> GetAssets<T>() where T : ScriptableObject
+        {
+            var list = new List<T>();
+            string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);
+            foreach (string guid in guids)
+            {
+                var asset = AssetDatabase.LoadAssetAtPath<T>(AssetDatabase.GUIDToAssetPath(guid));
+                if (asset == null) continue;
+                list.Add(asset);
+            }
+
+            return list;
+        }
+        
         public static void MoveAssetToTrash(string relativePath, string fileName, bool saveAssetDatabase = true,
                                             bool refreshAssetDatabase = true, bool printDebugMessage = true)
         {

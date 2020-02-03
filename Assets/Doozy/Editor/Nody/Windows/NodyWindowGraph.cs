@@ -82,7 +82,7 @@ namespace Doozy.Editor.Nody.Windows
             //we do this here because in normal operation we want to update only the connections that are referencing nodes that are being dragged
             CalculateAllConnectionCurves();
 
-            //update the visual sate of all the connection points
+            //update the visual state of all the connection points
             UpdateVirtualPointsIsOccupiedStates();
 
             //check for errors

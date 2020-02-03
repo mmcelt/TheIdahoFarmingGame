@@ -566,6 +566,24 @@ namespace Doozy.Engine.Utils
         public const string ColorTargetTextMeshPro_Manual = "http://doozyui.com/color-target-textmeshpro/";
         public const string ColorTargetTextMeshPro_YouTube = "https://youtu.be/WEisFz1q0Uw";
         
+        //ColorTargetSelectable
+        public const string ColorTargetSelectable_GameObject_Name = "Color Target Selectable";
+        public const string ColorTargetSelectable_AddComponentMenu_MenuName = Themes_Targets_AddComponentMenu_Path + ColorTargetSelectable_GameObject_Name;
+        public const int    ColorTargetSelectable_AddComponentMenu_Order = THEMES_MENU_ORDER;
+        public const string ColorTargetSelectable_MenuItem_ItemName = Themes_Targets_MenuItem_Path + ColorTargetSelectable_GameObject_Name;
+        public const int    ColorTargetSelectable_MenuItem_Priority = THEMES_MENU_ORDER;
+        public const string ColorTargetSelectable_Manual = "http://doozyui.com/color-target-selectable/";
+        public const string ColorTargetSelectable_YouTube = "https://youtu.be/y04XQORK6Kk";
+        
+        //ColorTargetUnityEvent
+        public const string ColorTargetUnityEvent_GameObject_Name = "Color Target UnityEvent";
+        public const string ColorTargetUnityEvent_AddComponentMenu_MenuName = Themes_Targets_AddComponentMenu_Path + ColorTargetUnityEvent_GameObject_Name;
+        public const int    ColorTargetUnityEvent_AddComponentMenu_Order = THEMES_MENU_ORDER;
+        public const string ColorTargetUnityEvent_MenuItem_ItemName = Themes_Targets_MenuItem_Path + ColorTargetUnityEvent_GameObject_Name;
+        public const int    ColorTargetUnityEvent_MenuItem_Priority = THEMES_MENU_ORDER;
+        public const string ColorTargetUnityEvent_Manual = "http://doozyui.com/color-target-unityevent/";
+        public const string ColorTargetUnityEvent_YouTube = "https://youtu.be/ChkOH_-zbHU";
+        
         //FontTargetText
         public const string FontTargetText_GameObject_Name = "Font Target Text";
         public const string FontTargetText_AddComponentMenu_MenuName = Themes_Targets_AddComponentMenu_Path + FontTargetText_GameObject_Name;
@@ -593,6 +611,15 @@ namespace Doozy.Engine.Utils
         public const string SpriteTargetImage_Manual = "http://doozyui.com/sprite-target-image/";
         public const string SpriteTargetImage_YouTube = "https://youtu.be/dZlHNHfR0po";
         
+        //SpriteTargetSelectable
+        public const string SpriteTargetSelectable_GameObject_Name = "Sprite Target Selectable";
+        public const string SpriteTargetSelectable_AddComponentMenu_MenuName = Themes_Targets_AddComponentMenu_Path + SpriteTargetSelectable_GameObject_Name;
+        public const int    SpriteTargetSelectable_AddComponentMenu_Order = THEMES_MENU_ORDER;
+        public const string SpriteTargetSelectable_MenuItem_ItemName = Themes_Targets_MenuItem_Path + SpriteTargetSelectable_GameObject_Name;
+        public const int    SpriteTargetSelectable_MenuItem_Priority = THEMES_MENU_ORDER;
+        public const string SpriteTargetSelectable_Manual = "http://doozyui.com/sprite-target-selectable/";
+        public const string SpriteTargetSelectable_YouTube = "https://youtu.be/jkIlc-6xv04";
+        
         //SpriteTargetSpriteRenderer
         public const string SpriteTargetSpriteRenderer_GameObject_Name = "Sprite Target SpriteRenderer";
         public const string SpriteTargetSpriteRenderer_AddComponentMenu_MenuName = Themes_Targets_AddComponentMenu_Path + SpriteTargetSpriteRenderer_GameObject_Name;
@@ -602,6 +629,15 @@ namespace Doozy.Engine.Utils
         public const string SpriteTargetSpriteRenderer_Manual = "http://doozyui.com/sprite-target-spriterenderer/";
         public const string SpriteTargetSpriteRenderer_YouTube = "https://youtu.be/umoIvXb57Ys";
         
+        //SpriteTargetUnityEvent
+        public const string SpriteTargetUnityEvent_GameObject_Name = "Sprite Target UnityEvent";
+        public const string SpriteTargetUnityEvent_AddComponentMenu_MenuName = Themes_Targets_AddComponentMenu_Path + SpriteTargetUnityEvent_GameObject_Name;
+        public const int    SpriteTargetUnityEvent_AddComponentMenu_Order = THEMES_MENU_ORDER;
+        public const string SpriteTargetUnityEvent_MenuItem_ItemName = Themes_Targets_MenuItem_Path + SpriteTargetUnityEvent_GameObject_Name;
+        public const int    SpriteTargetUnityEvent_MenuItem_Priority = THEMES_MENU_ORDER;
+        public const string SpriteTargetUnityEvent_Manual = "http://doozyui.com/sprite-target-unityevent/";
+        public const string SpriteTargetUnityEvent_YouTube = "https://youtu.be/Wbw_eHJRQcM";
+        
         //TextureTargetRawImage
         public const string TextureTargetRawImage_GameObject_Name = "Texture Target RawImage";
         public const string TextureTargetRawImage_AddComponentMenu_MenuName = Themes_Targets_AddComponentMenu_Path + TextureTargetRawImage_GameObject_Name;
@@ -610,6 +646,15 @@ namespace Doozy.Engine.Utils
         public const int    TextureTargetRawImage_MenuItem_Priority = THEMES_MENU_ORDER;
         public const string TextureTargetRawImage_Manual = "http://doozyui.com/texture-target-rawimage/";
         public const string TextureTargetRawImage_YouTube = "https://youtu.be/ZJkcAoiCV4Q";
+        
+        //TextureTargetUnityEvent
+        public const string TextureTargetUnityEvent_GameObject_Name = "Texture Target UnityEvent";
+        public const string TextureTargetUnityEvent_AddComponentMenu_MenuName = Themes_Targets_AddComponentMenu_Path + TextureTargetUnityEvent_GameObject_Name;
+        public const int    TextureTargetUnityEvent_AddComponentMenu_Order = THEMES_MENU_ORDER;
+        public const string TextureTargetUnityEvent_MenuItem_ItemName = Themes_Targets_MenuItem_Path + TextureTargetUnityEvent_GameObject_Name;
+        public const int    TextureTargetUnityEvent_MenuItem_Priority = THEMES_MENU_ORDER;
+        public const string TextureTargetUnityEvent_Manual = "http://doozyui.com/texture-target-unityevent/";
+        public const string TextureTargetUnityEvent_YouTube = "https://youtu.be/_-KnTuoBIhw";
         #endregion
         
         #endregion

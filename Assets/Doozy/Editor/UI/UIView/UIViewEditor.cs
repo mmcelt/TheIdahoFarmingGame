@@ -43,6 +43,7 @@ namespace Doozy.Editor.UI
         private const string SHOW_INSTANT_ANIMATION = "ShowInstantAnimation";
         private const string NO_HIDE_ANIMATION = "NoHideAnimation";
         private const string HIDE_INSTANT_ANIMATION = "HideInstantAnimation";
+        private const string HAS_CHILD_VIEWS = "HasChildViews";
 
         private static UIViewSettings Settings { get { return UIViewSettings.Instance; } }
         private static NamesDatabase Database { get { return UIViewSettings.Database; } }
@@ -55,13 +56,17 @@ namespace Doozy.Editor.UI
         private readonly Dictionary<UIViewBehavior, List<DGUI.IconGroup.Data>> m_viewBehaviorIconsDatabase = new Dictionary<UIViewBehavior, List<DGUI.IconGroup.Data>>();
 
         /// <summary> Returns TRUE if this UIView has at least one child UIView </summary> 
-        private bool HasChildUIViews {
+        private bool HasChildUIViews
+        {
             get
             {
                 UIView[] childUIViews = Target.GetComponentsInChildren<UIView>();
                 return childUIViews != null && childUIViews.Length > 1;
-            } }
-        
+            }
+        }
+
+        private bool m_hasChildViews;
+
         private SerializedProperty
             m_autoHideAfterShow,
             m_autoHideAfterShowDelay,
@@ -109,7 +114,8 @@ namespace Doozy.Editor.UI
             m_noShowAnimationInfoMessage,
             m_showInstantAnimationInfoMessage,
             m_noHideAnimationInfoMessage,
-            m_hideInstantAnimationInfoMessage;
+            m_hideInstantAnimationInfoMessage,
+            m_hasChildViewsInfoMessage;
 
         private int OnVisibilityChangedEventCount { get { return Target.OnVisibilityChanged.GetPersistentEventCount(); } }
         private int OnInverseVisibilityChangedEventCount { get { return Target.OnInverseVisibilityChanged.GetPersistentEventCount(); } }
@@ -176,9 +182,9 @@ namespace Doozy.Editor.UI
         {
             base.OnEnable();
             AdjustPositionRotationAndScaleToRoundValues(Target.RectTransform);
-            
-            if (HasChildUIViews && Target.DisableGameObjectWhenHidden) Target.DisableGameObjectWhenHidden = false;
-            
+
+//            if (HasChildUIViews && Target.DisableGameObjectWhenHidden) Target.DisableGameObjectWhenHidden = false;
+
             m_showDatabase = Animations.Get(AnimationType.Show);
             m_hideDatabase = Animations.Get(AnimationType.Hide);
             m_loopDatabase = Animations.Get(AnimationType.Loop);
@@ -190,6 +196,9 @@ namespace Doozy.Editor.UI
             AddInfoMessage(SHOW_INSTANT_ANIMATION, new InfoMessage(DGUI.Icon.Show, InfoMessage.GetIconColor(InfoMessage.MessageType.Info), InfoMessage.GetIconColor(InfoMessage.MessageType.Info), UILabels.InstantAnimation, false, Repaint));
             AddInfoMessage(NO_HIDE_ANIMATION, new InfoMessage(DGUI.Icon.Hide, InfoMessage.GetIconColor(InfoMessage.MessageType.Error), InfoMessage.GetIconColor(InfoMessage.MessageType.Error), UILabels.NoAnimationEnabled, UILabels.HideAnimationWillNotWork, false, Repaint));
             AddInfoMessage(HIDE_INSTANT_ANIMATION, new InfoMessage(DGUI.Icon.Hide, InfoMessage.GetIconColor(InfoMessage.MessageType.Info), InfoMessage.GetIconColor(InfoMessage.MessageType.Info), UILabels.InstantAnimation, false, Repaint));
+            AddInfoMessage(HAS_CHILD_VIEWS, new InfoMessage(InfoMessage.MessageType.Warning, UILabels.HasChildViews, false, Repaint));
+
+            m_hasChildViews = HasChildUIViews;
         }
 
         protected override void OnDisable()
@@ -429,13 +438,7 @@ namespace Doozy.Editor.UI
             GUILayout.Space(DGUI.Properties.Space());
             GUILayout.BeginHorizontal();
             {
-                EditorGUI.BeginChangeCheck();
                 DGUI.Toggle.Switch.Draw(m_disableGameObjectWhenHidden, UILabels.GameObject, m_disableGameObjectWhenHidden.boolValue ? ComponentColorName : DGUI.Colors.DisabledBackgroundColorName, false, true);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    if (HasChildUIViews && m_disableGameObjectWhenHidden.boolValue) 
-                        m_disableGameObjectWhenHidden.boolValue = false;
-                }
                 GUILayout.Space(DGUI.Properties.Space());
                 DGUI.Toggle.Switch.Draw(m_disableCanvasWhenHidden, UILabels.Canvas, m_disableCanvasWhenHidden.boolValue ? ComponentColorName : DGUI.Colors.DisabledBackgroundColorName, false, true);
                 GUILayout.Space(DGUI.Properties.Space());
@@ -443,6 +446,12 @@ namespace Doozy.Editor.UI
                 GUILayout.FlexibleSpace();
             }
             GUILayout.EndHorizontal();
+            GUILayout.Space(DGUI.Properties.Space());
+
+            m_hasChildViewsInfoMessage = GetInfoMessage(HAS_CHILD_VIEWS);
+            GUILayout.Space(-DGUI.Properties.Space(2) * m_hasChildViewsInfoMessage.Show.faded);
+            m_hasChildViewsInfoMessage.Draw(Target.DisableGameObjectWhenHidden && m_hasChildViews, InspectorWidth);
+            GUILayout.Space(DGUI.Properties.Space(3) * m_hasChildViewsInfoMessage.Show.faded);
         }
 
         private void DrawAutoHide()
@@ -563,12 +572,12 @@ namespace Doozy.Editor.UI
             {
                 case AnimationType.Show:
                     instantAnimationProperty = m_showInstantAnimation;
-                    
+
                     m_showInstantAnimationInfoMessage = GetInfoMessage(SHOW_INSTANT_ANIMATION);
                     GUILayout.Space(-DGUI.Properties.Space(2) * m_showInstantAnimationInfoMessage.Show.faded);
                     m_showInstantAnimationInfoMessage.DrawMessageOnly(behavior.InstantAnimation);
                     GUILayout.Space(DGUI.Properties.Space(3) * m_showInstantAnimationInfoMessage.Show.faded);
-                    
+
                     m_noShowAnimationInfoMessage = GetInfoMessage(NO_SHOW_ANIMATION);
                     GUILayout.Space(-DGUI.Properties.Space(2) * m_noShowAnimationInfoMessage.Show.faded);
                     m_noShowAnimationInfoMessage.Draw(!behavior.HasAnimation && !behavior.InstantAnimation, InspectorWidth);
@@ -577,17 +586,17 @@ namespace Doozy.Editor.UI
                     break;
                 case AnimationType.Hide:
                     instantAnimationProperty = m_hideInstantAnimation;
-                    
+
                     m_hideInstantAnimationInfoMessage = GetInfoMessage(HIDE_INSTANT_ANIMATION);
                     GUILayout.Space(-DGUI.Properties.Space(2) * m_hideInstantAnimationInfoMessage.Show.faded);
                     m_hideInstantAnimationInfoMessage.DrawMessageOnly(behavior.InstantAnimation);
                     GUILayout.Space(DGUI.Properties.Space(3) * m_hideInstantAnimationInfoMessage.Show.faded);
-                    
+
                     m_noHideAnimationInfoMessage = GetInfoMessage(NO_HIDE_ANIMATION);
                     GUILayout.Space(-DGUI.Properties.Space(2) * m_noHideAnimationInfoMessage.Show.faded);
                     m_noHideAnimationInfoMessage.Draw(!behavior.HasAnimation && !behavior.InstantAnimation, InspectorWidth);
                     GUILayout.Space(DGUI.Properties.Space(3) * m_noHideAnimationInfoMessage.Show.faded);
-                    
+
                     break;
             }
 

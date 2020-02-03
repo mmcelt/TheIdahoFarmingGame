@@ -16,241 +16,287 @@ using UnityEngine.EventSystems;
 
 namespace Doozy.Engine.UI.Base
 {
-    /// <inheritdoc />
-    /// <summary> Base class for UI Components </summary>
-    /// <typeparam name="T"> The component type that implements it </typeparam>
-    /// <seealso cref="T:UnityEngine.MonoBehaviour" />
-    public abstract class UIComponentBase<T> : MonoBehaviour
-    {
-        #region UNITY_EDITOR
+	/// <inheritdoc />
+	/// <summary> Base class for UI Components </summary>
+	/// <typeparam name="T"> The component type that implements it </typeparam>
+	/// <seealso cref="T:UnityEngine.MonoBehaviour" />
+	public abstract class UIComponentBase<T> : MonoBehaviour
+	{
+		#region UNITY_EDITOR
 
 #if UNITY_EDITOR
 
-        /// <summary>
-        ///     Method used when creating an UIComponent.
-        ///     It looks if the selected object has a RectTransform (and returns it as the parent).
-        ///     If the selected object is null or does not have a RectTransform, it returns the MasterCanvas GameObject as the parent.
-        /// </summary>
-        /// <param name="selectedObject"> Selected object </param>
-        protected static GameObject GetParent(GameObject selectedObject)
-        {
-            if (selectedObject == null) return UICanvas.GetMasterCanvas().gameObject; //selected object is null -> returns the MasterCanvas GameObject
-            return selectedObject.GetComponent<RectTransform>() != null ? selectedObject : UICanvas.GetMasterCanvas().gameObject;
-        }
+		/// <summary>
+		///     Method used when creating an UIComponent.
+		///     It looks if the selected object has a RectTransform (and returns it as the parent).
+		///     If the selected object is null or does not have a RectTransform, it returns the MasterCanvas GameObject as the parent.
+		/// </summary>
+		/// <param name="selectedObject"> Selected object </param>
+		protected static GameObject GetParent(GameObject selectedObject)
+		{
+			if (selectedObject == null) return UICanvas.GetMasterCanvas().gameObject; //selected object is null -> returns the MasterCanvas GameObject
+			return selectedObject.GetComponent<RectTransform>() != null ? selectedObject : UICanvas.GetMasterCanvas().gameObject;
+		}
 
-        /// <summary>
-        ///     Method used when creating an UIComponent that needs to be under an UICanvas directly.
-        ///     It looks if the selected object has an UICanvas component (and returns it.
-        ///     If the selected object does not have an UICanvas component it searches for one at it's hierarchy root.
-        ///     If the selected object is null or no UICanvas was found, it returns the MasterCanvas GameObject to be used as a parent
-        /// </summary>
-        /// <param name="selectedObject"> Selected object </param>
-        protected static GameObject GetCanvasAsParent(GameObject selectedObject)
-        {
-            if (selectedObject == null) return UICanvas.GetMasterCanvas().gameObject; //selected object is null -> returns the MasterCanvas GameObject
-            if (selectedObject.GetComponent<UICanvas>()) return selectedObject; //selected object has an UICanvas -> returns its GameObject
-            if (selectedObject.transform.root.GetComponent<UICanvas>()) return selectedObject.transform.root.gameObject; //selected object root has an UICanvas -> returns the root GameObject
-            return UICanvas.GetMasterCanvas().gameObject; //selected object is NOT null, but has no UICanvas -> returns the MasterCanvas GameObject
-        }
+		/// <summary>
+		///     Method used when creating an UIComponent that needs to be under an UICanvas directly.
+		///     It looks if the selected object has an UICanvas component (and returns it.
+		///     If the selected object does not have an UICanvas component it searches for one at it's hierarchy root.
+		///     If the selected object is null or no UICanvas was found, it returns the MasterCanvas GameObject to be used as a parent
+		/// </summary>
+		/// <param name="selectedObject"> Selected object </param>
+		protected static GameObject GetCanvasAsParent(GameObject selectedObject)
+		{
+			if (selectedObject == null) return UICanvas.GetMasterCanvas().gameObject; //selected object is null -> returns the MasterCanvas GameObject
+			if (selectedObject.GetComponent<UICanvas>()) return selectedObject; //selected object has an UICanvas -> returns its GameObject
+			if (selectedObject.transform.root.GetComponent<UICanvas>()) return selectedObject.transform.root.gameObject; //selected object root has an UICanvas -> returns the root GameObject
+			return UICanvas.GetMasterCanvas().gameObject; //selected object is NOT null, but has no UICanvas -> returns the MasterCanvas GameObject
+		}
 
 #endif
 
-        #endregion
+		#endregion
 
-        #region Static Properties
-        
-        protected static DoozySettings Settings { get { return DoozySettings.Instance; } }
+		#region Static Properties
 
-        // ReSharper disable once InconsistentNaming
-        /// <summary> Database used to keep track of all the components of the given type </summary>
-        public static readonly List<T> Database = new List<T>(); 
+		protected static DoozySettings Settings
+		{
+			get { return DoozySettings.Instance; }
+		}
 
-        /// <summary>
-        ///     Internal variable used to keep track if the UI interactions are disabled or not.
-        ///     <para>This is an additive bool so if == 0 --> false (the UI interactions are NOT disabled) and if > 0 --> true (the UI interactions are disabled).</para>
-        /// </summary>
-        // ReSharper disable once StaticMemberInGenericType
-        private static int s_uiInteractionsDisableLevel;
+		// ReSharper disable once InconsistentNaming
+		/// <summary> Database used to keep track of all the components of the given type </summary>
+		public static readonly List<T> Database = new List<T>();
 
-        /// <summary> Returns TRUE if the UI interactions are disabled </summary>
-        // ReSharper disable once MemberCanBeProtected.Global
-        public static bool UIInteractionsDisabled
-        {
-            get
-            {
-                if (s_uiInteractionsDisableLevel < 0) s_uiInteractionsDisableLevel = 0;
+		/// <summary>
+		///     Internal variable used to keep track if the UI interactions are disabled or not.
+		///     <para>This is an additive bool so if == 0 --> false (the UI interactions are NOT disabled) and if > 0 --> true (the UI interactions are disabled).</para>
+		/// </summary>
+		// ReSharper disable once StaticMemberInGenericType
+		private static int s_uiInteractionsDisableLevel;
 
-                return s_uiInteractionsDisableLevel != 0;
-            }
-        }
+		/// <summary> Returns TRUE if the UI interactions are disabled </summary>
+		// ReSharper disable once MemberCanBeProtected.Global
+		public static bool UIInteractionsDisabled
+		{
+			get
+			{
+				if (s_uiInteractionsDisableLevel < 0) s_uiInteractionsDisableLevel = 0;
 
-        private static EventSystem s_unityEventSystem;
-        public static EventSystem UnityEventSystem
-        {
-            get
-            {
-                if (s_unityEventSystem != null) return s_unityEventSystem;
-                s_unityEventSystem = EventSystem.current;
-                if (s_unityEventSystem != null) return s_unityEventSystem;
-                s_unityEventSystem = FindObjectOfType<EventSystem>();
-                if (s_unityEventSystem != null) return s_unityEventSystem;
-                s_unityEventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule)).GetComponent<EventSystem>();
-                return s_unityEventSystem;
-            }
-        }
-        
-        #endregion
+				return s_uiInteractionsDisableLevel != 0;
+			}
+		}
 
-        #region Public Variables
+		private static EventSystem s_unityEventSystem;
 
-        /// <summary> Enables relevant debug messages to be printed to the console </summary>
-        public bool DebugMode;
+		public static EventSystem UnityEventSystem
+		{
+			get
+			{
+				if (s_unityEventSystem != null) return s_unityEventSystem;
+				s_unityEventSystem = EventSystem.current;
+				if (s_unityEventSystem != null) return s_unityEventSystem;
+				s_unityEventSystem = FindObjectOfType<EventSystem>();
+				if (s_unityEventSystem != null) return s_unityEventSystem;
+				s_unityEventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(StandaloneInputModule)).GetComponent<EventSystem>();
+				return s_unityEventSystem;
+			}
+		}
 
-        /// <summary> Holds the start RectTransform.anchoredPosition3D </summary>
-        public Vector3 StartPosition = UIAnimator.DEFAULT_START_POSITION;
+		#endregion
 
-        /// <summary> Holds the start RectTransform.localEulerAngles </summary>
-        public Vector3 StartRotation = UIAnimator.DEFAULT_START_ROTATION;
+		#region Public Variables
 
-        /// <summary> Holds the start RectTransform.localScale </summary>
-        public Vector3 StartScale = UIAnimator.DEFAULT_START_SCALE;
+		/// <summary> Enables relevant debug messages to be printed to the console </summary>
+		public bool DebugMode;
 
-        /// <summary> Holds the start alpha. It does that by checking if a CanvasGroup component is attached (holding the alpha value) or it just remembers 1 (as in 100% visibility) </summary>
-        public float StartAlpha = UIAnimator.DEFAULT_START_ALPHA;
+		/// <summary> Holds the start RectTransform.anchoredPosition3D </summary>
+		public Vector3 StartPosition = UIAnimator.DEFAULT_START_POSITION;
 
-        #endregion
+		/// <summary> Holds the start RectTransform.localEulerAngles </summary>
+		public Vector3 StartRotation = UIAnimator.DEFAULT_START_ROTATION;
 
-        #region Properties
+		/// <summary> Holds the start RectTransform.localScale </summary>
+		public Vector3 StartScale = UIAnimator.DEFAULT_START_SCALE;
 
-        /// <summary> Reference to the RectTransform component </summary>
-        public RectTransform RectTransform
-        {
-            get
-            {
-                if (m_rectTransform == null) m_rectTransform = GetComponent<RectTransform>();
+		/// <summary> Holds the start alpha. It does that by checking if a CanvasGroup component is attached (holding the alpha value) or it just remembers 1 (as in 100% visibility) </summary>
+		public float StartAlpha = UIAnimator.DEFAULT_START_ALPHA;
 
-                return m_rectTransform;
-            }
-        }
-        
-       #endregion
+		#endregion
 
-        #region Private Variables
+		#region Properties
 
-        /// <summary> Internal variable that holds a reference to the RectTransform component </summary>
-        private RectTransform m_rectTransform;
+		/// <summary> Reference to the RectTransform component </summary>
+		public RectTransform RectTransform
+		{
+			get
+			{
+				if (m_rectTransform == null) m_rectTransform = GetComponent<RectTransform>();
 
-        #endregion
+				return m_rectTransform;
+			}
+		}
 
-        #region Unity Methods
-        
-        protected virtual void Reset() { }
-        
-        public virtual void Awake()
-        {
-            BackButton.Init();
-            SoundyManager.Init();
-            Database.Add(GetComponent<T>());
-            UpdateStartValues();
-        }
-        
-        public virtual void Start() { }
+		#endregion
 
-        public virtual void OnEnable() { }
+		#region Private Variables
 
-        public virtual void OnDisable() { }
+		/// <summary> Internal variable that holds a reference to the RectTransform component </summary>
+		private RectTransform m_rectTransform;
 
-        public virtual void OnDestroy() { Database.Remove(GetComponent<T>()); }
+		#endregion
 
-        /// <summary> Returns true if the GameObject and the Component are active </summary>
-        public virtual bool IsActive() { return isActiveAndEnabled; }
+		#region Unity Methods
 
-        /// <summary> Returns true if the native representation of the behaviour has been destroyed </summary>
-        public bool IsDestroyed() { return this == null; }
+		protected virtual void Reset()
+		{
+		}
 
-        #endregion
+		public virtual void Awake()
+		{
+			BackButton.Init();
+			SoundyManager.Init();
+			Database.Add(GetComponent<T>());
+			UpdateStartValues();
+		}
 
-        #region Public Methods
+		public virtual void Start()
+		{
+		}
 
-        /// <summary> Resets the RectTransform values to the Start values (StartPosition, StartRotation, StartScale and StartAlpha) </summary>
-        public virtual void ResetToStartValues()
-        {
-            UIAnimator.ResetCanvasGroup(RectTransform);
-            ResetPosition();
-            ResetRotation();
-            ResetScale();
-            ResetAlpha();
-        }
+		public virtual void OnEnable()
+		{
+		}
 
-        /// <summary> Resets the RectTransform.anchoredPosition3D to the StartPosition value </summary>
-        public virtual void ResetPosition() { RectTransform.anchoredPosition3D = StartPosition; }
+		public virtual void OnDisable()
+		{
+		}
 
-        /// <summary> Resets the RectTransform.localEulerAngles to the StartRotation value </summary>
-        public virtual void ResetRotation() { RectTransform.localEulerAngles = StartRotation; }
+		public virtual void OnDestroy()
+		{
+			Database.Remove(GetComponent<T>());
+		}
 
-        /// <summary> Resets the RectTransform.localScale to the StartScale value </summary>
-        public virtual void ResetScale() { RectTransform.localScale = StartScale; }
+		/// <summary> Returns true if the GameObject and the Component are active </summary>
+		public virtual bool IsActive()
+		{
+			return isActiveAndEnabled;
+		}
 
-        /// <summary> Resets the CanvasGroup.alpha to the StartAlpha value (if a CanvasGroup is attached) </summary>
-        public virtual void ResetAlpha()
-        {
-            if (RectTransform.GetComponent<CanvasGroup>() != null) RectTransform.GetComponent<CanvasGroup>().alpha = StartAlpha;
-        }
+		/// <summary> Returns true if the native representation of the behaviour has been destroyed </summary>
+		public bool IsDestroyed()
+		{
+			return this == null;
+		}
 
-        /// <summary> Updates the StartPosition, StartRotation, StartScale and StartAlpha for this RectTransform to the current values </summary>
-        public virtual void UpdateStartValues()
-        {
-            UpdateStartPosition();
-            UpdateStartRotation();
-            UpdateStartScale();
-            UpdateStartAlpha();
-        }
+		#endregion
 
-        /// <summary> Updates the StartPosition to the RectTransform.anchoredPosition3D value </summary>
-        public virtual void UpdateStartPosition() { StartPosition = RectTransform.anchoredPosition3D; }
+		#region Public Methods
 
-        /// <summary> Updates the StartRotation to the RectTransform.localEulerAngles value </summary>
-        public virtual void UpdateStartRotation() { StartRotation = RectTransform.localEulerAngles; }
+		/// <summary> Resets the RectTransform values to the Start values (StartPosition, StartRotation, StartScale and StartAlpha) </summary>
+		public virtual void ResetToStartValues()
+		{
+			UIAnimator.ResetCanvasGroup(RectTransform);
+			ResetPosition();
+			ResetRotation();
+			ResetScale();
+			ResetAlpha();
+		}
 
-        /// <summary> Updates the StartScale to the RectTransform.localScale value </summary>
-        public virtual void UpdateStartScale() { StartScale = RectTransform.localScale; }
+		/// <summary> Resets the RectTransform.anchoredPosition3D to the StartPosition value </summary>
+		public virtual void ResetPosition()
+		{
+			RectTransform.anchoredPosition3D = StartPosition;
+		}
 
-        /// <summary> Updates the StartAlpha to the CanvasGroup.alpha value (if a CanvasGroup is attached) </summary>
-        public virtual void UpdateStartAlpha() { StartAlpha = RectTransform.GetComponent<CanvasGroup>() == null ? 1 : RectTransform.GetComponent<CanvasGroup>().alpha; }
+		/// <summary> Resets the RectTransform.localEulerAngles to the StartRotation value </summary>
+		public virtual void ResetRotation()
+		{
+			RectTransform.localEulerAngles = StartRotation;
+		}
 
-        #endregion
+		/// <summary> Resets the RectTransform.localScale to the StartScale value </summary>
+		public virtual void ResetScale()
+		{
+			RectTransform.localScale = new Vector3(StartScale.x, StartScale.y, 1f);
+		}
 
-        #region Protected Methods
+		/// <summary> Resets the CanvasGroup.alpha to the StartAlpha value (if a CanvasGroup is attached) </summary>
+		public virtual void ResetAlpha()
+		{
+			if (RectTransform.GetComponent<CanvasGroup>() != null) RectTransform.GetComponent<CanvasGroup>().alpha = StartAlpha;
+		}
 
-        /// <summary> Removes any null references from the Database </summary>
-        protected static void RemoveAnyNullReferencesFromTheDatabase()
-        {
-            for (int i = Database.Count; i >= 0; i--)
-                if (Database[i] == null)
-                    Database.RemoveAt(i);
-        }
+		/// <summary> Updates the StartPosition, StartRotation, StartScale and StartAlpha for this RectTransform to the current values </summary>
+		public virtual void UpdateStartValues()
+		{
+			UpdateStartPosition();
+			UpdateStartRotation();
+			UpdateStartScale();
+			UpdateStartAlpha();
+		}
 
-        #endregion
+		/// <summary> Updates the StartPosition to the RectTransform.anchoredPosition3D value </summary>
+		public virtual void UpdateStartPosition()
+		{
+			StartPosition = RectTransform.anchoredPosition3D;
+		}
 
-        #region Static Methods
+		/// <summary> Updates the StartRotation to the RectTransform.localEulerAngles value </summary>
+		public virtual void UpdateStartRotation()
+		{
+			StartRotation = RectTransform.localEulerAngles;
+		}
 
-        /// <summary> Enables the UI interactions </summary>
-        public static void EnableUIInteractions()
-        {
-            s_uiInteractionsDisableLevel--; //if == 0 --> false (UI interactions are NOT disabled) if > 0 --> true (UI interactions are disabled)
-            if (s_uiInteractionsDisableLevel < 0) s_uiInteractionsDisableLevel = 0;
-        }
+		/// <summary> Updates the StartScale to the RectTransform.localScale value </summary>
+		public virtual void UpdateStartScale()
+		{
+			Vector3 localScale = RectTransform.localScale;
+			StartScale = new Vector3(localScale.x, localScale.y, 1f);
+		}
 
-        /// <summary> Enables the UI interactions by resetting the additive bool to zero. s_uiInteractionsDisableLevel = 0.
-        /// Use this ONLY for special cases when something wrong happens and the UI interactions are stuck in disabled mode </summary>
-        public static void EnableUIInteractionsByForce() { s_uiInteractionsDisableLevel = 0; }
+		/// <summary> Updates the StartAlpha to the CanvasGroup.alpha value (if a CanvasGroup is attached) </summary>
+		public virtual void UpdateStartAlpha()
+		{
+			StartAlpha = RectTransform.GetComponent<CanvasGroup>() == null ? 1 : RectTransform.GetComponent<CanvasGroup>().alpha;
+		}
 
-        /// <summary> Disables the UI interactions </summary>
-        public static void DisableUIInteractions()
-        {
-            s_uiInteractionsDisableLevel++; //if == 0 --> false (UI interactions are NOT disabled) if > 0 --> true (UI interactions are disabled)
-        }
+		#endregion
 
-        #endregion
-    }
+		#region Protected Methods
+
+		/// <summary> Removes any null references from the Database </summary>
+		protected static void RemoveAnyNullReferencesFromTheDatabase()
+		{
+			for (int i = Database.Count; i >= 0; i--)
+				if (Database[i] == null)
+					Database.RemoveAt(i);
+		}
+
+		#endregion
+
+		#region Static Methods
+
+		/// <summary> Enables the UI interactions </summary>
+		public static void EnableUIInteractions()
+		{
+			s_uiInteractionsDisableLevel--; //if == 0 --> false (UI interactions are NOT disabled) if > 0 --> true (UI interactions are disabled)
+			if (s_uiInteractionsDisableLevel < 0) s_uiInteractionsDisableLevel = 0;
+		}
+
+		/// <summary> Enables the UI interactions by resetting the additive bool to zero. s_uiInteractionsDisableLevel = 0.
+		/// Use this ONLY for special cases when something wrong happens and the UI interactions are stuck in disabled mode </summary>
+		public static void EnableUIInteractionsByForce()
+		{
+			s_uiInteractionsDisableLevel = 0;
+		}
+
+		/// <summary> Disables the UI interactions </summary>
+		public static void DisableUIInteractions()
+		{
+			s_uiInteractionsDisableLevel++; //if == 0 --> false (UI interactions are NOT disabled) if > 0 --> true (UI interactions are disabled)
+		}
+
+		#endregion
+	}
 }

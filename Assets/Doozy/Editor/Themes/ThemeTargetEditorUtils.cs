@@ -16,6 +16,21 @@ namespace Doozy.Editor.Themes
 {
     public static class ThemeTargetEditorUtils
     {
+        /// <summary> An enumeration of selected states of objects </summary>
+        public enum SelectionState
+        {
+            /// <summary> The UI object can be selected </summary>
+            Normal,
+            /// <summary> The UI object is highlighted </summary>
+            Highlighted,
+            /// <summary> The UI object is pressed </summary>
+            Pressed,
+            /// <summary> The UI object is selected </summary>
+            Selected,
+            /// <summary> The UI object cannot be selected </summary>
+            Disabled,
+        }
+        
         private static UILanguagePack UILabels { get { return UILanguagePack.Instance; } }
 
         public static void DrawOverrideAlpha(SerializedProperty overrideAlphaProperty, SerializedProperty alphaProperty, float currentAlpha,
@@ -192,7 +207,7 @@ namespace Doozy.Editor.Themes
                 GUILayout.Space(DGUI.Properties.Space());
             }
         }
-
+        
         public static void DrawSpriteProperties(ThemeData themeData, int propertyIndex,
                                                 SerializedObject serializedObject, Object[] targets, ThemeTarget target,
                                                 ColorName componentColorName, Color initialGUIColor)

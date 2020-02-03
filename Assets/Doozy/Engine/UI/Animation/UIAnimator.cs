@@ -921,13 +921,17 @@ namespace Doozy.Engine.UI.Animation
         /// <param name="startValue"> Start scale </param>
         public static Vector3 GetAnimationScaleFrom(UIAnimation animation, Vector3 startValue)
         {
+            Vector3 value;
+            
             // ReSharper disable once SwitchStatementMissingSomeCases
             switch (animation.AnimationType)
             {
-                case AnimationType.Show: return animation.Scale.From;
-                case AnimationType.Hide: return animation.Scale.UseCustomFromAndTo ? animation.Scale.From : startValue;
-                default:                 return DEFAULT_START_SCALE;
+                case AnimationType.Show: value = animation.Scale.From; break;
+                case AnimationType.Hide: value = animation.Scale.UseCustomFromAndTo ? animation.Scale.From : startValue; break;
+                default:                 value = DEFAULT_START_SCALE; break;
             }
+
+            return new Vector3(value.x, value.y, 1f);;
         }
 
         /// <summary> Returns a ScaleTo value depending on the given animation settings and the animation start scale </summary>
@@ -935,13 +939,17 @@ namespace Doozy.Engine.UI.Animation
         /// <param name="startValue"> Start scale </param>
         public static Vector3 GetAnimationScaleTo(UIAnimation animation, Vector3 startValue)
         {
+            Vector3 value;
+            
             // ReSharper disable once SwitchStatementMissingSomeCases
             switch (animation.AnimationType)
             {
-                case AnimationType.Show: return animation.Scale.UseCustomFromAndTo ? animation.Scale.To : startValue;
-                case AnimationType.Hide: return animation.Scale.To;
-                default:                 return DEFAULT_START_SCALE;
+                case AnimationType.Show:  value = animation.Scale.UseCustomFromAndTo ? animation.Scale.To : startValue;  break;
+                case AnimationType.Hide:  value = animation.Scale.To; break;
+                default:                  value = DEFAULT_START_SCALE; break;
             }
+            
+            return new Vector3(value.x, value.y, 1f);;
         }
 
         /// <summary> Returns a FadeFrom value depending on the given animation settings and the animation start alpha </summary>
