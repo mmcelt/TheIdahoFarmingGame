@@ -291,8 +291,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 		print(PhotonNetwork.LocalPlayer.NickName + " has joined room: " + PhotonNetwork.CurrentRoom.Name);
 		ActivatePanel(farmerSelectionPanel.name);
 
-		if (PhotonNetwork.LocalPlayer.IsMasterClient)
-			startGameButton.SetActive(true);
+		if (PhotonNetwork.LocalPlayer.IsMasterClient)	//TODO: testing
+			startGameButton.SetActive(false);
 		else
 			startGameButton.SetActive(false);
 
@@ -361,7 +361,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 		UpdateRoomInfoText();
 
-		if (PhotonNetwork.PlayerList.Length == numberOfPlayers)
+		if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
 			startGameButton.SetActive(CheckPlayersReady());
 	}
 
@@ -540,7 +540,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 			}
 		}
 
-		return true;
+		if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+			return true;
+		else
+			return false;
+
+		//return true;
 	}
 	#endregion
 }
