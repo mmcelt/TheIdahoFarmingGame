@@ -689,6 +689,9 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._completeModalPanel.SetActive(false);
 		_uiManager._optionsWarningPanelModalPanel.SetActive(false);
 		_uiManager._eogModalPanel.SetActive(false);
+
+		if (_uiManager._tetonDamPanel.activeSelf)
+			_uiManager._completeModalPanel.SetActive(true);
 	}
 	[PunRPC]
 	void UpdateActivePlayerText(PhotonMessageInfo info)
