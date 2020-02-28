@@ -84,6 +84,9 @@ public class UncleChester : MonoBehaviour
 
 	void PopulateTheDropdown()
 	{
+		_downpayments.Clear();
+		downpaymentDropdown.ClearOptions();
+
 		string header = "SELECT YOUR DOWNPAYMENT...";
 
 		_downpayments.Add(header);

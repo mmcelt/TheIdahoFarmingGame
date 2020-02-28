@@ -668,6 +668,7 @@ public class PlayerManager : MonoBehaviourPun
 			{
 				_uiManager._rollButton.interactable = true;
 				_isMyTurn = true;
+				CloseAllModalPanels();
 				AudioManager.Instance.PlaySound(AudioManager.Instance._yourTurn);
 				photonView.RPC("UpdateActivePlayerText", RpcTarget.All);
 			}
@@ -681,6 +682,14 @@ public class PlayerManager : MonoBehaviourPun
 		}
 	}
 
+	void CloseAllModalPanels()
+	{
+		_uiManager._forcedLoanModalPanel.SetActive(false);
+		_uiManager._modalPanel.SetActive(false);
+		_uiManager._completeModalPanel.SetActive(false);
+		_uiManager._optionsWarningPanelModalPanel.SetActive(false);
+		_uiManager._eogModalPanel.SetActive(false);
+	}
 	[PunRPC]
 	void UpdateActivePlayerText(PhotonMessageInfo info)
 	{
