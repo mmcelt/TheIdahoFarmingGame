@@ -13,6 +13,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	[SerializeField] GameObject loginPanel;
 	[SerializeField] TMP_InputField playerNameInput;
 	[SerializeField] Button loginButton;
+	[SerializeField] Button quitButton;
 
 	[Header("Connecting Info Panel")]
 	[SerializeField] GameObject connectingInfoPanel;
@@ -123,8 +124,17 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 		//}
 	}
 
+	public void OnQuitButtonClicked()
+	{
+#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+#endif
+		Application.Quit();
+	}
+
 	public void OnCancelButtonClicked()
 	{
+		PhotonNetwork.Disconnect();
 		ActivatePanel(loginPanel.name);
 	}
 
