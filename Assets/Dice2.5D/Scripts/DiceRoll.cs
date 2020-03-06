@@ -14,8 +14,10 @@ namespace TmDice25D
             Stop,
         };
         [SerializeField] int m_pip=-1;
-        [SerializeField] Text buttonTxt;
+        [SerializeField] Text buttonTxt=null;
         [SerializeField] Vector2 rollVec = Vector2.one * 200f;
+        [SerializeField] int m_eyeMin = 1;
+        [SerializeField] int m_eyeMax = 6;
         public int pip { get { return m_pip; } }
         RollStarte state;
         Animator anm;
@@ -61,6 +63,7 @@ namespace TmDice25D
                 transform.position = defPos;
                 state = RollStarte.Stop;
                 m_pip = -1;
+                Roll();
                 while (!toRoll)
                 {
                     yield return null;
@@ -77,7 +80,7 @@ namespace TmDice25D
                     yield return null;
                 }
 
-                SetPip(Random.Range(0, 6) + 1);
+                SetPip(Random.Range(m_eyeMin, m_eyeMax+1));
 
                 buttonTxt.text = pip.ToString();
                 toRoll = false;
@@ -108,7 +111,7 @@ namespace TmDice25D
         /// <param name="_pip">pip of dice</param>
         public void SetPip(int _pip)
         {
-            m_pip = Mathf.Clamp(_pip,1,7);
+            m_pip = _pip;
             anm.Play("to" + m_pip.ToString());
         }
     }
