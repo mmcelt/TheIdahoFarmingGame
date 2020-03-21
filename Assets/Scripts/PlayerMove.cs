@@ -80,6 +80,7 @@ public class PlayerMove : MonoBehaviourPun
 	float _moveSpeed;
 	int _cowCounter;
 	int _spudCounter;
+	bool _isDirectedMove;
 
 	MyDiceRoll _diceRoll;
 	UIManager _uiManager;
@@ -132,6 +133,8 @@ public class PlayerMove : MonoBehaviourPun
 	public void DirectedForwardMove(int space)
 	{
 		if (GameManager.Instance._gameOver) return;
+
+		_isDirectedMove = true;
 
 		_uiManager._endTurnButton.interactable = false;
 		_moveSpeed = _directedMoveSpeed;
@@ -218,6 +221,11 @@ public class PlayerMove : MonoBehaviourPun
 
 	IEnumerator MoveRoutine(int die)
 	{
+		if (_uiManager._hasRolledForMovement && !_isDirectedMove && !_uiManager._tetonDamRoll) yield break;
+
+		_isDirectedMove = false;
+		_uiManager._hasRolledForMovement = true;
+
 		int startSpace = _currentSpace;
 		int endSpace = startSpace + die;
 

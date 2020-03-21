@@ -78,15 +78,19 @@ public class MyDiceRoll : MonoBehaviour
 	void OnCollisionEnter2D(Collision2D collision)
 	{
 		//Debug.Log(rb.velocity.sqrMagnitude);
+		if(ac != null)
+			ac.Play();
 
-		ac.Play();
-		if (rb.velocity.sqrMagnitude < stopRollAmount)	//10
+		if(rb != null)
 		{
-			state = RollStarte.Stop;
-		}
-		if (rb.velocity.sqrMagnitude < startMoveAmount)	//0.25f/4.5f
-		{
-			StartCoroutine(StartMove());
+			if (rb.velocity.sqrMagnitude < stopRollAmount)  //10
+			{
+				state = RollStarte.Stop;
+			}
+			if (rb.velocity.sqrMagnitude < startMoveAmount) //0.25f/4.5f
+			{
+				StartCoroutine(StartMove());
+			}
 		}
 	}
 
@@ -104,6 +108,8 @@ public class MyDiceRoll : MonoBehaviour
 
 	IEnumerator diceRollCo()
 	{
+		tetonDamRollComplete = false;
+
 		while (true)
 		{
 			if(!isOtherRoll)

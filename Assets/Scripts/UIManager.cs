@@ -163,6 +163,8 @@ public class UIManager : MonoBehaviourPun
 	[HideInInspector] public OTBCard _selectedCard;
 	public bool _warningGiven;
 	public bool _okToProceed;
+	public bool _hasRolledForMovement;
+	public bool _tetonDamRoll;
 
 	#endregion
 
@@ -326,6 +328,7 @@ public class UIManager : MonoBehaviourPun
 
 		//_actionsPanel.SetActive(false);
 		_pManager.EndTurn();
+		_hasRolledForMovement = false;
 	}
 
 	public void OnActionsButtonClicked()

@@ -424,6 +424,8 @@ public class PlayerManager : MonoBehaviourPun
 	//called by DeckManager
 	public void TetonDam()
 	{
+		_uiManager._tetonDamRoll = false;
+
 		UpdateMyCash(500 * _pHay);
 		//FIRE THE TETON_DAM_EVENT...
 		object[] sndData = new object[] { photonView.Owner.ActorNumber };
@@ -457,12 +459,13 @@ public class PlayerManager : MonoBehaviourPun
 				_uiManager._boardSpaceModalPanel.SetActive(false);
 			}
 
+			_uiManager._tetonOkButton.gameObject.SetActive(false);
 			_uiManager._tetonDamPanel.SetActive(true);
 			_uiManager._completeModalPanel.SetActive(true);
 			_uiManager._tetonRollButton.gameObject.SetActive(true);
 			_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
 			_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
-
+			_uiManager._tetonDamRoll = true;
 			//loopCounter = 0;
 		}
 	}
@@ -530,6 +533,7 @@ public class PlayerManager : MonoBehaviourPun
 		yield return new WaitWhile(() => _uiManager._tetonDamPanel.activeSelf);
 
 		_uiManager._completeModalPanel.SetActive(false);
+		_uiManager._tetonDamRoll = false;
 		//while (_uiManager._tetonDamPanel.activeSelf)
 		//	yield return null;
 
