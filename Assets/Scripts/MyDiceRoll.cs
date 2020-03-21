@@ -28,8 +28,8 @@ public class MyDiceRoll : MonoBehaviour
 
 	public bool isOtherRoll;
 	public bool isHarvestRoll;
-	public bool isTetonDamRoll;
-	public bool tetonDamRollComplete;
+	public bool isTetonDamRoll;			//used as a roll type designator
+	public bool tetonDamRollComplete;	//used to coroutine wait point
 
 	RollStarte state;
 	Animator anm;

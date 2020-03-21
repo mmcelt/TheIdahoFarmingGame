@@ -117,12 +117,13 @@ public class PlayerManager : MonoBehaviourPun
 	{
 		_uiManager = GameManager.Instance.uiManager;
 		_pMove = GetComponent<PlayerMove>();
+		_diceRoll = GameManager.Instance.myDiceRoll;
 
 		_uiManager._tetonRollButton.onClick.AddListener(OnTetonDamRollButtonClicked);
 		_uiManager._tetonOkButton.onClick.AddListener(OnTetonOkButtonClicked);
 		_customHireOkButton = _uiManager._customHarvesterOkButton;
 		_customHireOkButton.onClick.AddListener(OnCustomHarvesterOkButtonClicked);
-
+		
 		UpdateMyCash(5000);
 		UpdateMyNotes(5000);
 		//UpdateMyOtbCount(0);
@@ -421,10 +422,13 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Draw_Ff_Event_Code, data, eventOptions, sendOptions);
 	}
 
-	//called by DeckManager
+	//called by DeckManager for the drawing player
 	public void TetonDam()
 	{
+		//reset all Teton Dam variables to false
 		_uiManager._tetonDamRoll = false;
+		_diceRoll.tetonDamRollComplete = false;
+		_diceRoll.isTetonDamRoll = false;
 
 		UpdateMyCash(500 * _pHay);
 		//FIRE THE TETON_DAM_EVENT...
@@ -459,6 +463,11 @@ public class PlayerManager : MonoBehaviourPun
 				_uiManager._boardSpaceModalPanel.SetActive(false);
 			}
 
+			//reset all Teton Dam variables to false
+			_uiManager._tetonDamRoll = false;
+			_diceRoll.tetonDamRollComplete = false;
+			_diceRoll.isTetonDamRoll = false;
+
 			_uiManager._tetonOkButton.gameObject.SetActive(false);
 			_uiManager._tetonDamPanel.SetActive(true);
 			_uiManager._completeModalPanel.SetActive(true);
@@ -466,7 +475,6 @@ public class PlayerManager : MonoBehaviourPun
 			_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
 			_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
 			_uiManager._tetonDamRoll = true;
-			//loopCounter = 0;
 		}
 	}
 
@@ -481,20 +489,12 @@ public class PlayerManager : MonoBehaviourPun
 		_diceRoll.isOtherRoll = true;
 		_diceRoll.isTetonDamRoll = true;
 
-		//Debug.Log("TETON DAM ROLL BUTTON CLICKED LC: " + loopCounter);
-
-		//if (loopCounter == 0)
 		StartCoroutine(AsFateWillHaveIt());
 	}
 
 	IEnumerator AsFateWillHaveIt()
 	{
 		_uiManager._tetonRollButton.gameObject.SetActive(false);
-		//if(loopCounter == 0)
-		//{
-		//Debug.Log("LOOP COUNTER IN AFWHI: " + loopCounter);
-
-		//_uiManager._tetonHeaderText.text = "";
 		_uiManager._tetonMessageText.text = "";
 
 		_diceRoll.OnRollButton();
@@ -503,9 +503,6 @@ public class PlayerManager : MonoBehaviourPun
 
 		int roll = _diceRoll.Pip;
 
-		//Debug.Log("DICE ROLL: " + roll);
-
-		//roll = 4;   //TESTING
 		yield return new WaitForSeconds(0.5f);
 
 		int penalty = 0;
@@ -515,16 +512,13 @@ public class PlayerManager : MonoBehaviourPun
 		{
 			penalty = -(100 * (_pFruit + _pGrain + _pHay + _pSpuds));
 			//even Hit
-			//_uiManager._tetonDamImage.enabled = true;
 			_uiManager._tetonMessageText.text = "You Were Hit!! " + roll;
-			//Debug.Log("HIT: " + -(100 * (_pFruit + _pGrain + _pHay + _pSpuds)));
 			//play bad sound
 			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 		}
 		else
 		{
 			//odd escaped
-			//_uiManager._tetonDamImage.enabled = true;
 			_uiManager._tetonMessageText.text = "You Escaped!! " + roll;
 			//play good sound
 			AudioManager.Instance.PlaySound(AudioManager.Instance._good);
@@ -534,20 +528,12 @@ public class PlayerManager : MonoBehaviourPun
 
 		_uiManager._completeModalPanel.SetActive(false);
 		_uiManager._tetonDamRoll = false;
-		//while (_uiManager._tetonDamPanel.activeSelf)
-		//	yield return null;
-
-		//Debug.Log("PENALTY B4 IF: " + penalty);
-
-		//loopCounter++;
 
 		if (penalty < 0)
 		{
 			UpdateMyCash(penalty);
-			//Debug.Log("PENALTY: " + penalty);
 			penalty = 0;
 		}
-		//}
 	}
 
 	public void OnTetonOkButtonClicked()
@@ -558,14 +544,10 @@ public class PlayerManager : MonoBehaviourPun
 		_uiManager._tetonDamPanel.SetActive(false);
 		_uiManager._completeModalPanel.SetActive(false);
 		_uiManager._tetonHeaderText.text = IFG.TetonDamHeaderText;
-		//_uiManager._tetonHeaderText.enabled = true;
 		_uiManager._tetonMessageText.text = IFG.TetonDamMessageText;
-		//_uiManager._tetonMessageText.enabled = true;
 		_diceRoll.isOtherRoll = false;
 		_diceRoll.isTetonDamRoll = false;
 		_diceRoll.tetonDamRollComplete = false;
-		//loopCounter = 0;
-		//Debug.Log("LOOP COUNTER AFTER RESET: " + loopCounter);
 	}
 
 	public void CustomHireHarvester()   //called from DeckManager

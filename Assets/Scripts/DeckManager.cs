@@ -835,8 +835,8 @@ public class DeckManager : MonoBehaviourPun
 		//desc = "GARNISHED!";       //TESTING
 		//cardNum = 13;					//TESTING
 		//desc = "CUSTOM HARVESTER";	//TESTING
-		cardNum = 10;              //TESTING
-		desc = "TETON DAM!";       //TESTING
+		//cardNum = 10;              //TESTING
+		//desc = "TETON DAM!";       //TESTING
 											//cardNum = 15;					//TESTING
 											//desc = "UNCLE CHEESTER";		//TESTING
 											//cardNum = 1;                //TESTING
