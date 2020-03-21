@@ -6,6 +6,7 @@ using System.Linq;
 using Photon.Pun;
 using ExitGames.Client.Photon;
 using Photon.Realtime;
+using DG.Tweening;
 
 public class WinnerList : MonoBehaviour
 {
@@ -207,6 +208,9 @@ public class WinnerList : MonoBehaviour
 	public void OnCloseWPButtonClicked()
 	{
 		_winnersPanel.SetActive(false);
+		_uiManager._optionsPanel.SetActive(true);
+		_uiManager._optionsPanel.GetComponent<DOTweenAnimation>().DOPlayForward();
+
 	}
 
 	public void OnCloseRUPButtonClicked()

@@ -55,7 +55,7 @@ public class UIManager : MonoBehaviourPun
 	public InputField _repayLoanInput;
 
 	[Header("Options Panel")]
-	[SerializeField] GameObject _optionsPanel;
+	public GameObject _optionsPanel;
 	[SerializeField] GameObject _resetWinnersListButton;
 	[SerializeField] GameObject _makeTheMasterListButton;
 	[SerializeField] Text _secondChanceWarningText;
