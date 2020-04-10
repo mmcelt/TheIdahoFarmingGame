@@ -879,7 +879,10 @@ public class PlayerManager : MonoBehaviourPun
 		if (eventData.Code == (byte)RaiseEventCodes.Custom_Hire_Harvester_Code)
 		{
 			if (_uiManager._ffPanel.activeSelf)
+			{
 				_uiManager._ffPanel.SetActive(false);
+				_uiManager._boardSpaceModalPanel.SetActive(false);
+			}
 
 			_uiManager._customHarvesterPanel.SetActive(true);
 			//play animation
