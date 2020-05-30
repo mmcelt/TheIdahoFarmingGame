@@ -136,6 +136,10 @@ public class UIManager : MonoBehaviourPun
 	public Text _shuffleMessageText;
 	public Text _gameOverMessageText;
 
+	[Header("Info Panel")]
+	public GameObject _infoPanel;
+	public TextMeshProUGUI _infoText;
+
 	[Header("Modal Panels")]
 	public GameObject _modalPanel;
 	public GameObject _completeModalPanel;
@@ -1641,6 +1645,7 @@ public class UIManager : MonoBehaviourPun
 								_otbOkButton.gameObject.SetActive(true);
 								//return false;
 							}
+							_stopBuying = true;
 							return false;
 						}
 					}
@@ -1649,6 +1654,7 @@ public class UIManager : MonoBehaviourPun
 						_isWarningMsg = true;
 						_otbMessageText.text = "You can't buy that because you don't have enough cash on hand!";
 						_otbOkButton.gameObject.SetActive(true);
+						_stopBuying = true;
 						return false;
 					}
 				}
@@ -1657,6 +1663,7 @@ public class UIManager : MonoBehaviourPun
 					_isWarningMsg = true;
 					_otbMessageText.text = "You can't buy that because you're past Spring Planting!";
 					_otbOkButton.gameObject.SetActive(true);
+					_stopBuying = true;
 					return false;
 				}
 			}
@@ -1665,12 +1672,14 @@ public class UIManager : MonoBehaviourPun
 				_isWarningMsg = true;
 				_otbMessageText.text = "You can't buy that because it's not your turn!";
 				_otbOkButton.gameObject.SetActive(true);
+				_stopBuying = true;
 				return false;
 			}
 
 		}
 		else
 		{
+			_stopBuying = true;
 			return false;
 		}
 		//if (() && () && ( && (_pManager._isMyTurn)))

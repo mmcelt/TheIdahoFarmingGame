@@ -206,6 +206,7 @@ public class HarvestManager : MonoBehaviour
 
 		//show the Harvest UI
 		_uiManager._harvestPanel.SetActive(true);
+		_uiManager._forcedLoanModalPanel.SetActive(true);
 		//play the show animation
 		_uiManager._harvestPanel.GetComponent<DOTweenAnimation>().DOPlayForward();	//scale up
 
@@ -276,6 +277,7 @@ public class HarvestManager : MonoBehaviour
 
 		yield return new WaitWhile(() => _uiManager._harvestPanel.activeSelf);
 
+		_uiManager._forcedLoanModalPanel.SetActive(false);
 		_pManager.UpdateMyCash(_netCheck);
 
 		if (_netCheck < 0)
@@ -738,6 +740,7 @@ public class HarvestManager : MonoBehaviour
 		//show the OE card panel
 		_uiManager._oeCardText.text = drawnCard.description;
 		_uiManager._oePanel.SetActive(true);
+		_uiManager._forcedLoanModalPanel.SetActive(true);
 
 		//play the open animation
 		_uiManager._oePanel.GetComponent<DOTweenAnimation>().DOPlayForward();   //scale up
@@ -756,6 +759,7 @@ public class HarvestManager : MonoBehaviour
 		//play the close animation
 		_uiManager._oePanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();   //scale down
 		_uiManager._oePanel.transform.DOLocalMove(new Vector3(638, -219), 0.3f);   //move to side
+		_uiManager._forcedLoanModalPanel.SetActive(false);
 
 		//yield return new WaitForSeconds(0.3f);
 

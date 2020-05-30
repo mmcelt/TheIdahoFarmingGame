@@ -553,6 +553,7 @@ public class PlayerManager : MonoBehaviourPun
 	public void CustomHireHarvester()   //called from DeckManager
 	{
 		int hitPlayers = 0;
+		List<string> hitPlayerNames = new List<string>();
 
 		foreach (Player player in PhotonNetwork.PlayerList)
 		{
@@ -565,6 +566,8 @@ public class PlayerManager : MonoBehaviourPun
 				if (!(bool)harvester)
 				{
 					hitPlayers++;
+					hitPlayerNames.Add(player.NickName);
+
 					//fire a custom hire event to this player
 					//event data
 					object[] data = new object[] { };
@@ -582,6 +585,12 @@ public class PlayerManager : MonoBehaviourPun
 			}
 		}
 		//TODO: message for how many hit players
+		_uiManager._infoText.text = "The Following Players Were Hit: ";
+		foreach(string player in hitPlayerNames)
+		{
+			_uiManager._infoText.text += "\n" + player;
+		}
+		_uiManager._infoPanel.SetActive(true);
 		//get my money...
 		UpdateMyCash(2000 * hitPlayers);
 	}
@@ -741,12 +750,12 @@ public class PlayerManager : MonoBehaviourPun
 			drawnCard.bottomCard = false;
 
 			//TESTING
-			Debug.Log("DRAWN OTB CARD DATA:");
-			Debug.Log("OTB card count:" + _myOtbs.Count);
-			Debug.Log("Card Number: " + drawnCard.cardNumber);
-			Debug.Log("Description: " + drawnCard.description);
-			Debug.Log("Summary: " + drawnCard.summary);
-			Debug.Log("Total Cost: " + drawnCard.totalCost);
+			//Debug.Log("DRAWN OTB CARD DATA:");
+			//Debug.Log("OTB card count:" + _myOtbs.Count);
+			//Debug.Log("Card Number: " + drawnCard.cardNumber);
+			//Debug.Log("Description: " + drawnCard.description);
+			//Debug.Log("Summary: " + drawnCard.summary);
+			//Debug.Log("Total Cost: " + drawnCard.totalCost);
 
 			StartCoroutine(ShowOtbCardRoutine(drawnCard));
 		}
