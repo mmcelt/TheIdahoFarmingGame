@@ -166,7 +166,6 @@ public class DeckManager : MonoBehaviourPun
 				break;
 
 			case 10: //teton dam
-			case 27:
 				_pManager.TetonDam();
 				break;
 
@@ -630,6 +629,11 @@ public class DeckManager : MonoBehaviourPun
 		//sum = "Harvester - 20000";
 		//cost = 10000;
 
+		//cardNum = 39;  //RANGE TESTING
+		//desc = "OXFORD";
+		//sum = "Oxford - 20000";
+		//cost = 20000;
+
 		//declare an OTBCard object
 		OTBCard newOTBCard = new OTBCard();
 
@@ -826,8 +830,6 @@ public class DeckManager : MonoBehaviourPun
 			"Your Spuds are showing signs of Blight. Should have sprayed earlier.\nPAY $500 per Spud acre.");
 		CreateAnFFCard(26,
 			"Your Spuds are in great demand!\nDOUBLE your Spud Harvest the next two years.");
-		CreateAnFFCard(27,
-			"HIDEOUS DISASTER - THE TETON DAM BREAKS! You are luckily out the Flood Zone. Your flood-free Hay jumps in price.  COLLECT $500 per Hay acre.\nOther players must roll to see if they escaped. Odd - escaped; Even - hit. Flood hit players PAY $100 per acre (all acres) to clean up the mess.");
 
 		ShuffleFfDeck(_ffCards);
 	}

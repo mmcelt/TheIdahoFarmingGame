@@ -1098,7 +1098,7 @@ public class UIManager : MonoBehaviourPun
 		if (_selectedCard.cardNumber >= 29 && _selectedCard.cardNumber <= 40)
 		{
 			yield return new WaitUntil(() => !CheckIfRangeIsAlreadyOwned());
-			//Debug.Log("Past CIRIAO");
+			Debug.Log("Past CIRIAO");
 		}
 		if (_selectedCard.cardNumber >= 6 && _selectedCard.cardNumber <= 11)
 		{
@@ -1703,13 +1703,13 @@ public class UIManager : MonoBehaviourPun
 					{
 						if ((bool)owned)
 						{
+							//_buyOptionButton.interactable = false;
 							_otbMessageText.text = "Lemhi Range is already owned!";
 							_isWarningMsg = true;
 							_otbOkButton.gameObject.SetActive(true);
 							_stopBuying = true;
+							return (bool)owned;
 						}
-
-						return (bool)owned;
 					}
 				}
 				break;
@@ -1723,13 +1723,13 @@ public class UIManager : MonoBehaviourPun
 					{
 						if ((bool)owned)
 						{
+							//_buyOptionButton.interactable = false;
 							_otbMessageText.text = "Lost River Range is already owned!";
 							_isWarningMsg = true;
 							_otbOkButton.gameObject.SetActive(true);
 							_stopBuying = true;
+							return (bool)owned;
 						}
-
-						return (bool)owned;
 					}
 				}
 				break;
@@ -1743,13 +1743,13 @@ public class UIManager : MonoBehaviourPun
 					{
 						if ((bool)owned)
 						{
+							//_buyOptionButton.interactable = false;
 							_otbMessageText.text = "Targhee Range is already owned!";
 							_isWarningMsg = true;
 							_otbOkButton.gameObject.SetActive(true);
 							_stopBuying = true;
+							return (bool)owned;
 						}
-
-						return (bool)owned;
 					}
 				}
 				break;
@@ -1763,18 +1763,18 @@ public class UIManager : MonoBehaviourPun
 					{
 						if ((bool)owned)
 						{
+							//_buyOptionButton.interactable = false;
 							_otbMessageText.text = "Oxford Range is already owned!";
 							_isWarningMsg = true;
 							_otbOkButton.gameObject.SetActive(true);
 							_stopBuying = true;
+							return (bool)owned;
 						}
-
-						return (bool)owned;
 					}
 				}
 				break;
 		}
-		return true;
+		return false;
 	}
 
 	bool CheckIfMaxFarmCowsReached()
@@ -1789,12 +1789,12 @@ public class UIManager : MonoBehaviourPun
 			maxReached = true;
 		}
 
-		if (!_pManager._pHarvester)
-			maxReached = false;
-		else
-		{
+		//if (!_pManager._pHarvester)
+		//	maxReached = false;
+		//else
+		//{
 
-		}
+		//}
 		return maxReached;
 	}
 

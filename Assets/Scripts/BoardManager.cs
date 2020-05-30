@@ -1091,12 +1091,24 @@ public class BoardManager : MonoBehaviour
 		CyclePlayersAndStickers(false);
 		_gameboardRenderer.enabled = false;
 		GameObject fireworks = Instantiate(_fireworksPrefabs[randomPlay]);
-		yield return new WaitForSeconds(5.5f);
+		ParticleSystem[] particles = FindObjectsOfType<ParticleSystem>();
+
+		yield return new WaitUntil(() => CheckForActiveParticles(particles));
+
 		CyclePlayersAndStickers(true);
 		_gameboardRenderer.enabled = true;
 		Destroy(fireworks);
 	}
 
+	bool CheckForActiveParticles(ParticleSystem[] particles)
+	{
+		foreach (ParticleSystem firework in particles)
+		{
+			if (firework.isPlaying) return false;
+		}
+
+		return true;
+	}
 	void CyclePlayersAndStickers(bool status)
 	{
 		//players
