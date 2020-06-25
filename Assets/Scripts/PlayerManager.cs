@@ -62,6 +62,9 @@ public class PlayerManager : MonoBehaviourPun
 
 	public List<OTBCard> _myOtbs = new List<OTBCard>();
 	public int _myOtbCount;
+	public List<int> _tetonDamVictims = new List<int>();
+
+	int _tetonDamCaller;
 
 	#endregion
 
@@ -515,6 +518,8 @@ public class PlayerManager : MonoBehaviourPun
 			_uiManager._tetonMessageText.text = "You Were Hit!! " + roll;
 			//play bad sound
 			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
+			//send hit event to caller...
+
 		}
 		else
 		{
