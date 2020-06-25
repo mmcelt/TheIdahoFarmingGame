@@ -913,13 +913,13 @@ public class DeckManager : MonoBehaviourPun
 
 			FFCard drawnCard = _ffCards[0];
 			_ffCards.RemoveAt(0);
-
-			if (drawnCard.bottomCard)
-				ShuffleFfDeck(_ffCards);
+			////TODO: MOVE THIS TO AFTER CARD IS REPLACED
+			//if (drawnCard.bottomCard)
+			//	ShuffleFfDeck(_ffCards);
 
 			//Raise the return event to the sender...
-			//event data: cardNumber/description
-			object[] sndData = new object[] { drawnCard.cardNumber, drawnCard.description };
+			//event data: cardNumber/description/bottomCard
+			object[] sndData = new object[] { drawnCard.cardNumber, drawnCard.description, drawnCard.bottomCard };
 			//send options
 			RaiseEventOptions eventOptions = new RaiseEventOptions
 			{
@@ -972,9 +972,12 @@ public class DeckManager : MonoBehaviourPun
 			FFCard disCard = new FFCard();
 			disCard.cardNumber = (int)recData[0];
 			disCard.description = (string)recData[1];
-			disCard.bottomCard = false;
+			disCard.bottomCard = (bool)recData[2];
 
 			_ffCards.Add(disCard);
+
+			if (disCard.bottomCard)
+				ShuffleFfDeck(_ffCards);
 
 			UpdateFfDeckInfo();
 		}
@@ -1107,13 +1110,13 @@ public class DeckManager : MonoBehaviourPun
 
 			OECard drawnCard = _oeCards[0];
 			_oeCards.RemoveAt(0);
-
-			if (drawnCard.bottomCard)
-				ShuffleOeDeck(_oeCards);
+			////TODO: MOVE TO AFTER REPLACING CARD
+			//if (drawnCard.bottomCard)
+			//	ShuffleOeDeck(_oeCards);
 
 			//Raise the return event to the sender...
-			//event data
-			object[] sndData = new object[] { drawnCard.cardNumber, drawnCard.description };
+			//event data: cardNum/desc/bottomCard
+			object[] sndData = new object[] { drawnCard.cardNumber, drawnCard.description, drawnCard.bottomCard };
 			//send options
 			RaiseEventOptions eventOptions = new RaiseEventOptions
 			{
@@ -1166,9 +1169,12 @@ public class DeckManager : MonoBehaviourPun
 			OECard disCard = new OECard();
 			disCard.cardNumber = (int)recData[0];
 			disCard.description = (string)recData[1];
-			disCard.bottomCard = false;
+			disCard.bottomCard = (bool)recData[2];
 
 			_oeCards.Add(disCard);
+
+			if (disCard.bottomCard)
+				ShuffleOeDeck(_oeCards);
 
 			UpdateOeDeckInfo();
 		}

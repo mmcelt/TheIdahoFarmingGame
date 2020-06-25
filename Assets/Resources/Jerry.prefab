@@ -208,6 +208,7 @@ MonoBehaviour:
   _isOkToCloseOtbPanel: 0
   _isOkToCloseFfPanel: 0
   _myOtbCount: 0
+  _tetonDamVictims: 
 --- !u!114 &2065647414897076446
 MonoBehaviour:
   m_ObjectHideFlags: 0

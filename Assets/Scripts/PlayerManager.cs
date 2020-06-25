@@ -807,10 +807,13 @@ public class PlayerManager : MonoBehaviourPun
 			object[] recData = (object[])eventData.CustomData;
 			int cardNum = (int)recData[0];
 			string desc = (string)recData[1];
+			bool bottomCard = (bool)recData[2];
 
 			FFCard drawnCard = new FFCard();
 			drawnCard.cardNumber = cardNum;
 			drawnCard.description = desc;
+			drawnCard.bottomCard = bottomCard;
+
 			//start the ShowFfCardRoutine
 			StartCoroutine(ShowFfCardRoutine(drawnCard));
 
@@ -835,8 +838,8 @@ public class PlayerManager : MonoBehaviourPun
 			DeckManager.Instance.PerformFfActions(cardToShow.cardNumber);
 
 			//return the card to the deck event...
-			//event data: //cardNum, description
-			object[] sendData = new object[] { cardToShow.cardNumber, cardToShow.description };
+			//event data: //cardNum, description, bottomCard
+			object[] sendData = new object[] { cardToShow.cardNumber, cardToShow.description, cardToShow.bottomCard };
 			//event options
 			RaiseEventOptions eventOptions = new RaiseEventOptions
 			{

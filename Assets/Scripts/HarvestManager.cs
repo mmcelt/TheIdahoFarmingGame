@@ -726,10 +726,12 @@ public class HarvestManager : MonoBehaviour
 			object[] recData = (object[])eventData.CustomData;
 			int cNum = (int)recData[0];
 			string desc = (string)recData[1];
+			bool bottomCard = (bool)recData[2];
 
 			OECard drawnCard = new OECard();
 			drawnCard.cardNumber = cNum;
 			drawnCard.description = desc;
+			drawnCard.bottomCard = bottomCard;
 
 			StartCoroutine(ShowOeCardRoutine(drawnCard));
 		}
@@ -778,7 +780,7 @@ public class HarvestManager : MonoBehaviour
 		//return the card to the deck
 		//fire the replace OE event...
 		//event data
-		object[] sendData = new object[] { drawnCard.cardNumber, drawnCard.description };
+		object[] sendData = new object[] { drawnCard.cardNumber, drawnCard.description, drawnCard.bottomCard };
 		//event options
 		RaiseEventOptions eventOptions = new RaiseEventOptions()
 		{
