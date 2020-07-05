@@ -322,6 +322,7 @@ public class HarvestManager : MonoBehaviour
 
 		_ok1GButtonPressed = false;
 		_uiManager._gHarvestPanel.SetActive(true);
+		_uiManager._forcedLoanModalPanel.SetActive(true);
 		//play the show animation
 		_uiManager._gHarvestPanel.GetComponent<DOTweenAnimation>().DOPlayForward(); //scale up
 
@@ -761,7 +762,7 @@ public class HarvestManager : MonoBehaviour
 		//play the close animation
 		_uiManager._oePanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();   //scale down
 		_uiManager._oePanel.transform.DOLocalMove(new Vector3(638, -219), 0.3f);   //move to side
-		_uiManager._forcedLoanModalPanel.SetActive(false);
+		//_uiManager._forcedLoanModalPanel.SetActive(false);
 
 		//yield return new WaitForSeconds(0.3f);
 
