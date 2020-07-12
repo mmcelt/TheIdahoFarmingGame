@@ -158,6 +158,8 @@ MonoBehaviour:
     type: 3}
   diePrefab: {fileID: 8980114885317863626, guid: 69cb5f19486400a449932b7b763ce0f1,
     type: 3}
+  chatManagerPrefab: {fileID: 2480713787906577015, guid: 0ba56184f0885df47b7b7454f7976c24,
+    type: 3}
 --- !u!114 &1242409655131170562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,6 +210,7 @@ MonoBehaviour:
   _isOkToCloseOtbPanel: 0
   _isOkToCloseFfPanel: 0
   _myOtbCount: 0
+  _tetonDamVictims: 
 --- !u!114 &5134175974575207240
 MonoBehaviour:
   m_ObjectHideFlags: 0

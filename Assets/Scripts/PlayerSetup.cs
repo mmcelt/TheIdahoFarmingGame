@@ -11,6 +11,7 @@ public class PlayerSetup : MonoBehaviourPun
 
 	[SerializeField] GameObject uiPrefab;
 	[SerializeField] GameObject diePrefab;
+	[SerializeField] GameObject chatManagerPrefab;
 
 	#endregion
 
@@ -39,6 +40,9 @@ public class PlayerSetup : MonoBehaviourPun
 			GameObject die = Instantiate(diePrefab);
 			GameManager.Instance.myDiceRoll = die.GetComponentInChildren<MyDiceRoll>();
 			GameManager.Instance.myFarmer = gameObject;
+			//instantiate the Player's Chat Manager
+			GameObject myChatManager = Instantiate(chatManagerPrefab);
+			myChatManager.transform.localScale = Vector3.one;
 		}
 		else
 		{

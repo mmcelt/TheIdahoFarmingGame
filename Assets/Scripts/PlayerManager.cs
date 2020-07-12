@@ -666,7 +666,9 @@ public class PlayerManager : MonoBehaviourPun
 
 			if (PhotonNetwork.LocalPlayer.ActorNumber == GameManager.Instance._activePlayer)
 			{
-				_uiManager._rollButton.interactable = true;
+				if (_uiManager != null)
+					_uiManager._rollButton.interactable = true;
+
 				_isMyTurn = true;
 				CloseAllModalPanels();
 				AudioManager.Instance.PlaySound(AudioManager.Instance._yourTurn);
@@ -675,7 +677,9 @@ public class PlayerManager : MonoBehaviourPun
 			else
 			{
 				AudioManager.Instance._aSource.Stop();
-				_uiManager._rollButton.interactable = false;
+				if(_uiManager != null)
+					_uiManager._rollButton.interactable = false;
+
 				_isMyTurn = false;
 			}
 			//Debug.Log("INSIDE IF!");

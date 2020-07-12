@@ -14,6 +14,7 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 	ChatClient chatClient;
 	bool isConnected;
 	[SerializeField] string username;
+	[SerializeField] bool chatPanelActive;
 
 	//public void UsernameOnValueChange(string valueIn)
 	//{
@@ -39,14 +40,15 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 	[SerializeField] InputField chatField;
 	[SerializeField] Text chatDisplay;
 
-	// Start is called before the first frame update
 	void Start()
 	{
+		chatField.text = "";
+		chatPanelActive = false;
+
 		username = PhotonNetwork.LocalPlayer.NickName;
 		ChatConnectOnClick();
 	}
 
-	// Update is called once per frame
 	void Update()
 	{
 		if (isConnected)
@@ -54,10 +56,16 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 			chatClient.Service();
 		}
 
-		if (chatField.text != "" && Input.GetKey(KeyCode.Return))
+		if (chatField.text != "" && (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter)))
 		{
 			SubmitPublicChatOnClick();
 			SubmitPrivateChatOnClick();
+		}
+
+		if (Input.GetKeyDown(KeyCode.C))
+		{
+			chatPanelActive = !chatPanelActive;
+			chatPanel.SetActive(chatPanelActive);
 		}
 	}
 
@@ -139,6 +147,12 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 
 	public void OnGetMessages(string channelName, string[] senders, object[] messages)
 	{
+		if (!chatPanel.activeSelf)
+		{
+			chatPanel.SetActive(true);
+			chatPanelActive = true;
+		}
+
 		string msgs = "";
 		for (int i = 0; i < senders.Length; i++)
 		{
@@ -148,7 +162,6 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 
 			Debug.Log(msgs);
 		}
-
 	}
 
 	public void OnPrivateMessage(string sender, object message, string channelName)
@@ -170,7 +183,8 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 
 	public void OnSubscribed(string[] channels, bool[] results)
 	{
-		chatPanel.SetActive(true);
+		//chatPanel.SetActive(true);
+		Debug.Log("Subscribed to: " + channels[0]);
 	}
 
 	public void OnUnsubscribed(string[] channels)
