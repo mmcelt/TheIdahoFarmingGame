@@ -14,17 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AppSettings:
     AppIdRealtime: bfcb11da-fa1b-4358-a7cc-1acdf5efc9da
-    AppIdChat: 
+    AppIdChat: beb38b4c-5587-440f-9495-3357cc64157e
     AppIdVoice: 
-    AppVersion: 
+    AppVersion: 0.2
     UseNameServer: 1
     FixedRegion: usw
     Server: 
     Port: 0
+    ProxyServer: 
     Protocol: 0
+    EnableProtocolFallback: 1
+    AuthMode: 0
     EnableLobbyStatistics: 0
     NetworkLogging: 1
-  PunLogging: 1
+  DevRegion: usw
+  PunLogging: 0
   EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
@@ -33,25 +37,13 @@ MonoBehaviour:
   - DestroyRpc
   - DestroySpaceship
   - Fire
-  - RespawnSpaceship
-  - SetFarmer
-  - UpdateMyCash
-  - UpdateMyFCows
-  - UpdateMyFruit
-  - UpdateMyGrain
-  - UpdateMyHarvester
-  - UpdateMyHay
-  - UpdateMyNotes
-  - UpdateMyRCows
-  - UpdateMySpuds
-  - UpdateMyTractor
-  - UpdateMyOtbCount
-  - ShowFfCard
-  - TetonDamRoutine
-  - UpdateTimer
-  - UpdateTheData
   - PlayRemoteMoveSound
-  - RemoteTetonDamMethod
+  - RespawnSpaceship
+  - ShowFfCard
   - UpdateActivePlayerText
+  - UpdateTheData
+  - UpdateTimer
+  - UpdateRoomTextRPC
   DisableAutoOpenWizard: 1
   ShowSettings: 1
+  DevRegionSetOnce: 1

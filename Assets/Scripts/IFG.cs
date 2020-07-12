@@ -2,7 +2,7 @@
 
 public class IFG
 {
-	//Custom Properties
+	//Custom Property Keys
 	public const string Networth_Game = "nwg";						//int
 	public const string Timed_Game = "tg";								//float
 	public const string Number_Of_Players = "nop";					//int

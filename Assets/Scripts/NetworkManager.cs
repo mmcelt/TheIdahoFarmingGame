@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
+using Doozy.Engine.Extensions;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -50,6 +51,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	[SerializeField] Transform playerListContent;
 
 	public Dictionary<int, GameObject> playerListGameobjects;
+
+	[SerializeField] string gameTypeString = "?";
+	[SerializeField] int gameAmount = 0;
+	[SerializeField] string gameAmountString = "0";
+
 	#endregion
 
 	#region Private Fields / References
@@ -91,6 +97,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 		//int test = 20;
 		//Debug.Log("TEST: " + (test /= 10));
 	}
+	#endregion
+
+	#region Photon Custom Properties
+
+	ExitGames.Client.Photon.Hashtable _gameTypeProperty = new ExitGames.Client.Photon.Hashtable();
+
 	#endregion
 
 	#region UI Callbacks
@@ -275,15 +287,21 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	{
 		if (networthToggle.isOn)
 		{
-			ExitGames.Client.Photon.Hashtable networthProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Networth_Game, networthGameAmount } };
-			PhotonNetwork.CurrentRoom.SetCustomProperties(networthProp);
+			//ExitGames.Client.Photon.Hashtable networthProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Networth_Game, networthGameAmount } };
+			//PhotonNetwork.CurrentRoom.SetCustomProperties(networthProp);
+
+			_gameTypeProperty[IFG.Networth_Game] = networthGameAmount;
+			PhotonNetwork.CurrentRoom.SetCustomProperties(_gameTypeProperty);
 
 			//Debug.Log("SETTING NETWORTH FOR GAME " + networthGameAmount);
 		}
 		else if (timedToggle.isOn)
 		{
-			ExitGames.Client.Photon.Hashtable timedProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Timed_Game, timedGameAmount } };
-			PhotonNetwork.CurrentRoom.SetCustomProperties(timedProp);
+			//ExitGames.Client.Photon.Hashtable timedProp = new ExitGames.Client.Photon.Hashtable() { { IFG.Timed_Game, timedGameAmount } };
+			//PhotonNetwork.CurrentRoom.SetCustomProperties(timedProp);
+
+			_gameTypeProperty[IFG.Timed_Game] = timedGameAmount;
+			PhotonNetwork.CurrentRoom.SetCustomProperties(_gameTypeProperty);
 
 			//Debug.Log("SETTING TIME FOR GAME " + timedGameAmount);
 		}
@@ -301,10 +319,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 		print(PhotonNetwork.LocalPlayer.NickName + " has joined room: " + PhotonNetwork.CurrentRoom.Name);
 		ActivatePanel(farmerSelectionPanel.name);
 
-		if (PhotonNetwork.LocalPlayer.IsMasterClient)	//TODO: testing
-			startGameButton.SetActive(false);
-		else
-			startGameButton.SetActive(false);
+		//if (PhotonNetwork.LocalPlayer.IsMasterClient)
+		//	startGameButton.SetActive(false);
+		//else
+		//	startGameButton.SetActive(false);
 
 		//update gameInfoText
 		UpdateRoomInfoText();
@@ -335,6 +353,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 			//update the playerListGameobjects Dictionary
 			playerListGameobjects.Add(player.ActorNumber, playerListGameobject);
 		}
+
+		UpdateRoomInfoText();
 
 		startGameButton.SetActive(false);
 	}
@@ -373,6 +393,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 		if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
 			startGameButton.SetActive(CheckPlayersReady());
+
+		UpdateRoomInfoText();
 	}
 
 
@@ -452,6 +474,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 			startGameButton.SetActive(CheckPlayersReady());
 		}
 	}
+
+	public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+	{
+		UpdateRoomInfoText();
+	}
 	#endregion
 
 	#region Public Methods
@@ -471,34 +498,38 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	#region Private Methods
 
-	void UpdateRoomInfoText()
+	public void UpdateRoomInfoText()
 	{
-		string gameTypeString = "";
-		int gameAmount = 0;
-		string gameAmountString = "";
+		//string gameTypeString = "?";
+		//int gameAmount = 0;
+		//string gameAmountString = "0";
 
-		object gameType;
-		if (PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(IFG.Networth_Game, out gameType))
-			gameTypeString = "Networth Game";
-		else
-			gameTypeString = "Timed Game";
-
-		if (gameTypeString == "Networth Game")
+		if (_gameTypeProperty.ContainsKey(IFG.Networth_Game))
 		{
-			gameAmountString = networthGameAmount.ToString("c0");
-			gameAmount = (int)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Networth_Game];
+			gameTypeString = "Networth Game";
+			gameAmount = (int)_gameTypeProperty[IFG.Networth_Game];
 			gameAmountString = gameAmount.ToString("c0");
 		}
-		else
+
+		if (_gameTypeProperty.ContainsKey(IFG.Timed_Game))
 		{
-			gameAmountString = timedGameAmount.ToString();
-			gameAmount = (int)(float)PhotonNetwork.CurrentRoom.CustomProperties[IFG.Timed_Game];
+			gameTypeString = "Timed Game";
+			gameAmount = (int)(float)_gameTypeProperty[IFG.Timed_Game];
 			gameAmountString = gameAmount + " Min";
 		}
 
-		gameInfoText.text = "Game Name: " + PhotonNetwork.CurrentRoom.Name + "  " + "Players/MaxPlayers: " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "   Game Type: " + gameTypeString + " : " + gameAmountString;
+		//gameInfoText.text = "Game Name: " + PhotonNetwork.CurrentRoom.Name + "  " + "Players/MaxPlayers: " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "   Game Type: " + gameTypeString + " : " + gameAmountString;
+
+		photonView.RPC("UpdateRoomTextRPC", RpcTarget.AllBuffered, gameTypeString,  gameAmountString);
 	}
 
+	[PunRPC]
+	void UpdateRoomTextRPC(string typeString, string amountString)
+	{
+
+		gameInfoText.text = "Game Name: " + PhotonNetwork.CurrentRoom.Name + "  " + "Players/MaxPlayers: " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "   Game Type: " + typeString + " : " + amountString;
+
+	}
 	IEnumerator TryJoiningAgain()
 	{
 		yield return new WaitForSeconds(3);
