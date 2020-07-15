@@ -3002,6 +3002,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   joinChatButton: {fileID: 1611810511}
   username: 
+  chatPanelActive: 0
   chatPanel: {fileID: 1208037345}
   chatField: {fileID: 1155064778}
   chatDisplay: {fileID: 272813720}

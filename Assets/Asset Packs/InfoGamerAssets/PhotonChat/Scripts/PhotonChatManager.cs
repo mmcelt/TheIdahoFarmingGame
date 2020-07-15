@@ -10,6 +10,8 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 {
 	#region Setup
 
+	public static PhotonChatManager Instance;
+
 	[SerializeField] GameObject joinChatButton;
 	ChatClient chatClient;
 	bool isConnected;
@@ -21,11 +23,19 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 	//	username = valueIn;
 	//}
 
+	void Awake()
+	{
+		if (Instance == null)
+			Instance = this;
+		else if (Instance != this)
+			Destroy(gameObject);
+	}
+
 	public void ChatConnectOnClick()
 	{
 		isConnected = true;
 		chatClient = new ChatClient(this);
-		//chatClient.ChatRegion = "US";
+		chatClient.ChatRegion = "US";
 		chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(username));
 		Debug.Log("Connecting");
 	}
@@ -62,11 +72,12 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
 			SubmitPrivateChatOnClick();
 		}
 
-		if (Input.GetKeyDown(KeyCode.C))
-		{
-			chatPanelActive = !chatPanelActive;
-			chatPanel.SetActive(chatPanelActive);
-		}
+	}
+
+	public void ToggleChatWindow()
+	{
+		chatPanelActive = !chatPanelActive;
+		chatPanel.SetActive(chatPanelActive);
 	}
 
 	#endregion General

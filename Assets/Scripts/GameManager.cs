@@ -102,6 +102,14 @@ public class GameManager : MonoBehaviourPun
 		//SetTheGameMode();
 	}
 
+	void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.F2))
+		{
+			Debug.LogError("Chat");
+			PhotonChatManager.Instance.ToggleChatWindow();
+		}
+	}
 	#endregion
 
 	#region Public Methods

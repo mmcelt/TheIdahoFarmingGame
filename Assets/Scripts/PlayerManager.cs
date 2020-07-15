@@ -102,6 +102,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived += OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived += OnChangingActivePlayer;
 		PhotonNetwork.NetworkingClient.EventReceived += OnTetonDamEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived += OnTetonDamHitEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived += OnSellOtbToOtherPlayerEventReceived;
 	}
 
@@ -113,6 +114,7 @@ public class PlayerManager : MonoBehaviourPun
 		PhotonNetwork.NetworkingClient.EventReceived -= OnCustomHireHarvester;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnChangingActivePlayer;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnTetonDamEventReceived;
+		PhotonNetwork.NetworkingClient.EventReceived -= OnTetonDamHitEventReceived;
 		PhotonNetwork.NetworkingClient.EventReceived -= OnSellOtbToOtherPlayerEventReceived;
 	}
 
@@ -458,7 +460,7 @@ public class PlayerManager : MonoBehaviourPun
 
 			//extract data
 			object[] recData = (object[])eventData.CustomData;
-			int senderID = (int)recData[0];
+			_tetonDamCaller = (int)recData[0];
 
 			if (_uiManager._ffPanel.activeSelf)
 			{
@@ -519,7 +521,18 @@ public class PlayerManager : MonoBehaviourPun
 			//play bad sound
 			AudioManager.Instance.PlaySound(AudioManager.Instance._bad);
 			//send hit event to caller...
-
+			//event data: hit player's nickname
+			object[] data = new object[] { PhotonNetwork.LocalPlayer.NickName };
+			//event options
+			RaiseEventOptions eventOptions = new RaiseEventOptions
+			{
+				TargetActors = new int[] { _tetonDamCaller },
+				CachingOption = EventCaching.DoNotCache
+			};
+			//send options
+			SendOptions sendOptions = new SendOptions() { Reliability = true };
+			//fire the event...
+			PhotonNetwork.RaiseEvent((byte)RaiseEventCodes.Teton_Dam_Hit_Event_Code, data, eventOptions, sendOptions);
 		}
 		else
 		{
@@ -553,6 +566,15 @@ public class PlayerManager : MonoBehaviourPun
 		_diceRoll.isOtherRoll = false;
 		_diceRoll.isTetonDamRoll = false;
 		_diceRoll.tetonDamRollComplete = false;
+	}
+
+	void OnTetonDamHitEventReceived(EventData eventData)
+	{
+		//extract data
+		object[] recData = (object[])eventData.CustomData;
+		string hitPlayer = (string)recData[0];
+		_uiManager._infoText.text = hitPlayer + " was hit!";
+		_uiManager._infoPanel.SetActive(true);
 	}
 
 	public void CustomHireHarvester()   //called from DeckManager
@@ -589,15 +611,18 @@ public class PlayerManager : MonoBehaviourPun
 				}
 			}
 		}
-		//TODO: message for how many hit players
-		_uiManager._infoText.text = "The Following Players Were Hit: ";
-		foreach(string player in hitPlayerNames)
+		//message for how many hit players
+		if(hitPlayerNames.Count > 0)
 		{
-			_uiManager._infoText.text += "\n" + player;
+			_uiManager._infoText.text = "The Following Players Were Hit: ";
+			foreach (string player in hitPlayerNames)
+			{
+				_uiManager._infoText.text += "\n" + player;
+			}
+			_uiManager._infoPanel.SetActive(true);
+			//get my money...
+			UpdateMyCash(2000 * hitPlayers);
 		}
-		_uiManager._infoPanel.SetActive(true);
-		//get my money...
-		UpdateMyCash(2000 * hitPlayers);
 	}
 
 	public void UncleCheester()
@@ -688,6 +713,8 @@ public class PlayerManager : MonoBehaviourPun
 
 	void CloseAllModalPanels()
 	{
+		if (_uiManager == null) return;
+
 		_uiManager._forcedLoanModalPanel.SetActive(false);
 		_uiManager._modalPanel.SetActive(false);
 		_uiManager._completeModalPanel.SetActive(false);

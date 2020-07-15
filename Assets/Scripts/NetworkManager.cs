@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using Doozy.Engine.Extensions;
+using System;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -354,8 +355,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 			playerListGameobjects.Add(player.ActorNumber, playerListGameobject);
 		}
 
-		UpdateRoomInfoText();
-
 		startGameButton.SetActive(false);
 	}
 
@@ -393,8 +392,6 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 		if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
 			startGameButton.SetActive(CheckPlayersReady());
-
-		UpdateRoomInfoText();
 	}
 
 
@@ -477,7 +474,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
 	{
-		UpdateRoomInfoText();
+		//UpdateRoomInfoText();
 	}
 	#endregion
 
@@ -526,10 +523,14 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	[PunRPC]
 	void UpdateRoomTextRPC(string typeString, string amountString)
 	{
+		Debug.Log("GType: " + typeString);
 
-		gameInfoText.text = "Game Name: " + PhotonNetwork.CurrentRoom.Name + "  " + "Players/MaxPlayers: " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "   Game Type: " + typeString + " : " + amountString;
-
+		if (typeString != "?")
+		{
+			gameInfoText.text = "Game Name: " + PhotonNetwork.CurrentRoom.Name + "  " + "Players/MaxPlayers: " + PhotonNetwork.CurrentRoom.PlayerCount + "/" + PhotonNetwork.CurrentRoom.MaxPlayers + "   Game Type: " + typeString + " : " + amountString;
+		}
 	}
+
 	IEnumerator TryJoiningAgain()
 	{
 		yield return new WaitForSeconds(3);
