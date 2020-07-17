@@ -570,11 +570,14 @@ public class PlayerManager : MonoBehaviourPun
 
 	void OnTetonDamHitEventReceived(EventData eventData)
 	{
-		//extract data
-		object[] recData = (object[])eventData.CustomData;
-		string hitPlayer = (string)recData[0];
-		_uiManager._infoText.text = hitPlayer + " was hit!";
-		_uiManager._infoPanel.SetActive(true);
+		if (eventData.Code == (byte)RaiseEventCodes.Teton_Dam_Hit_Event_Code)
+		{
+			//extract data
+			object[] recData = (object[])eventData.CustomData;
+			string hitPlayer = (string)recData[0];
+			_uiManager._infoText.text = hitPlayer + " was hit!";
+			_uiManager._infoPanel.SetActive(true);
+		}
 	}
 
 	public void CustomHireHarvester()   //called from DeckManager
