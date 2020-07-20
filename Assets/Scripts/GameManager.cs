@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviourPun
 	{
 		if (Input.GetKeyDown(KeyCode.F2))
 		{
-			Debug.LogError("Chat");
+			Debug.Log("Chat");
 			PhotonChatManager.Instance.ToggleChatWindow();
 		}
 	}
