@@ -8,210 +8,184 @@ using UnityEngine.UI;
 
 public class PhotonChatManager : MonoBehaviour, IChatClientListener
 {
-	#region Setup
+    #region Setup
 
-	public static PhotonChatManager Instance;
+    [SerializeField] GameObject joinChatButton;
+    ChatClient chatClient;
+    bool isConnected;
+    [SerializeField] string username;
 
-	[SerializeField] GameObject joinChatButton;
-	ChatClient chatClient;
-	bool isConnected;
-	[SerializeField] string username;
-	[SerializeField] bool chatPanelActive;
+    public void UsernameOnValueChange(string valueIn)
+    {
+        username = valueIn;
+    }
 
-	//public void UsernameOnValueChange(string valueIn)
-	//{
-	//	username = valueIn;
-	//}
+    public void ChatConnectOnClick()
+    {
+        isConnected = true;
+        chatClient = new ChatClient(this);
+        //chatClient.ChatRegion = "US";
+        chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(username));
+        Debug.Log("Connenting");
+    }
 
-	void Awake()
-	{
-		if (Instance == null)
-			Instance = this;
-		else if (Instance != this)
-			Destroy(gameObject);
-	}
+    #endregion Setup
 
-	public void ChatConnectOnClick()
-	{
-		isConnected = true;
-		chatClient = new ChatClient(this);
-		chatClient.ChatRegion = "US";
-		chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(username));
-		Debug.Log("Connecting");
-	}
+    #region General
 
-	#endregion Setup
+    [SerializeField] GameObject chatPanel;
+    string privateReceiver = "";
+    string currentChat;
+    [SerializeField] InputField chatField;
+    [SerializeField] Text chatDisplay;
 
-	#region General
+    // Start is called before the first frame update
+    void Start()
+    {
 
-	[SerializeField] GameObject chatPanel;
-	string privateReceiver = "";
-	string currentChat;
-	[SerializeField] InputField chatField;
-	[SerializeField] Text chatDisplay;
+    }
 
-	void Start()
-	{
-		chatField.text = "";
-		chatPanelActive = false;
+    // Update is called once per frame
+    void Update()
+    {
+        if (isConnected)
+        {
+            chatClient.Service();
+        }
 
-		username = PhotonNetwork.LocalPlayer.NickName;
-		ChatConnectOnClick();
-	}
+        if (chatField.text != "" && Input.GetKey(KeyCode.Return))
+        {
+            SubmitPublicChatOnClick();
+            SubmitPrivateChatOnClick();
+        }
+    }
 
-	void Update()
-	{
-		if (isConnected)
-		{
-			chatClient.Service();
-		}
+    #endregion General
 
-		if (chatField.text != "" && (Input.GetKey(KeyCode.Return) || Input.GetKey(KeyCode.KeypadEnter)))
-		{
-			SubmitPublicChatOnClick();
-			SubmitPrivateChatOnClick();
-		}
+    #region PublicChat
 
-	}
+    public void SubmitPublicChatOnClick()
+    {
+        if (privateReceiver == "")
+        {
+            chatClient.PublishMessage("RegionChannel", currentChat);
+            chatField.text = "";
+            currentChat = "";
+        }
+    }
 
-	public void ToggleChatWindow()
-	{
-		chatPanelActive = !chatPanelActive;
-		chatPanel.SetActive(chatPanelActive);
-	}
+    public void TypeChatOnValueChange(string valueIn)
+    {
+        currentChat = valueIn;
+    }
 
-	#endregion General
+    #endregion PublicChat
 
-	#region PublicChat
+    #region PrivateChat
 
-	public void SubmitPublicChatOnClick()
-	{
-		if (privateReceiver == "")
-		{
-			chatClient.PublishMessage("RegionChannel", currentChat);
-			chatField.text = "";
-			currentChat = "";
-		}
-	}
+    public void ReceiverOnValueChange(string valueIn)
+    {
+        privateReceiver = valueIn;
+    }
 
-	public void TypeChatOnValueChange(string valueIn)
-	{
-		currentChat = valueIn;
-	}
+    public void SubmitPrivateChatOnClick()
+    {
+        if (privateReceiver != "")
+        {
+            chatClient.SendPrivateMessage(privateReceiver, currentChat);
+            chatField.text = "";
+            currentChat = "";
+        }
+    }
 
-	#endregion PublicChat
+    #endregion PrivateChat
 
-	#region PrivateChat
+    #region Callbacks
 
-	public void ReceiverOnValueChange(string valueIn)
-	{
-		privateReceiver = valueIn;
-	}
+    public void DebugReturn(DebugLevel level, string message)
+    {
+        //throw new System.NotImplementedException();
+    }
 
-	public void SubmitPrivateChatOnClick()
-	{
-		if (privateReceiver != "")
-		{
-			chatClient.SendPrivateMessage(privateReceiver, currentChat);
-			chatField.text = "";
-			currentChat = "";
-		}
-	}
+    public void OnChatStateChange(ChatState state)
+    {
+        if(state == ChatState.Uninitialized)
+        {
+            isConnected = false;
+            joinChatButton.SetActive(true);
+            chatPanel.SetActive(false);
+        }
 
-	#endregion PrivateChat
+        //throw new System.NotImplementedException();
+        //Debug.Log("Connected");
+        //isConnected = true;
+        //joinChatButton.SetActive(false);
+    }
 
-	#region Callbacks
+    public void OnConnected()
+    {
+        Debug.Log("Connected");
+        joinChatButton.SetActive(false);
+        chatClient.Subscribe(new string[] { "RegionChannel" });
+    }
 
-	public void DebugReturn(DebugLevel level, string message)
-	{
-		//throw new System.NotImplementedException();
-	}
+    public void OnDisconnected()
+    {
+        isConnected = false;
+        joinChatButton.SetActive(true);
+        chatPanel.SetActive(false);
+    }
 
-	public void OnChatStateChange(ChatState state)
-	{
-		if (state == ChatState.Uninitialized)
-		{
-			isConnected = false;
-			joinChatButton.SetActive(true);
-			chatPanel.SetActive(false);
-		}
+    public void OnGetMessages(string channelName, string[] senders, object[] messages)
+    {
+        string msgs = "";
+        for (int i = 0; i < senders.Length; i++)
+        {
+            msgs = string.Format("{0}: {1}", senders[i], messages[i]);
 
-		//throw new System.NotImplementedException();
-		//Debug.Log("Connected");
-		//isConnected = true;
-		//joinChatButton.SetActive(false);
-	}
+            chatDisplay.text += "\n" + msgs;
 
-	public void OnConnected()
-	{
-		Debug.Log("Connected");
-		joinChatButton.SetActive(false);
-		chatClient.Subscribe(new string[] { "RegionChannel" });
-	}
+            Debug.Log(msgs);
+        }
 
-	public void OnDisconnected()
-	{
-		isConnected = false;
-		joinChatButton.SetActive(true);
-		chatPanel.SetActive(false);
-	}
+    }
 
-	public void OnGetMessages(string channelName, string[] senders, object[] messages)
-	{
-		if (!chatPanel.activeSelf)
-		{
-			chatPanel.SetActive(true);
-			chatPanelActive = true;
-		}
+    public void OnPrivateMessage(string sender, object message, string channelName)
+    {
+        string msgs = "";
 
-		string msgs = "";
-		for (int i = 0; i < senders.Length; i++)
-		{
-			msgs = string.Format("{0}: {1}", senders[i], messages[i]);
+        msgs = string.Format("(Private) {0}: {1}", sender, message);
 
-			chatDisplay.text += "\n" + msgs;
+        chatDisplay.text += "\n " + msgs;
 
-			Debug.Log(msgs);
-		}
-	}
+        Debug.Log(msgs);
+        
+    }
 
-	public void OnPrivateMessage(string sender, object message, string channelName)
-	{
-		string msgs = "";
+    public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
+    {
+        throw new System.NotImplementedException();
+    }
 
-		msgs = string.Format("(Private) {0}: {1}", sender, message);
+    public void OnSubscribed(string[] channels, bool[] results)
+    {
+        chatPanel.SetActive(true);
+    }
 
-		chatDisplay.text += "\n " + msgs;
+    public void OnUnsubscribed(string[] channels)
+    {
+        throw new System.NotImplementedException();
+    }
 
-		Debug.Log(msgs);
+    public void OnUserSubscribed(string channel, string user)
+    {
+        throw new System.NotImplementedException();
+    }
 
-	}
+    public void OnUserUnsubscribed(string channel, string user)
+    {
+        throw new System.NotImplementedException();
+    }
 
-	public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public void OnSubscribed(string[] channels, bool[] results)
-	{
-		//chatPanel.SetActive(true);
-		Debug.Log("Subscribed to: " + channels[0]);
-	}
-
-	public void OnUnsubscribed(string[] channels)
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public void OnUserSubscribed(string channel, string user)
-	{
-		throw new System.NotImplementedException();
-	}
-
-	public void OnUserUnsubscribed(string channel, string user)
-	{
-		throw new System.NotImplementedException();
-	}
-
-	#endregion Callbacks
+    #endregion Callbacks
 }
