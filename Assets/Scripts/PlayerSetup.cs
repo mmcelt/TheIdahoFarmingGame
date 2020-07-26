@@ -43,6 +43,7 @@ public class PlayerSetup : MonoBehaviourPun
 			//instantiate the Player's Chat Manager
 			GameObject myChatManager = Instantiate(chatManagerPrefab);
 			myChatManager.transform.localScale = Vector3.one;
+			myChatManager.transform.SetParent(transform);
 		}
 		else
 		{

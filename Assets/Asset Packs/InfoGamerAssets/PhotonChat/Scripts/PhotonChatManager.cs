@@ -26,7 +26,7 @@ public class PhotonChatManager : MonoBehaviour, IChatClientListener
         chatClient = new ChatClient(this);
         //chatClient.ChatRegion = "US";
         chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(username));
-        Debug.Log("Connenting");
+        Debug.Log("Connecting");
     }
 
     #endregion Setup
