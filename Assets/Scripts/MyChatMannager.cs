@@ -72,7 +72,7 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 			SubmitPrivateChatOnClick();
 		}
 
-		if(chatField.text == "" && Input.GetKeyDown(KeyCode.C))
+		if(chatField.text == "" && privateReceiver == "" && Input.GetKeyDown(KeyCode.C))
 		{
 			ToggleChatWindow();
 		}
@@ -188,6 +188,11 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 
 		Debug.Log(msgs);
 
+		if (!chatPanel.activeInHierarchy)
+		{
+			chatPanel.SetActive(true);
+			chatWindowVisible = true;
+		}
 	}
 
 	public void OnStatusUpdate(string user, int status, bool gotMessage, object message)
