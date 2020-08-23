@@ -354,14 +354,17 @@ namespace Photon.Pun
                 }
 
             }
-            // HARD DISCONNECT: Player permanently removed. Remove that actor as owner for all items.
+            // HARD DISCONNECT: Player permanently removed. Remove that actor as owner for all items they created (Unless AutoCleanUp is false)
             else
             {
-                foreach (var view in views)
+                if (!PhotonNetwork.CurrentRoom.AutoCleanUp)
                 {
-                    var master = PhotonNetwork.MasterClient;
-                    if (view.OwnerActorNr == leavingPlayerId)
-                        view.SetOwnerInternal(master, 0);
+                    foreach (var view in views)
+                    {
+                        var master = PhotonNetwork.MasterClient;
+                        if (view.OwnerActorNr == leavingPlayerId)
+                            view.SetOwnerInternal(master, 0);
+                    }
                 }
             }
 
