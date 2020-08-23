@@ -38,7 +38,7 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 	[SerializeField] GameObject chatPanel;
 	string privateReceiver = "";
 	string currentChat;
-	[SerializeField] InputField chatField;
+	[SerializeField] InputField toInput, chatField;
 	[SerializeField] Text chatDisplay;
 
 	void Awake()
@@ -117,7 +117,9 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 		{
 			chatClient.SendPrivateMessage(privateReceiver, currentChat);
 			chatField.text = "";
+			toInput.text = "";
 			currentChat = "";
+			privateReceiver = "";
 		}
 	}
 

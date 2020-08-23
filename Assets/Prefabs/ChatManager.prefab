@@ -48,6 +48,7 @@ MonoBehaviour:
   joinChatButton: {fileID: 2085291305488876722}
   username: 
   chatPanel: {fileID: 2085291305301416104}
+  toInput: {fileID: 2085291304649991838}
   chatField: {fileID: 2085291305888696413}
   chatDisplay: {fileID: 2085291305763738583}
 --- !u!1 &2085291303993076174
