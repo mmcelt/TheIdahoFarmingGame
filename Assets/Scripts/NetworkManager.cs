@@ -92,6 +92,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 		roomListGameobjects = new Dictionary<string, GameObject>();
 
 		ActivatePanel(loginPanel.name);
+		playerNameInput.Select();
 		PhotonNetwork.AutomaticallySyncScene = true;
 		networthToggle.isOn = true;
 
@@ -281,7 +282,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	{
 		ActivatePanel(gameOptionsPanel.name);
 
-		Debug.Log("Connected to Master");
+		//Debug.Log("Connected to Master");
 	}
 
 	public override void OnCreatedRoom()
@@ -317,7 +318,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	public override void OnJoinedRoom()
 	{
-		print(PhotonNetwork.LocalPlayer.NickName + " has joined room: " + PhotonNetwork.CurrentRoom.Name);
+		//print(PhotonNetwork.LocalPlayer.NickName + " has joined room: " + PhotonNetwork.CurrentRoom.Name);
 		ActivatePanel(farmerSelectionPanel.name);
 
 		//if (PhotonNetwork.LocalPlayer.IsMasterClient)
@@ -373,7 +374,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 			object selectedFarmer;
 			if (changedProps.TryGetValue(IFG.Selected_Farmer, out selectedFarmer))
 			{
-				Debug.Log(target.NickName + "'s " + "Selected Farmer is:" + (string)selectedFarmer);
+				//Debug.Log(target.NickName + "'s " + "Selected Farmer is:" + (string)selectedFarmer);
 			}
 		}
 
@@ -523,7 +524,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	[PunRPC]
 	void UpdateRoomTextRPC(string typeString, string amountString)
 	{
-		Debug.Log("GType: " + typeString);
+		//Debug.Log("GType: " + typeString);
 
 		if (typeString != "?")
 		{

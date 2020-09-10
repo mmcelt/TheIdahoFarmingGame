@@ -499,7 +499,7 @@ public class UIManager : MonoBehaviourPun
 			_minDownPayment = (int)(_otbCost * 0.2f);
 			_downPaymentInput.placeholder.GetComponent<Text>().text = _minDownPayment.ToString();
 
-			if (!_stopBuying)
+			if (!_stopBuying && !_forcedLoanPanel.activeInHierarchy)
 				StartCoroutine("BuyOptionRoutine");
 
 			if (_pManager._isMyTurn)
@@ -1247,7 +1247,7 @@ public class UIManager : MonoBehaviourPun
 	{
 		for (int i = 0; i < 10; i++)
 		{
-			Debug.Log("IN UPDATE ROUTINE");
+			//Debug.Log("IN UPDATE ROUTINE");
 			UpdateUI();
 			yield return new WaitForSeconds(0.5f);
 		}
@@ -1276,7 +1276,7 @@ public class UIManager : MonoBehaviourPun
 		//update the remote players info...
 		for (int i = 0; i < 9; i++)
 		{
-			Debug.Log("IN URPI ROUTINE");
+			//Debug.Log("IN URPI ROUTINE");
 
 			int index = 0;
 			foreach (Player player in PhotonNetwork.PlayerList)
@@ -2070,7 +2070,7 @@ public class UIManager : MonoBehaviourPun
 
 	void OnUpdateDeckDataEventReceived(EventData eventData)
 	{
-		Debug.Log("IN UPDATE DECK DATA");
+		//Debug.Log("IN UPDATE DECK DATA");
 		if (eventData.Code == (byte)RaiseEventCodes.Update_Deck_Data_Event_Code)
 		{
 			//extract data..."deck",total,left

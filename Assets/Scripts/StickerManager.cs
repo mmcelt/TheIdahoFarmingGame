@@ -102,7 +102,7 @@ public class StickerManager : MonoBehaviour
 
 	public void PlaceFarmSticker(string farmer,string sticker,int amount,bool doubled,bool fCowsKilled=false)
 	{
-		Debug.Log("IN PLACESTICKER: STICKER: " + farmer + " " + sticker + " " + amount);
+		//Debug.Log("IN PLACESTICKER: STICKER: " + farmer + " " + sticker + " " + amount);
 		//if (amount == 0 && sticker == "Cow")
 		//{
 		_fCowsKilled = fCowsKilled;
@@ -149,11 +149,11 @@ public class StickerManager : MonoBehaviour
 		if (amount > 0)
 		{
 			//spawn the new sticker
-			Debug.Log("SPAWNING: " + _stickerPrefab.name);
+			//Debug.Log("SPAWNING: " + _stickerPrefab.name);
 
 			if (!doubled && !_fCowsKilled)
 			{
-				Debug.Log("INSIDE SPAWN 1ST IF: " + _stickerPrefab.name + " " + _spawnPoint);
+				//Debug.Log("INSIDE SPAWN 1ST IF: " + _stickerPrefab.name + " " + _spawnPoint);
 				PhotonNetwork.Instantiate(_stickerPrefab.name, _spawnPoint, Quaternion.identity);
 			}
 			else if (doubled && !_fCowsKilled)

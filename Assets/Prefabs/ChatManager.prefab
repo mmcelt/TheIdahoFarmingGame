@@ -50,6 +50,7 @@ MonoBehaviour:
   chatPanel: {fileID: 2085291305301416104}
   toInput: {fileID: 2085291304649991838}
   chatField: {fileID: 2085291305888696413}
+  toDropdown: {fileID: 0}
   chatDisplay: {fileID: 2085291305763738583}
 --- !u!1 &2085291303993076174
 GameObject:
@@ -87,7 +88,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -177.42, y: 128.3}
+  m_AnchoredPosition: {x: -910, y: 937}
   m_SizeDelta: {x: 356, y: 258}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2085291303993076169

@@ -135,6 +135,7 @@ MonoBehaviour:
   ObservedComponentsFoldoutOpen: 1
   Group: 0
   prefixField: -1
+  observableSearch: 0
   Synchronization: 3
   OwnershipTransfer: 0
   ObservedComponents:
@@ -158,7 +159,7 @@ MonoBehaviour:
     type: 3}
   diePrefab: {fileID: 8980114885317863626, guid: 69cb5f19486400a449932b7b763ce0f1,
     type: 3}
-  chatManagerPrefab: {fileID: 2085291303945407464, guid: 0ba56184f0885df47b7b7454f7976c24,
+  chatManagerPrefab: {fileID: 6533359264906766442, guid: bf4dabea0da172040aba159936c5017d,
     type: 3}
 --- !u!114 &-3046280262615811790
 MonoBehaviour:

@@ -41,9 +41,12 @@ public class PlayerSetup : MonoBehaviourPun
 			GameManager.Instance.myDiceRoll = die.GetComponentInChildren<MyDiceRoll>();
 			GameManager.Instance.myFarmer = gameObject;
 			//instantiate the Player's Chat Manager
-			GameObject myChatManager = Instantiate(chatManagerPrefab);
-			myChatManager.transform.localScale = Vector3.one;
-			myChatManager.transform.SetParent(transform);
+			if(PhotonNetwork.PlayerList.Length > 1)
+			{
+				GameObject myChatManager = Instantiate(chatManagerPrefab);
+				myChatManager.transform.localScale = Vector3.one;
+				myChatManager.transform.SetParent(transform);
+			}
 		}
 		else
 		{
@@ -51,11 +54,6 @@ public class PlayerSetup : MonoBehaviourPun
 			GetComponent<PlayerMove>().enabled = false;
 			GetComponent<GameTimer>().enabled = false;
 		}
-	}
-
-	void Start() 
-	{
-
 	}
 	#endregion
 

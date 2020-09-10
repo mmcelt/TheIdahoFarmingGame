@@ -1,6 +1,8 @@
-﻿using ExitGames.Client.Photon;
+﻿//using Boo.Lang;
+using ExitGames.Client.Photon;
 using Photon.Chat;
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,18 +19,19 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 	bool isConnected, chatWindowVisible;
 	[SerializeField] string username;
 
-	public void UsernameOnValueChange(string valueIn)
-	{
-		//username = valueIn;
-	}
+	//public void UsernameOnValueChange(string valueIn)
+	//{
+	//	username = valueIn;
+	//}
 
 	public void ChatConnectOnClick()
 	{
 		isConnected = true;
 		chatClient = new ChatClient(this);
 		chatClient.ChatRegion = "US";
-		chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new AuthenticationValues(username));
-		Debug.Log("Connecting");
+		chatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, PhotonNetwork.AppVersion, new Photon.Chat.AuthenticationValues(username));
+		//Debug.Log("Connecting");
+
 	}
 
 	#endregion Setup
@@ -38,8 +41,11 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 	[SerializeField] GameObject chatPanel;
 	string privateReceiver = "";
 	string currentChat;
-	[SerializeField] InputField toInput, chatField;
+	[SerializeField] InputField chatField;
+	[SerializeField] Dropdown toDropdown;
 	[SerializeField] Text chatDisplay;
+
+	List<string> otherPlayers = new List<string>();
 
 	void Awake()
 	{
@@ -72,16 +78,20 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 			SubmitPrivateChatOnClick();
 		}
 
-		if(chatField.text == "" && privateReceiver == "" && Input.GetKeyDown(KeyCode.C))
+		if(chatField.text == "" /*&& privateReceiver == "" */&& Input.GetKeyDown(KeyCode.C))
 		{
 			ToggleChatWindow();
 		}
+
 	}
 
 	void ToggleChatWindow()
 	{
 		chatWindowVisible = !chatWindowVisible;
 		chatPanel.SetActive(chatWindowVisible);
+
+		if (chatPanel.activeInHierarchy)
+			PopulateToDropdown();
 	}
 	#endregion General
 
@@ -117,7 +127,8 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 		{
 			chatClient.SendPrivateMessage(privateReceiver, currentChat);
 			chatField.text = "";
-			toInput.text = "";
+			toDropdown.value = 0;
+			toDropdown.RefreshShownValue();
 			currentChat = "";
 			privateReceiver = "";
 		}
@@ -149,9 +160,9 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 
 	public void OnConnected()
 	{
-		Debug.Log("Connected");
+		//Debug.Log("Connected");
 		joinChatButton.SetActive(false);
-		chatClient.Subscribe(new string[] { "RegionChannel" });
+		chatClient.Subscribe(new string[] { "FG Channel" });
 	}
 
 	public void OnDisconnected()
@@ -170,7 +181,7 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 
 			chatDisplay.text += "\n" + msgs;
 
-			Debug.Log(msgs);
+			//Debug.Log(msgs);
 		}
 
 		if (!chatPanel.activeInHierarchy)
@@ -188,7 +199,7 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 
 		chatDisplay.text += "\n " + msgs;
 
-		Debug.Log(msgs);
+		//Debug.Log(msgs);
 
 		if (!chatPanel.activeInHierarchy)
 		{
@@ -207,6 +218,9 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 		Debug.Log("Subscribed to: " + channels[0]);
 		chatPanel.SetActive(true);
 		//ToggleChatWindow();
+		//Debug.Log("NOP in Chat: " + PhotonNetwork.PlayerList.Length);
+		if (PhotonNetwork.PlayerList.Length > 1)
+			PopulateToDropdown();
 	}
 
 	public void OnUnsubscribed(string[] channels)
@@ -224,6 +238,45 @@ public class MyChatMannager : MonoBehaviour, IChatClientListener
 		throw new System.NotImplementedException();
 	}
 
-	#endregion Callbacks
+	void PopulateToDropdown()
+	{
+		string headerEntry = "To...";
 
+		otherPlayers.Clear();
+		toDropdown.ClearOptions();
+
+		//add the empty entry
+		otherPlayers.Add(headerEntry);
+
+		foreach (Player player in PhotonNetwork.PlayerList)
+		{
+			//Debug.Log("IN CHAT FOREACH: " + player.NickName);
+			//Debug.Log("USERNAME: " + username);
+
+			if(player.NickName != username)
+			{
+				//add the remote player's name
+				otherPlayers.Add(player.NickName);
+				//Debug.Log("ADDING: " + player.NickName);
+			}
+		}
+
+		//for (int i = 0; i < otherPlayers.Count; i++)
+		//	Debug.Log("LIST CONTENTS: " + otherPlayers[i]);
+
+		toDropdown.AddOptions(otherPlayers);
+		toDropdown.value = 0;
+		toDropdown.Select();
+		toDropdown.RefreshShownValue();
+		//selectedIndex = 0;
+	}
+
+	public void OnToDropdownValueChanged(int index)
+	{
+		if (index > 0)
+			privateReceiver = otherPlayers[index];
+		else
+			privateReceiver = "";
+	}
+	#endregion Callbacks
 }

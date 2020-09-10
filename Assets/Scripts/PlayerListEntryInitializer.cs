@@ -45,11 +45,11 @@ public class PlayerListEntryInitializer : MonoBehaviourPun
 		{
 			int myPositionInPlayerList = PhotonNetwork.LocalPlayer.ActorNumber;
 
-			foreach(Player player in PhotonNetwork.PlayerList)
-			{
-				Debug.Log("Player AN: " + player.ActorNumber);
+			//foreach(Player player in PhotonNetwork.PlayerList)
+			//{
+			//	Debug.Log("Player AN: " + player.ActorNumber);
 
-			}
+			//}
 
 			//deactivate all farmer buttons to prevent dual selection
 			foreach (GameObject button in selectFarmerButtons)
@@ -115,7 +115,7 @@ public class PlayerListEntryInitializer : MonoBehaviourPun
 				ExitGames.Client.Photon.Hashtable newProps = new ExitGames.Client.Photon.Hashtable() { { IFG.Player_Ready, isPlayerReady } };
 				PhotonNetwork.LocalPlayer.SetCustomProperties(newProps);
 
-				Debug.Log("Is Player Ready? " + isPlayerReady);
+				//Debug.Log("Is Player Ready? " + isPlayerReady);
 			});
 		}
 	}
@@ -136,7 +136,7 @@ public class PlayerListEntryInitializer : MonoBehaviourPun
 
 	public void SetFarmer(int index)
 	{
-		Debug.Log("In SetFarmer " + index);
+		//Debug.Log("In SetFarmer " + index);
 		string farmer = "";
 
 		//selectedFarmerImage.enabled = true;
