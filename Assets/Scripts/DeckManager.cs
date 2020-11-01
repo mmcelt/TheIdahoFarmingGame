@@ -815,7 +815,8 @@ public class DeckManager : MonoBehaviourPun
 		CreateAnFFCard(18,
 			"Held some of your calves and the market jumped.\nCOLLECT $2,000, if you have cows.");
 		CreateAnFFCard(19,
-			"A leaking electrical motor at Feed Mill contaminates you load of feed with PCB. State Ag Inspector requires you to slaughter cows on your farm (not cows on lease range land) with no reimbursement.");
+			/*"A leaking electrical motor at Feed Mill contaminates you load of feed with PCB. State Ag Inspector requires you to slaughter cows on your farm (not cows on lease range land) with no reimbursement."*/
+			"While checking on your farm cows you notice all of them are dead!! And to your utter amazement you see they have been mutilated! A clear case of Alien Cattle Mutilations!");
 		CreateAnFFCard(20,
 			"Sharp management, production testing, and your computer record system cause your calf weaning weights to soar. RECEIVE a 50% bonus after you roll for your Livestock Harvest check each of the next two years.");
 		CreateAnFFCard(21,
@@ -840,12 +841,14 @@ public class DeckManager : MonoBehaviourPun
 		//desc = "GARNISHED!";       //TESTING
 		//cardNum = 13;              //TESTING
 		//desc = "CUSTOM HARVESTER"; //TESTING
-											//cardNum = 10;              //TESTING
-											//desc = "TETON DAM!";       //TESTING
-											//cardNum = 15;					//TESTING
-											//desc = "UNCLE CHEESTER";		//TESTING
-											//cardNum = 1;                //TESTING
-											//desc = "INCOME TAX!";       //TESTING
+		//cardNum = 10;						//TESTING
+		//desc = "TETON DAM!";				//TESTING
+		//cardNum = 15;						//TESTING
+		//desc = "UNCLE CHEESTER";			//TESTING
+		//cardNum = 1;							//TESTING
+		//desc = "INCOME TAX!";				//TESTING
+		//cardNum = 19;						//TESTING
+		//desc = "CATTLE MUTILATION!";	//TESTING
 
 		//declare an FFCard object
 		FFCard newFFCard = new FFCard();

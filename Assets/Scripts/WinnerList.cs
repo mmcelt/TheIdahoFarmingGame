@@ -30,7 +30,7 @@ public class WinnerList : MonoBehaviour
 
 	#region Properties
 
-	public static WinnerList Instance;
+	public static WinnerList Instance { get; private set; }
 
 	#endregion
 

@@ -131,7 +131,8 @@ public class UIManager : MonoBehaviourPun
 	public InputField _forcedLoanInput;
 
 	[Header("Message Texts")]
-	public Text _bonusMessageText;
+	public Text _spudBonusMessageText;
+	public Text _cfarmerBonusMessageText;
 	public Text _routineMessageText;
 	public Text _shuffleMessageText;
 	public Text _gameOverMessageText;
@@ -554,6 +555,7 @@ public class UIManager : MonoBehaviourPun
 		if (index > 0)
 		{
 			_salePriceInput.interactable = true;
+			_salePriceInput.Select();
 		}
 		else
 		{
@@ -592,12 +594,12 @@ public class UIManager : MonoBehaviourPun
 		else
 			_cashText.color = Color.green;
 
-		if (notes >= 50000)
+		if (notes >= 50000 || notes < 0)
 			_notesText.color = Color.red;
 		else
 			_notesText.color = Color.green;
 
-		if (cash < 0 || notes > 50000)
+		if (cash < 0 || notes > 50000 || notes < 0)
 			_transactionBlocked = true;
 		else
 			_transactionBlocked = false;
@@ -1856,10 +1858,17 @@ public class UIManager : MonoBehaviourPun
 	{
 		switch (typeOfMessage)
 		{
-			case "Bonus":
-				_bonusMessageText.text = msg;
-				_bonusMessageText.color = fontColor;
-				_bonusMessageText.gameObject.SetActive(true);
+			case "Spud Bonus":
+				_spudBonusMessageText.text = msg;
+				_spudBonusMessageText.color = fontColor;
+				_spudBonusMessageText.gameObject.SetActive(true);
+				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
+				break;
+
+			case "CF Bonus":
+				_cfarmerBonusMessageText.text = msg;
+				_cfarmerBonusMessageText.color = fontColor;
+				_cfarmerBonusMessageText.gameObject.SetActive(true);
 				AudioManager.Instance.PlaySound(AudioManager.Instance._good);
 				break;
 
@@ -1884,11 +1893,17 @@ public class UIManager : MonoBehaviourPun
 		}
 		yield return new WaitForSeconds(duration);
 
-		if (typeOfMessage == "Bonus")
+		if (typeOfMessage == "Spud Bonus")
 		{
-			_bonusMessageText.gameObject.SetActive(false);
-			_bonusMessageText.text = "";
-			_bonusMessageText.color = Color.black;
+			_spudBonusMessageText.gameObject.SetActive(false);
+			_spudBonusMessageText.text = "";
+			_spudBonusMessageText.color = Color.black;
+		}
+		if (typeOfMessage == "CF Bonus")
+		{
+			_cfarmerBonusMessageText.gameObject.SetActive(false);
+			_cfarmerBonusMessageText.text = "";
+			_cfarmerBonusMessageText.color = Color.black;
 		}
 		if (typeOfMessage == "Routine")
 		{
@@ -1996,10 +2011,10 @@ public class UIManager : MonoBehaviourPun
 			Vector3 fontColor = (Vector3)recData[0];
 			string msg = (string)recData[1];
 			Color combinedColor = new Color(fontColor.x, fontColor.y, fontColor.z);
-			_bonusMessageText.text = msg;
-			_bonusMessageText.color = combinedColor;
+			_spudBonusMessageText.text = msg;
+			_spudBonusMessageText.color = combinedColor;
 			//display the message...
-			StartCoroutine(ShowMessageRoutine("Bonus", msg, combinedColor));
+			StartCoroutine(ShowMessageRoutine("Spud Bonus", msg, combinedColor));
 		}
 	}
 
@@ -2014,10 +2029,10 @@ public class UIManager : MonoBehaviourPun
 			Vector3 fontColor = (Vector3)recData[0];
 			string msg = (string)recData[1];
 			Color combinedColor = new Color(fontColor.x, fontColor.y, fontColor.z);
-			_bonusMessageText.text = msg;
-			_bonusMessageText.color = combinedColor;
+			_cfarmerBonusMessageText.text = msg;
+			_cfarmerBonusMessageText.color = combinedColor;
 			//display the message...
-			StartCoroutine(ShowMessageRoutine("Bonus", msg, combinedColor));
+			StartCoroutine(ShowMessageRoutine("CF Bonus", msg, combinedColor));
 		}
 	}
 

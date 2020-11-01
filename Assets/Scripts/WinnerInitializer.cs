@@ -63,6 +63,15 @@ public class WinnerInitializer : MonoBehaviour
 
 	public void OnWinnerButtonClicked()
 	{
+		char[] charactersToTrim = { '$' };
+		string networthString = _gameConditionText.text;
+
+		networthString = networthString.Trim(charactersToTrim);
+		networthString = networthString.Replace(",", "");
+		//Debug.Log(networthString);
+		int endingNetworth = int.Parse(networthString);
+		//Debug.Log("NW: " + endingNetworth);
+
 		WinnerList.Instance._runnersUpPanel.SetActive(true);
 		List<GameObject> runnerUpPrefabs = GameObject.FindGameObjectsWithTag("RunnerUpPrefab").ToList();
 		foreach (GameObject prefab in runnerUpPrefabs)
@@ -75,7 +84,19 @@ public class WinnerInitializer : MonoBehaviour
 				GameObject ruGO = Instantiate(WinnerList.Instance._runnerUpEntryPrefab, WinnerList.Instance._ruContent);
 				ruGO.transform.Find("Name Text").GetComponent<Text>().text = _ruPlayers[i];
 				ruGO.transform.Find("Name Text").GetComponent<Text>().color = GameManager.Instance.uiManager.SelectFontColorForFarmer(_ruFarmers[i]);
+
+				if (ruGO.transform.Find("Name Text").GetComponent<Text>().color != Color.black)
+					ruGO.transform.Find("Name Text").GetComponent<Outline>().enabled = true;
+				else
+					ruGO.transform.Find("Name Text").GetComponent<Outline>().enabled = false;
+
 				ruGO.transform.Find("Networth Text").GetComponent<Text>().text = _ruNetworths[i].ToString("C0");
+				ruGO.transform.Find("Networth Text").GetComponent<Text>().color = SetRunnerUpNetworthColor(_ruNetworths[i], endingNetworth);
+
+				if (ruGO.transform.Find("Networth Text").GetComponent<Text>().color != Color.black)
+					ruGO.transform.Find("Networth Text").GetComponent<Outline>().enabled = true;
+				else
+					ruGO.transform.Find("Networth Text").GetComponent<Outline>().enabled = false;
 			}
 		}
 	}
@@ -83,6 +104,29 @@ public class WinnerInitializer : MonoBehaviour
 
 	#region Private Methods
 
-
+	Color SetRunnerUpNetworthColor(int networth,int endGame)
+	{
+		if (networth >= endGame * 0.25f && networth < endGame * 0.5f)
+		{
+			
+			return Color.green;
+		}
+		else if (networth >= endGame * 0.5f && networth < endGame * 0.75f)
+		{
+			return Color.yellow;
+		}
+		else if (networth >= endGame * 0.75f && networth < endGame * 0.875f)
+		{
+			return IFG.Orange;
+		}
+		else if (networth >= endGame * 0.875f)
+		{
+			return Color.red;
+		}
+		else
+		{
+			return Color.black;
+		}
+	}
 	#endregion
 }
