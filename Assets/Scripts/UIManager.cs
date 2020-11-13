@@ -363,6 +363,9 @@ public class UIManager : MonoBehaviourPun
 		//play click sound
 		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
 
+		StopCoroutine("SellOtbToPlayerRoutine");
+		StopCoroutine("SellOtbRoutine");
+		StopCoroutine("BuyOptionRoutine");
 		ResetOtbListPanel();
 		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
 		//_actionsPanel.SetActive(false);
