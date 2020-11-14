@@ -352,8 +352,7 @@ public class UIManager : MonoBehaviourPun
 
 		else if (_actionsPanel.activeSelf)
 		{
-			_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
-			ResetOtbListPanel();
+			ResetActionPanel();
 		}
 	}
 
@@ -363,11 +362,7 @@ public class UIManager : MonoBehaviourPun
 		//play click sound
 		AudioManager.Instance.PlaySound(AudioManager.Instance._buttonClick);
 
-		StopCoroutine("SellOtbToPlayerRoutine");
-		StopCoroutine("SellOtbRoutine");
-		StopCoroutine("BuyOptionRoutine");
-		ResetOtbListPanel();
-		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+		ResetActionPanel();
 		//_actionsPanel.SetActive(false);
 	}
 
@@ -1247,6 +1242,15 @@ public class UIManager : MonoBehaviourPun
 	#endregion
 
 	#region Private Methods
+
+	void ResetActionPanel()
+	{
+		StopCoroutine("SellOtbToPlayerRoutine");
+		StopCoroutine("SellOtbRoutine");
+		StopCoroutine("BuyOptionRoutine");
+		ResetOtbListPanel();
+		_actionsPanel.GetComponent<DOTweenAnimation>().DOPlayBackwards();
+	}
 
 	IEnumerator UpdateUIRoutine()
 	{

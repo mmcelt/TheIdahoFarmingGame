@@ -228,6 +228,8 @@ public class DeckManager : MonoBehaviourPun
 
 			case 20: //increase cows 2 yrs
 				_pManager._pCowsIncreased = true;
+				_pMove.ResetCowCounter();
+
 				if (_pManager._pFarmCows > 0)
 				{
 					_sManager.PlaceFarmSticker(GameManager.Instance.myFarmerName, "Cow", _pManager._pFarmCows, _pManager._pCowsIncreased);

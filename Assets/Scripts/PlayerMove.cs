@@ -180,6 +180,11 @@ public class PlayerMove : MonoBehaviourPun
 		_currentSpace = space;
 		EndOfMove(_currentSpace);
 	}
+
+	public void ResetCowCounter()
+	{
+		_cowCounter = 0;
+	}
 	#endregion
 
 	#region Private Methods
