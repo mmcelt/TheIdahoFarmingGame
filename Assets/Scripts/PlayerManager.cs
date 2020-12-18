@@ -349,6 +349,7 @@ public class PlayerManager : MonoBehaviourPun
 			if (_pNetworth >= GameManager.Instance._networthGameAmount)
 			{
 				//game over!
+				GameManager.Instance._gameOver = true;
 				//data
 				object[] sndData = new object[] { PhotonNetwork.LocalPlayer.NickName, GameManager.Instance.myFarmerName, _pNetworth };
 				//event options

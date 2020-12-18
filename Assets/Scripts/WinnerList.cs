@@ -96,9 +96,9 @@ public class WinnerList : MonoBehaviour
 		//_winners = JsonUtility.FromJson<Winners>(jsonString);
 
 		//load saved data...
-		if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
+		if (File.Exists(Application.persistentDataPath + "/WinnerList.json"))
 		{
-			string jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
+			string jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.json");
 			_winners = JsonUtility.FromJson<Winners>(jsonString);
 		}
 		else
@@ -127,7 +127,7 @@ public class WinnerList : MonoBehaviour
 
 		//save updated Winners
 		string json = JsonUtility.ToJson(_winners);
-		File.WriteAllText(Application.persistentDataPath + "/WinnerList.txt", json);
+		File.WriteAllText(Application.persistentDataPath + "/WinnerList.json", json);
 
 		if (GameManager.Instance._numberOfPlayers > 1)
 			SendListToOthers();
@@ -138,9 +138,9 @@ public class WinnerList : MonoBehaviour
 		if (!PhotonNetwork.IsMasterClient) return;
 
 		//load saved data...
-		if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
+		if (File.Exists(Application.persistentDataPath + "/WinnerList.json"))
 		{
-			string jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
+			string jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.json");
 			_winners = JsonUtility.FromJson<Winners>(jsonString);
 		}
 		else
@@ -154,7 +154,7 @@ public class WinnerList : MonoBehaviour
 			if (PhotonNetwork.IsMasterClient)
 			{
 				//event data
-				string myList = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
+				string myList = File.ReadAllText(Application.persistentDataPath + "/WinnerList.json");
 				object[] sndData = new object[] { myList };
 				//event options
 				RaiseEventOptions eventOptions = new RaiseEventOptions
@@ -186,9 +186,9 @@ public class WinnerList : MonoBehaviour
 
 		if (_winners == null)
 		{
-			if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
+			if (File.Exists(Application.persistentDataPath + "/WinnerList.json"))
 			{
-				string jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
+				string jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.json");
 				_winners = JsonUtility.FromJson<Winners>(jsonString);
 			}
 		}
@@ -230,7 +230,7 @@ public class WinnerList : MonoBehaviour
 		//copy the MasterList to the WinnerList...
 		if (File.Exists(Application.persistentDataPath + "/MasterList.txt"))
 		{
-			File.Copy(Application.persistentDataPath + "/MasterList.txt", Application.persistentDataPath + "/WinnerList.txt", true);
+			File.Copy(Application.persistentDataPath + "/MasterList.txt", Application.persistentDataPath + "/WinnerList.json", true);
 		}
 		PopulateAndShowWinnersList();
 		////delete the existing WinnersList.txt file...
@@ -251,9 +251,9 @@ public class WinnerList : MonoBehaviour
 
 	public void MakeTheMasterList()
 	{
-		if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
+		if (File.Exists(Application.persistentDataPath + "/WinnerList.json"))
 		{
-			File.Copy(Application.persistentDataPath + "/WinnerList.txt", Application.persistentDataPath + "/MasterList.txt", true);
+			File.Copy(Application.persistentDataPath + "/WinnerList.json", Application.persistentDataPath + "/MasterList.txt", true);
 		}
 	}
 	#endregion
@@ -267,11 +267,11 @@ public class WinnerList : MonoBehaviour
 			//extract data
 			object[] recData = (object[])eventData.CustomData;
 			string jsonString = (string)recData[0];
-			File.WriteAllText(Application.persistentDataPath + "/WinnerList.txt", jsonString);
+			File.WriteAllText(Application.persistentDataPath + "/WinnerList.json", jsonString);
 
-			if (File.Exists(Application.persistentDataPath + "/WinnerList.txt"))
+			if (File.Exists(Application.persistentDataPath + "/WinnerList.json"))
 			{
-				jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.txt");
+				jsonString = File.ReadAllText(Application.persistentDataPath + "/WinnerList.json");
 				_winners = JsonUtility.FromJson<Winners>(jsonString);
 			}
 			else

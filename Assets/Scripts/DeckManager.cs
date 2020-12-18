@@ -435,23 +435,23 @@ public class DeckManager : MonoBehaviourPun
 	{
 		CreateAnOTBCard(
 	01,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"<color=yellow>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
 		"10 acres GRAIN - Total $20,000", 20000);
 		CreateAnOTBCard(
 			02,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"<color=yellow>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
 		"10 acres GRAIN - Total $20,000", 20000);
 		CreateAnOTBCard(
 			03,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"<color=yellow>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
 		"10 acres GRAIN - Total $20,000", 20000);
 		CreateAnOTBCard(
 			04,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"<color=yellow>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
 		"10 acres GRAIN - Total $20,000", 20000);
 		CreateAnOTBCard(
 			05,
-		"<color=yellow>NEIGHBOR SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
+		"<color=yellow>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Grain at $2000 per acre",
 		"10 acres GRAIN - Total $20,000", 20000);
 		CreateAnOTBCard(
 			06,
@@ -479,23 +479,23 @@ public class DeckManager : MonoBehaviourPun
 			"10 Cows - Total $5,000", 5000);
 		CreateAnOTBCard(
 			12,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"<color=green>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
 			"10 acres HAY - Total $20,000", 20000);
 		CreateAnOTBCard(
 			13,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"<color=green>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
 			"10 acres HAY - Total $20,000", 20000);
 		CreateAnOTBCard(
 			14,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"<color=green>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
 			"10 acres HAY - Total $20,000", 20000);
 		CreateAnOTBCard(
 			15,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"<color=green>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
 			"10 acres HAY - Total $20,000", 20000);
 		CreateAnOTBCard(
 			16,
-			"<color=green>NEIGHBOR SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
+			"<color=green>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Hay at $2000 per acre",
 			"10 acres HAY - Total $20,000", 20000);
 		CreateAnOTBCard(
 			17,
@@ -523,27 +523,27 @@ public class DeckManager : MonoBehaviourPun
 			"HARVESTER - Total $10,000", 10000);
 		CreateAnOTBCard(
 			23,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"<color=red>NEIGHBORING FARMER GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
 			"5 acres FRUIT - Total $25,000", 25000);
 		CreateAnOTBCard(
 			24,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"<color=red>NEIGHBORING FARMER GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
 			"5 acres FRUIT - Total $25,000", 25000);
 		CreateAnOTBCard(
 			25,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"<color=red>NEIGHBORING FARMER GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
 			"5 acres FRUIT - Total $25,000", 25000);
 		CreateAnOTBCard(
 			26,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"<color=red>NEIGHBORING FARMER GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
 			"5 acres FRUIT - Total $25,000", 25000);
 		CreateAnOTBCard(
 			27,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"<color=red>NEIGHBORING FARMER GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
 			"5 acres FRUIT - Total $25,000", 25000);
 		CreateAnOTBCard(
 			28,
-			"<color=red>NEIGHBOR GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
+			"<color=red>NEIGHBORING FARMER GOES BROKE</color>\n5 acres of Fruit at $5000 per acre",
 			"5 acres FRUIT - Total $25,000", 25000);
 		CreateAnOTBCard(
 			29,
@@ -595,27 +595,27 @@ public class DeckManager : MonoBehaviourPun
 			"LEASE Oxford Range - Total $20,000", 20000);
 		CreateAnOTBCard(
 			41,
-			"<color=#00A1D6FF>NEIGHBOR SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
+			"<color=#00A1D6FF>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
 			"10 acres SPUDS - Total $20,000", 20000);
 		CreateAnOTBCard(
 			42,
-			"<color=#00A1D6FF>NEIGHBOR SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
+			"<color=#00A1D6FF>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
 			"10 acres SPUDS - Total $20,000", 20000);
 		CreateAnOTBCard(
 			43,
-			"<color=#00A1D6FF>NEIGHBOR SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
+			"<color=#00A1D6FF>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
 			"10 acres SPUDS - Total $20,000", 20000);
 		CreateAnOTBCard(
 			44,
-			"<color=#00A1D6FF>NEIGHBOR SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
+			"<color=#00A1D6FF>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
 			"10 acres SPUDS - Total $20,000", 20000);
 		CreateAnOTBCard(
 			45,
-			"<color=#00A1D6FF>NEIGHBOR SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
+			"<color=#00A1D6FF>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
 			"10 acres SPUDS - Total $20,000", 20000);
 		CreateAnOTBCard(
 			46,
-			"<color=#00A1D6FF>NEIGHBOR SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
+			"<color=#00A1D6FF>NEIGHBORING FARMER SELLS OUT</color>\n10 acres of Spuds at $2000 per acre",
 			"10 acres SPUDS - Total $20,000", 20000);
 
 		ShuffleOtbDeck(_otbCards);
@@ -783,9 +783,9 @@ public class DeckManager : MonoBehaviourPun
 		CreateAnFFCard(1,
 			"Income Taxes due.\n<color=red>PAY $7,000</color>.");
 		CreateAnFFCard(2,
-			"The Apple Maggot Fly, cousin of the dreaded Med Fly, is found in an insect trap in your orchard. Your orchard is quarantined and you lose a lucrative export contract.\nPAY $500 per Fruit acre.");
+			"The Apple Maggot Fly, a kin to the dreaded Med Fly, is found in an insect trap in your orchard. Your orchard is quarantined and you lose a profitable export contract.\nPAY $500 per Fruit acre.");
 		CreateAnFFCard(3,
-			"Banks raise Prime Rate.\n<color=red>PAY 10% of outstanding loan balance</color> as additional interest.");
+			"Banks raise the Prime Rate.\n<color=red>PAY 10% of outstanding loan balance</color> as additional interest.");
 		CreateAnFFCard(4,
 			"Valley Wide Co-op holds out for higher price. Processor gives in.\n<color=green>COLLECT $1,000</color>.");
 		CreateAnFFCard(5,
@@ -793,7 +793,7 @@ public class DeckManager : MonoBehaviourPun
 		CreateAnFFCard(6,
 			"Custom hire bill due.\nIf you have no Tractor - PAY $3,000.");
 		CreateAnFFCard(7,
-			"Some TV talk show host does a show on the dangers of a main control spray you use on your cherries. Even though the pseudo-science behind the inflated claims is nor more rigorous that a supermarket tabloid, the national cherry market crashes.\n<color=red>Cut your cherry crop in half</color> if you haven't already harvested this year.");
+			"Some TV talk show host does a show on the dangers of a main control spray you use on your cherries. Even though the pseudo-science behind the exaggerated claims is no more rigorous than a supermarket tabloid, the national cherry market crashes.\n<color=red>Cut your cherry crop in half</color> if you haven't already harvested this year.");
 		CreateAnFFCard(8,
 			"Russian sale boosts wheat prices.\n<color=green>COLLECT $2,000</color>.");
 		CreateAnFFCard(9,
@@ -803,11 +803,11 @@ public class DeckManager : MonoBehaviourPun
 		CreateAnFFCard(11,
 			"Oil Company pays you $100 per acre for Oil and Gas lease on you farm.");
 		CreateAnFFCard(12,
-			"Truckers strike delay Fruit in transport, lots of spoilage.\nPAY $1,000 per Fruit acre.");
+			"Trucker strike delays Fruit in transport, lots of spoilage.\nPAY $1,000 per Fruit acre.");
 		CreateAnFFCard(13,
-			"Custom hire out with your Harvester.\nIf you have a Harvester - COLLECT $2,000 from each player who has none.");
+			"Custom hire out with your Harvester.\nIf you have a Harvester - COLLECT $2,000 from each player who doesn't have one.");
 		CreateAnFFCard(14,
-			"<color=red>IRS garnishes your income after finding errors on your tax return. For the rest of the year, draw OPERATING EXPENSE cards during Harvests, but do not roll for Harvest check</color>.");
+			"<color=red>IRS garnishes your income after finding errors on your tax return! For the rest of the year, draw OPERATING EXPENSE cards during Harvests, but do not roll for Harvest check</color>.");
 		CreateAnFFCard(15,
 		"Uncle Cheester dies and leaves you 10 acres of Hay, if you can raise the $10,000 cash to pay Inheritance Tax and small remaining mortgage.");
 		CreateAnFFCard(16,
@@ -818,9 +818,9 @@ public class DeckManager : MonoBehaviourPun
 			"Held some of your calves and the market jumped.\nCOLLECT $2,000, if you have cows.");
 		CreateAnFFCard(19,
 			/*"A leaking electrical motor at Feed Mill contaminates you load of feed with PCB. State Ag Inspector requires you to slaughter cows on your farm (not cows on lease range land) with no reimbursement."*/
-			"While checking on your farm cows you notice all of them are dead!! And to your utter amazement you see they have been mutilated! A clear case of Alien Cattle Mutilations!");
+			"While checking on your farm cows you notice all of them are dead!! And to your utter amazement you see they have been mutilated! A clear case of Alien Cattle Mutilations, if you ask me...");
 		CreateAnFFCard(20,
-			"Sharp management, production testing, and your computer record system cause your calf weaning weights to soar. RECEIVE a 50% bonus after you roll for your Livestock Harvest check each of the next two years.");
+			"Excellent management, production testing, and your computer record system cause your calf weaning weights to soar. RECEIVE a 50% bonus after you roll for your Livestock Harvest check each of the next two years.");
 		CreateAnFFCard(21,
 			"The President slaps on a Grain Embargo while you're waiting for the custom harvester to show up. Instant market collapse.\nPAY $2,500 if you don't own your own Harvester.");
 		CreateAnFFCard(22,
@@ -828,7 +828,7 @@ public class DeckManager : MonoBehaviourPun
 		CreateAnFFCard(23,
 			"Federal Crop Disaster payment saves your bacon.\n<color=green>COLLECT $100 per Grain acre</color>.");
 		CreateAnFFCard(24,
-			"Rich folks from the city bought the neighboring farm and pay you a premium for your best hay to feed their fancy show horses.\n<color=green>COLLECT $100 per Hay acre</color>.");
+			"A rich couple from the city bought the neighboring farm and pay you a premium for your best hay to feed their fancy show horses.\n<color=green>COLLECT $100 per Hay acre</color>.");
 		CreateAnFFCard(25,
 			"Your Spuds are showing signs of Blight. Should have sprayed earlier.\nPAY $500 per Spud acre.");
 		CreateAnFFCard(26,
