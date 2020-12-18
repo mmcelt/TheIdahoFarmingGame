@@ -1095,6 +1095,8 @@ public class UIManager : MonoBehaviourPun
 
 	public IEnumerator BuyOptionRoutine()
 	{
+		if (_selectedCard == null) yield break;
+
 		_transactionBlocked = true;
 		_buyOptionButton.interactable = false;
 		yield return new WaitUntil(() => CheckIfAbleToBuyOption());
